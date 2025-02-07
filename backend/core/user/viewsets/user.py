@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework import mixins
+from rest_framework.decorators import action
 
 from core.user.serializers import UserSerializer
 from core.user.models import User
@@ -41,6 +42,7 @@ class UsersViewSet(
 
         return Response({"success": True}, status.HTTP_200_OK)
     
+    action(["get"], detail=False, url_path="department", url_name="department")
     def department(self, request, *args, **kwargs):
         """
         Get all users department

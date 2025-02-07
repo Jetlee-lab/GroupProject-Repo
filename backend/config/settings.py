@@ -17,6 +17,8 @@ env = environ.Env(
     DEBUG=(bool, False),
 )
 
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,12 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8f8f#!ka8uatbv-4e!2_)5&#_vm^-sc7#1jbe%f767apib^!yd'
+SECRET_KEY = env("SECRET_KEY", default='django-insecure-8f8f#!ka8uatbv-4e!2_)5&#_vm^-sc7#1jbe%f767apib^!yd')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG", default=False)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=['*'])
 
 
 # Application definition
@@ -84,22 +86,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-    
     #'default': {
-    #    'ENGINE': 'django.db.backends.postgresql',
-    #    'OPTIONS': {
-    #        # 'service': 'aits_service',
-    #        # 'passfile': '.aits_pgpass',
-    #        'host': 'localhost',
-    #        'port': 5432,
-    #        'user': 'postgres',
-    #        'password': 'postgres',
-    #    }
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
     #}
+    
+    'default': {
+        'ENGINE': env('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': env('DB_NAME', default='aits'), 
+        'USER': env('DB_USER', default='postgres'),
+        'PASSWORD': env('DB_PASSWORD', default='postgres'),
+        'HOST': env('DB_HOST', default='127.0.0.1'),
+        'PORT': env('DB_PORT', default='5432'),
+    }
 }
 
 

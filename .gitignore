@@ -128,3 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .env__
+
+# Hide node_modules and everythin in it in frontend directories
+*/node_modules/*
