@@ -40,7 +40,7 @@ export function SignInView() {
     email: z.string().email({ message: "Provide valid email" }),
     password: z.string().min(5)
   })
-  console.log(4545, user)
+
   const handleSignIn = useCallback(() => {
     if (!emailRef.current || !passwordRef.current)
       return
