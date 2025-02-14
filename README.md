@@ -1,1 +1,0 @@
-# Academic Issue Tracking System
