@@ -6,7 +6,7 @@ from core.auth.viewsets import (
     LogoutViewSet,
     RegisterViewSet
 )
-from core.user.viewsets import UsersViewSet, DepartmentViewSet, IssueViewSet
+from core.user.viewsets import UsersViewSet, DepartmentViewSet, FacultyViewSet, IssueViewSet
 
 router = routers.SimpleRouter(trailing_slash=False)
 
@@ -19,6 +19,7 @@ router.register(r"register", RegisterViewSet, basename="register")
 router.register(r"users", UsersViewSet, basename="users")
 router.register(r"issues", IssueViewSet, basename="issues")
 router.register(r"departments", DepartmentViewSet, basename="departments")
+router.register(r"faculties", FacultyViewSet, basename="faculties")
 
 urlpatterns = [
     *router.urls,

@@ -15,13 +15,14 @@ import os, environ
 
 env = environ.Env(
     DEBUG=(bool, False),
+    ALLOWED_HOSTS=(tuple),
 )
-
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    #'rest_framework',
     'config',
     'core',
     'core.auth',
@@ -100,7 +102,6 @@ DATABASES = {
         'PORT': env('DB_PORT', default='5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -167,4 +168,11 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+
+    #'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
+    'EXCEPTION_HANDLER': 'utils.io.custom_exception_handler',
+    
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': 'core.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 2,
 }

@@ -37,42 +37,69 @@ class Role(models.Model):
 
 
 class User(AbstractUser):
-   email = models.EmailField(_("email address"), db_index=True, unique=True)
    USERNAME_FIELD = "email"
    REQUIRED_FIELDS = ["username"]
+
+   email = models.EmailField(_("email address"), db_index=True, unique=True)
    roles = models.ManyToManyField(Role,
-       verbose_name=_("roles"),
        blank=True,
-       # related_name="user_roles",
+       related_name="users",
+       # verbose_name=_("roles"),
    )
-   department = models.ForeignKey(Department,
-       related_name='members', on_delete=models.CASCADE, null=True, blank=True
-   )
-   #roles = models.ManyToManyField(Role,
-   #    verbose_name=_("departments"),
-   #    blank=True,
-   #    # related_name="user_roles",
-   #)
-   groups = models.ManyToManyField(
-         Group,
-         blank=True,
-         related_name="student_permissions",
-         # related_query_name="stusent",
-   )
-   user_permissions = models.ManyToManyField(
-        Permission,
-        verbose_name=_("student permissions"),
-        blank=True,
-        help_text=_("Specific permissions for this student."),
-        related_name="student_permissions",
-        # related_query_name="student",
-    )
+
+   # groups = models.ManyToManyField(
+   #       Group,
+   #       blank=True,
+   #       related_name="user_groups",
+   #       # related_query_name="student",
+   # )
+   # user_permissions = models.ManyToManyField(
+   #      Permission,
+   #      verbose_name=_("user permissions"),
+   #      blank=True,
+   #      help_text=_("Specific permissions for this student."),
+   #      related_name="user_permissions",
+   #      # related_query_name="user",
+   # )
    
    objects = UserManager()
-   # class Meta(AbstractUser.Meta):
-   #     abstract = True
+
    def __str__(self):
-       return f"self.id: {self.email}"
+       return f"User: {self.email}"
+
+
+class UserManager(UserManager):
+    def create_user(self, username, email, password=None, **kwargs):
+        """Create and return a `User` with an email, username and password."""
+        if username is None:
+            raise TypeError("Users must have a username.")
+        if email is None:
+            raise TypeError("Users must have an email.")
+
+        user = self.model(username=username, email=self.normalize_email(email))
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(self, username, email, password):
+        """
+        Create and return a `User` with superuser (admin) permissions.
+        """
+        if password is None:
+            raise TypeError("Superusers must have a password.")
+        if email is None:
+            raise TypeError("Superusers must have an email.")
+        if username is None:
+            raise TypeError("Superusers must have an username.")
+
+        user = self.create_user(username, email, password)
+        user.is_superuser = True
+        user.is_staff = True
+        user.save(using=self._db)
+
+        return user
+
 
 
 # # students table
@@ -115,34 +142,42 @@ class User(AbstractUser):
 #     )
 
 
-class UserManager(UserManager):
-    def create_user(self, username, email, password=None, **kwargs):
-        """Create and return a `User` with an email, username and password."""
-        if username is None:
-            raise TypeError("Users must have a username.")
-        if email is None:
-            raise TypeError("Users must have an email.")
 
-        user = self.model(username=username, email=self.normalize_email(email))
-        user.set_password(password)
-        user.save(using=self._db)
-
-        return user
-
-    def create_superuser(self, username, email, password):
-        """
-        Create and return a `User` with superuser (admin) permissions.
-        """
-        if password is None:
-            raise TypeError("Superusers must have a password.")
-        if email is None:
-            raise TypeError("Superusers must have an email.")
-        if username is None:
-            raise TypeError("Superusers must have an username.")
-
-        user = self.create_user(username, email, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save(using=self._db)
-
-        return user
+# class U(AbstractUser):
+#     USERNAME_FIELD = "email"
+#     REQUIRED_FIELDS = ["username"]
+#     
+#     user_permissions = models.ManyToManyField(
+#         Permission,
+#         #verbose_name=_("s permissions"),
+#         blank=True,
+#         #related_name="s_set",
+#         #related_query_name="s",
+#     )
+# 
+#     groups = models.ManyToManyField(
+#         Group,
+#         verbose_name=_("%(app_label)s_%(class)ss"),
+#         blank=True,
+#         related_name="%(app_label)s_%(class)s_set",
+#         related_query_name="%(app_label)s_%(class)ss",
+#      )
+# 
+# 
+# 
+# 
+#     class Meta:
+#         abstract = True
+# 
+# class S(U):
+#     #groups = models.ManyToManyField(
+#     #    Group,
+#     #    verbose_name=_("ss"),
+#     #    blank=True,
+#     #    related_name="s_set",
+#     #    related_query_name="s",
+#     #)
+#     pass
+# 
+# class D(U):
+#     pass

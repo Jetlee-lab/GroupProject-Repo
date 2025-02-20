@@ -16,10 +16,13 @@ class ActiveSessionAuthentication(authentication.BaseAuthentication):
 
         auth_header = authentication.get_authorization_header(request)
 
+        print('Cookies:', request.COOKIES)
+        print('App TokenAuth, auth_header:', auth_header)
         if not auth_header:
             return None
 
         token = auth_header.decode("utf-8")
+        print('    App Token:', token)
 
         return self._authenticate_credentials(token)
 

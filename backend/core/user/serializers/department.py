@@ -13,6 +13,9 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 class FacultySerializer(serializers.ModelSerializer):
 
+    #departments = DepartmentSerializer(many=True, read_only=True)
+    departments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
     class Meta:
         model = Faculty
         fields = '__all__'

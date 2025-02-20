@@ -5,11 +5,11 @@ from ..models import User, Role
 
 
 class UserSerializer(serializers.ModelSerializer):
-    date_joined = serializers.DateTimeField(read_only=True)
+    #date_joined = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = User
-        exclude = []
+        exclude = ['password']
         read_only_field = ["id"]
 
 

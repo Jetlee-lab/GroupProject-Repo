@@ -70,7 +70,8 @@ module.exports = {
       1,
       {
         order: 'asc',
-        type: 'line-length',
+        // type: 'line-length',
+        type: 'alphabetical',
         'newlines-between': 'always',
         groups: [
           'style',
@@ -85,6 +86,7 @@ module.exports = {
           'custom-sections',
           'custom-auth',
           'custom-types',
+          'custom-alias',
           ['parent', 'sibling', 'index'],
           ['parent-type', 'sibling-type', 'index-type'],
           'object',
@@ -100,6 +102,7 @@ module.exports = {
             ['custom-routes']: 'src/routes/**',
             ['custom-sections']: 'src/sections/**',
             ['custom-components']: 'src/components/**',
+            ['custom-alias']: '@/**',
           },
         },
         'internal-pattern': ['src/**'],

@@ -1,27 +1,25 @@
-import { useState, useCallback, useRef } from 'react';
+import { useRef, useState, useCallback } from 'react';
+import { z } from 'zod';
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { Alert } from '@mui/material';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+
+import RestLogin from '@/components/auth/login';
+import { setCredentials, selectCurrentUser } from '@/features/auth/auth-slice';
+import { useAuth } from '@/hooks/use-auth';
+import { useAppDispatch } from '@/store';
+// import { useSelector } from 'react-redux';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { Iconify } from 'src/components/iconify';
-
-import RestLogin from '@/components/auth/login';
-import { z } from 'zod';
-import { Alert } from '@mui/material';
-
-import { useAppDispatch } from '@/store';
-import { setCredentials, selectCurrentUser } from '@/features/auth/auth-slice';
-// import { useSelector } from 'react-redux';
-import { useAuth } from '@/hooks/use-auth';
-
 // ----------------------------------------------------------------------
 
 export function SignInView() {
@@ -65,10 +63,10 @@ export function SignInView() {
     console.log(2, user)
     return
 
-    console.log(credentials.email, credentials.password)
+    // console.log(credentials.email, credentials.password)
     
     router.push('/');
-  }, [router]);
+  }, [router, dispatch, schema, user]);
 
   const renderForm = (
     <Box display="flex" flexDirection="column" alignItems="flex-end">

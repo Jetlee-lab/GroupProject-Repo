@@ -4,8 +4,10 @@ from django.contrib.auth import authenticate
 from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import login
 
 from core.auth.models import ActiveSession
+#from utils.io import format_response
 
 
 def _generate_jwt_token(user):
@@ -27,22 +29,19 @@ class LoginSerializer(serializers.Serializer):
         password = data.get("password", None)
 
         if email is None:
-            raise exceptions.ValidationError(
-                {"success": False, "msg": "Email is required to login"}
-            )
+            raise exceptions.ValidationError({"message":"Email is required to login"})
         if password is None:
-            raise exceptions.ValidationError(
-                {"success": False, "msg": "Password is required to log in."}
-            )
+            raise exceptions.ValidationError({"message": "Password is required to log in."})
         user = authenticate(username=email, password=password)
 
         if user is None:
-            raise exceptions.AuthenticationFailed({"success": False, "msg": "Wrong credentials"})
+            raise exceptions.AuthenticationFailed({"message": "Wrong credentials"})
+
+        ##############
+        login(self.context.get('request'), user)
 
         if not user.is_active:
-            raise exceptions.ValidationError(
-                {"success": False, "msg": "User is not active"}
-            )
+            raise exceptions.ValidationError({"message": "User is not active"})
 
         try:
             session = ActiveSession.objects.get(user=user)
@@ -56,8 +55,19 @@ class LoginSerializer(serializers.Serializer):
                 user=user, token=_generate_jwt_token(user)
             )
 
+        # return format_response({
+        #     "user": {
+        #         "_id": user.pk,
+        #         "username": user.username,
+        #         "email": user.email,
+        #     },
+        #     "token": session.token,
+        # })
         return {
-            "success": True,
+            "user": {
+                "_id": user.pk,
+                "username": user.username,
+                "email": user.email,
+            },
             "token": session.token,
-            "user": {"_id": user.pk, "username": user.username, "email": user.email},
         }
