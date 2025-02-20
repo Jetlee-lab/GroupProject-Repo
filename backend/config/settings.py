@@ -17,12 +17,11 @@ env = environ.Env(
     DEBUG=(bool, False),
 )
 
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-print("DEBUG: ", os.environ)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -46,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'rest_framework',
     'config',
     'core',
     'core.auth',
@@ -169,7 +167,4 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
-
-    # 'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler'
-    # 'EXCEPTION_HANDLER': 'core.utils.exception_handler'
 }
