@@ -16,7 +16,9 @@ def custom_exception_handler(exc, context):
     if response is not None:
         setattr(response, EXEC_HANDLER_ATTR, True)
 
-    meta = {'version': context['kwargs']['version']}
+    #print(EXEC_HANDLER_ATTR+'=', type(response.data), '---', type(exc), '---', exc, '---', response.data)
+    version = context['kwargs'].get('version', None)
+    meta = {} if version is None else {'version': version}
     return format_response(response, meta=meta)
 
 
@@ -29,7 +31,13 @@ def format_response(response, meta={}, success=None):
     elif response is not None:
         code = response.status_code
         success = is_success(code) # if success is None else success
-        key = 'data' if success else 'error'
+        if success:
+            key = 'data'
+        else:
+            key = 'error'
+            if isinstance(response.data, (str, bytes)):
+                response.data = {'message': response.data}
+
 
         print(response.context_data)
         #response_meta = response.

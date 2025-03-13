@@ -1,5 +1,0 @@
-{
-  "success": true,
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZXhwIjoxNzM5NDQ3MDc0fQ.NJ7D9e5jGlp5MO7sQ-B1rSuYXXk06D1FacHznWe7igU",
-  "user": { "_id": 1, "username": "admin", "email": "admin@e.com" }
-}

@@ -10,8 +10,12 @@ class LimitOffsetPagination(pagination.LimitOffsetPagination):
         next_link = self.get_next_link()
         prev_link = self.get_previous_link()
 
-        next_params = {k: int(v) for k, v in QueryDict( urlparse(next_link).query ).items()}
-        prev_params = {k: int(v) for k, v in QueryDict( urlparse(prev_link).query ).items()}
+        def get_params(qd):
+            params = [self.limit_query_param, self.offset_query_param]
+            return {k: int(v) for k, v in qd.items() if k in params}
+
+        next_params = get_params(QueryDict( urlparse(next_link).query ))
+        prev_params = get_params(QueryDict( urlparse(prev_link).query ))
 
         response = Response(data)
         setattr(response, META_ATTR, {
