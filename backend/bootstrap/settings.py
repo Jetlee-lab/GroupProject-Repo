@@ -16,6 +16,8 @@ import os, environ
 env = environ.Env(
     DEBUG=(bool, False),
     ALLOWED_HOSTS=(tuple),
+    CORS_ALLOWED_ORIGINS=(tuple),
+    CORS_ALLOW_ALL_ORIGINS=(bool, False),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -209,16 +211,9 @@ REST_FRAMEWORK = {
 #  CORS 
 # ##################################################################### #
 
-CORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=ALLOWED_HOSTS)
+CORS_ALLOW_ALL_ORIGINS=env("CORS_ALLOW_ALL_ORIGINS")
 
-# Load the default ones
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
-
-# Leaded from Environment
-CORS_ALLOWED_ORIGINS_ENV = env("CORS_ALLOWED_ORIGINS", default=None)
-
-if CORS_ALLOWED_ORIGINS_ENV:
-    CORS_ALLOWED_ORIGINS += CORS_ALLOWED_ORIGINS_ENV.split(' ')
 
 # ##################################################################### #
 # ALLAUTH
