@@ -11,7 +11,7 @@ const LoginPage = () => {
       </div>
     {/* Right: Sign Up Form */}
     <div class= "lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
-      <h1 class="text-2xl font-semibold mb-4 text-center">Sign Up</h1>
+      <h1 class="text-2xl font-semibold mb-4 text-center">Log in to Academic Issue Tracking System</h1>
       <form action="#" method="">
         {/* Email Input */}
         <div class="mb-4 bg-sky-100">
@@ -33,7 +33,7 @@ const LoginPage = () => {
           <a href="/" className="hover:underline">Forgot Password?</a>
         </div>
         {/* Login Button */}
-        <button type="submit" class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Sign Up</button>
+        <button type="submit" class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Log in</button>
       </form>
       {/* Log in  Link */}
       <div class="mt-6 text-green-500 text-center">
