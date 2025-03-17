@@ -7,9 +7,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 export default function header() {
   return (
     <> 
-      <div className='flex items-center justify-between p-4 bg-blue-500 text-white shadow-2xl'>
+      <div className='flex items-center justify-between p-4 bg-blue-600t ext-white shadow-2xl'>
         {/*Logo*/}
-        <div className='flex items-center bg-blue-500'>
+        <div className='flex items-center bg-blue-600'>
           <img src={logo} className="App-logo rounded-full" alt="logo" width={70} />
           <h2 className='font-bold p-2'>AITS</h2>
         </div>
