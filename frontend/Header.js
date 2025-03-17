@@ -7,9 +7,9 @@ function Header() {
    <>
     
         <header/>
-        <div className='flex items-center justify-between p-4 bg-blue-500 text-white shadow-2xl' >
+        <div className='flex items-center justify-between p-4 bg-blue-600 text-white shadow-2xl' >
           {/*logo*/}
-          <div className='flex items-center bg-blue-500'>
+          <div className='flex items-center bg-blue-600'>
             <img src={Logo} className="App-logo rounded-full" alt="Logo" width={70}/>
             <h2 className='text-3xl font-bold p-3'>AITS</h2>
         
