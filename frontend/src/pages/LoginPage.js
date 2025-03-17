@@ -9,7 +9,7 @@ const LoginPage = () => {
       <div class="w-1/2 h-screen hidden lg:block">
         <img src={AITS_Logo} alt="AITS Logo" class="object-cover w-full h-full"/>
       </div>
-    {/* Right: Sign Up Form */}
+    {/* Right: Log In Form */}
     <div class= "lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
       <h1 class="text-2xl font-semibold mb-4 text-center">Log in to Academic Issue Tracking System</h1>
       <form action="#" method="">
