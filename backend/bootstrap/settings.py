@@ -18,6 +18,8 @@ env = environ.Env(
     ALLOWED_HOSTS=(tuple),
     CORS_ALLOWED_ORIGINS=(tuple),
     CORS_ALLOW_ALL_ORIGINS=(bool, False),
+    CORS_ALLOW_CREDENTIALS=(bool, False),
+    CSRF_TRUSTED_ORIGINS=(tuple),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -52,20 +54,22 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
-    'dj_rest_auth',
+    # 'dj_rest_auth',
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
+    "allauth.mfa",
+    "allauth.headless",
+    "allauth.usersessions",
 
     'api',
     'authentication',
     'bootstrap',
     'core',
     'search',
-    'utils',
 ]
 
 MIDDLEWARE = [
@@ -187,7 +191,7 @@ REST_FRAMEWORK = {
     #    #"rest_framework.renderers.JSONRenderer",
     #),
 
-    "DEFAULT_AUTHENTICAT`ION_`CLASSES": (
+    "DEFAULT_AUTHENTICATION_CLASSES": (
         # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         "authentication.backends.ActiveSessionAuthentication",
@@ -212,8 +216,11 @@ REST_FRAMEWORK = {
 # ##################################################################### #
 
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=ALLOWED_HOSTS)
-CORS_ALLOW_ALL_ORIGINS=env("CORS_ALLOW_ALL_ORIGINS")
+CORS_ALLOW_ALL_ORIGINS =env("CORS_ALLOW_ALL_ORIGINS")
+CORS_ALLOW_CREDENTIALS = env("CORS_ALLOW_CREDENTIALS")
 
+#  CSRF
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=ALLOWED_HOSTS)
 
 # ##################################################################### #
 # ALLAUTH
@@ -225,6 +232,9 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
     # 'allauth.socialaccount.auth_backends.AuthenticationBackend',
 ]
+
+ACCOUNT_LOGIN_METHODS = {"email", "username"}
+# ACCOUNT_EMAIL_REQUIRED = True
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -242,3 +252,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SOCIALACCOUNT_QUERY_EMAIL = True
+HEADLESS_ONLY = True

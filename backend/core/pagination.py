@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from urllib.parse import urlparse, parse_qs
 from django.http import QueryDict
 
-from utils.common import META_ATTR
+from core.utils.common import META_ATTR
 
 class LimitOffsetPagination(pagination.LimitOffsetPagination):
     def get_paginated_response(self, data):

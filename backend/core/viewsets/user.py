@@ -13,7 +13,7 @@ from ..serializers import (
     IssueSerializer
 )
 from ..models import User, Student, Staff, Faculty
-from utils.io import IOMixin, paginate_response #format_response
+from core.utils.io import IOMixin, paginate_response #format_response
 
 
 class UsersViewSet(

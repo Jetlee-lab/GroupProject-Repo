@@ -7,7 +7,7 @@ from rest_framework.exceptions import ValidationError
 
 from ..serializers import IssueSerializer, IssueLogSerializer, AttachmentSerializer
 from ..models.issue import Issue, IssueLog
-from utils.io import IOMixin, paginate_response
+from core.utils.io import IOMixin, paginate_response
 
 class IssueViewSet(IOMixin, viewsets.ModelViewSet):
 # class AccountViewSet(viewsets.ModelViewSet):
