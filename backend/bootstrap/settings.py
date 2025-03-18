@@ -204,7 +204,7 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
 
     #'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
-    'EXCEPTION_HANDLER': 'utils.io.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'core.utils.io.custom_exception_handler',
     
     #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_PAGINATION_CLASS': 'core.pagination.LimitOffsetPagination',
@@ -252,4 +252,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SOCIALACCOUNT_QUERY_EMAIL = True
-HEADLESS_ONLY = True
+# HEADLESS_ONLY = True
