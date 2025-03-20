@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './components/common/Header';
-//import SideBar from './components/common/SideBar';
+import SideBar from './components/common/SideBar';
 import HomePage from './pages/HomePage';
 import HelpPage from './pages/HelpPage';
 import NotificationsPage from './pages/NotificationsPage';
@@ -15,7 +15,7 @@ function App() {
     <Router>
       <Header />
       <main className='flex space-between'>
-        {/*<SideBar />*/}
+        <SideBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/help" element={<HelpPage />} />

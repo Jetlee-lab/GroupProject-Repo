@@ -26,7 +26,8 @@ function Header() {
         {/*icons*/}
         <div>
           <CircleNotificationsIcon className='mx-2 cursor-pointer'/>
-          <AccountCircleIcon className ='mx-2 cursor-pointer'/>
+          <AccountCircleIcon className ='mx-2 cursor-pointer' />
+          
         </div>
     </div>
     
@@ -35,3 +36,4 @@ function Header() {
 }
 
 export default Header
+
