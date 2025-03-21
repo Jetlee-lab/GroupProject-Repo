@@ -35,7 +35,7 @@ const LoginPage = () => {
         {/* Login Button */}
         <button type="submit" class="bg-red-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full">Log in</button>
       </form>
-      {/* Log in  Link */}
+      {/* Sign Up Link */}
       <div class="mt-6 text-green-500 text-center">
         <Link to="/signup" class="hover:underline">Sign Up Here</Link> 
       </div>
