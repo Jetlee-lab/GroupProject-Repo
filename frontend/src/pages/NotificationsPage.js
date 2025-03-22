@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 
 const Notifications = () => {
   const [notifications] = useState([
@@ -10,7 +10,21 @@ const Notifications = () => {
       type: "Issue Update",
     },
     {
-      id: 2,
+      id: 8,
+      message:
+        'New comment added to your issue "Technical issue with AITS platform".',
+      date: "16/03/2025",
+      type: "Comment",
+    },
+    {
+      id: 6,
+      message:
+        'New comment added to your issue "Technical issue with AITS platform".',
+      date: "16/03/2025",
+      type: "Comment",
+    },
+    {
+      id: 7,
       message:
         'New comment added to your issue "Technical issue with AITS platform".',
       date: "16/03/2025",
@@ -20,21 +34,16 @@ const Notifications = () => {
       id: 3,
       message: 'Your issue "Conflicting exam schedule " has been updated.',
       date: "15/03/2025",
-      type: "Issue Update",
+      type: "Issue Upload",
     },
-    {
-      id: 4,
-      message: 'Your issue "Missing exam marks " has been updated.',
-      date: "18/03/2025",
-      type: "Issue Update",
-    },
+    
   ]);
 
   return (
     //Displaying the notifications components
-    <div className="container mx-auto p-6 bg-gray-50">
+    <div className=" mx-auto p-6 bg-blue-100">
       <h1 className="text-3xl font-semibold text-black-800 mb-6">
-        {" "}
+       
         Notifications
       </h1>
       <div className="space-y-4">
@@ -42,9 +51,10 @@ const Notifications = () => {
           <div
             key={notification.id}
             className={`p-4 border-l-4 rounded-lg ${
-              notification.type === "Issue Update"
-                ? "bg-blue-100 border-blue-500"
-                : "bg-yellow-100 border-yellow-500"
+              //Conditional rendering of the notification type  based on the type of notification
+              notification.type === "Issue Update" ? "bg-blue-200 border-blue-500":
+              notification.type ===  "Comment" ? "bg-yellow-100 border-yellow-500":
+              notification.type ==="Issue Upload" ? "bg-gray-200 border-green-500" : ""                
             }`}
           >
             {/*Displaying the notification type */}

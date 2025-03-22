@@ -1,9 +1,9 @@
 import React from "react";
 
-const CarouselSlide = ({ imgSrc, primaryText, secondaryTest, alt }) => {
+const CarouselSlide = ({ imgSrc, primaryText, secondaryText, alt }) => {
   return (
     <>
-      <div className=" bg-white rounded-lg shadow-md">
+      <div className=" bg-white rounded-lg  shadow-md">
         <img
           src={imgSrc}
           alt={alt}
@@ -11,7 +11,7 @@ const CarouselSlide = ({ imgSrc, primaryText, secondaryTest, alt }) => {
         />
         <h2 className="text-xl font-semibold mb-2">{primaryText}</h2>
         <p className="text-gray-600">
-        {secondaryTest}
+        {secondaryText}
         </p>
       </div>
     </>
