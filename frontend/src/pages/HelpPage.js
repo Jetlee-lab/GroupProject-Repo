@@ -10,7 +10,7 @@ const HelpPage = () => {
       <HelpHeader />
       <UserGuide />
       <FAQ />       
-      {/* <ContactSupport />         */}
+       <ContactSupport />         
     </div>
   )
 }
