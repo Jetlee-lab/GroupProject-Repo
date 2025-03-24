@@ -13,7 +13,7 @@ const HomePage = () => {
   const handlePrev = () => setCurrentSlide((prev) => (prev === 0 ? 3 : prev - 1));
 
   return (
-    <div className="container flex flex-col items-center bg-blue-100 text-gray-900 p-6">
+    <div className="flex flex-col items-center bg-blue-100 text-gray-900 p-6">
       <h1 className="text-4xl font-bold mb-6 text-center">Streamline Academic & Issue Tracking with Ease!</h1>
 
       <div className="relative w-full ">

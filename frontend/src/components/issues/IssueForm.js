@@ -53,13 +53,7 @@ const IssueForm = () => {
           onChange={handleChange}
           required
         />
-        <SelectInput
-          label="Priority"
-          name="priority"
-          value={formData.priority}
-          onChange={handleChange}
-          options={["Low", "Medium", "High"]}
-        />
+        
       </div>
 
       {/* Section 2: Category and Course Details */}
