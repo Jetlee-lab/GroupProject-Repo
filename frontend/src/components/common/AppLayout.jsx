@@ -1,13 +1,26 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./Header";
-import SideBar from "./SideBar";
+import SideBar from "./SideBar"; 
 
 function AppLayout() {
+  const location = useLocation();
+
+  // Check if the current path is one of the excluded pages
+  const excludedPaths = ["/", "/login", "/signup"];
+  const shouldShowSidebar = !excludedPaths.includes(location.pathname);
+
   return (
-    <div className="grid grid-cols-[210px_auto] grid-rows-[1fr_auto] h-dvh overflow-hidden">
+    <div
+      className={`grid ${
+        shouldShowSidebar
+          ? "grid-cols-[210px_auto] grid-rows-[1fr_auto]"
+          : "grid-rows-[1fr_auto]"
+      } h-dvh overflow-hidden`}
+    >
       <Header />
-      <SideBar />
-      <main className="overflow-y-scroll col-start-2 row-start-2">
+      {shouldShowSidebar && <SideBar />} 
+      {/* Render the sidebar only if not on excluded pages */}
+      <main className={`${shouldShowSidebar ? "col-start-2" : ""} overflow-y-scroll`}>
         <Outlet />
       </main>
     </div>
