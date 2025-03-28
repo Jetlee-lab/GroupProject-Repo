@@ -183,11 +183,11 @@ Each issue contains information about:
       </div>
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         {/*Table for displaying issues */}
-        <table className="min-w-full table-auto border-collapse">
+        <table className="min-w-full table-auto border-separate border-spacing-0">
           <thead className="bg-blue-500 text-white">
             <tr>
               <th className="px-6 py-3 text-left">ID</th>
-              <th className="px-6 py-3 text-centre">Title</th>
+              <th className="px-6 py-3 text-center">Title</th>
               <th className="px-6 py-3 text-left">Category</th>
               <th className="px-6 py-3 text-left">Status</th>
               <th className="px-6 py-3 text-left">Reported By</th>
@@ -196,7 +196,7 @@ Each issue contains information about:
           </thead>
           <tbody>
             {issues.map((issue) => (
-              <tr key={issue.id} className="border-t hover:bg-gray-100">
+              <tr key={issue.id} className="border-b hover:bg-gray-100">
                 <td className="px-6 py-4">{issue.id}</td>
                 <td className="px-6 py-4">{issue.title}</td>
                 <td className="px-6 py-4">{issue.category}</td>
