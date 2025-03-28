@@ -1,8 +1,21 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import AITS_Logo from '../components/images/logo2.jpg';
 import { Link } from 'react-router-dom';
 
 const SignUpPage = () => {
+  const navigate = useNavigate(); 
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+
+    // Performing sign-up logic here
+    console.log('User signed up successfully!');
+
+    // Redirecting to the Landing Page after successful sign-up
+    navigate('/landing');
+  };
+
   return (
     <div className="bg-sky-100 flex h-screen">
       {/* Left: Image */}
@@ -18,7 +31,7 @@ const SignUpPage = () => {
       <div className="p-5 w-full lg:w-1/2 flex items-center justify-center">
         <div className="w-full max-w-md">
           <h1 className="text-2xl font-semibold mt-20 mb-6 text-center">Sign Up</h1>
-          <form action="#" method="">
+          <form onSubmit={handleSignUp}>
             {/* Full Name */}
             <div className="mb-4">
               <label htmlFor="fullName" className="block text-gray-600">
