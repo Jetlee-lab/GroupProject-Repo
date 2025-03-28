@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import IssueForm from "./components/issues/IssueForm";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AppLayout from "./components/common/AppLayout";
+import LandingPage from "./pages/LandingPage";  
 
 function App() {
   const [darkMode, setDarkMode] = React.useState(false);
@@ -28,6 +29,7 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/add-issue" element={<IssueForm />} />
+          <Route path="/landing" element={<LandingPage />} />
         </Route>
       </Routes>
     </Router>
