@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../images/Logo.webp';
+import logo from '../images/MukLogo.png';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 

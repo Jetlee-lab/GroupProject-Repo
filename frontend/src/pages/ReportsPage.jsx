@@ -178,12 +178,12 @@ Each issue contains information about:
           onChange={handleSearchInput}
           type="text"
           placeholder="Search Issues..."
-          className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-black  border-gray-300 p-2 w-664  outline-none  "
+          className="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-black  border-gray-300 p-2 w-64  outline-none  "
         />
       </div>
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         {/*Table for displaying issues */}
-        <table className="min-w-full table-auto">
+        <table className="min-w-full table-auto border-collapse">
           <thead className="bg-blue-500 text-white">
             <tr>
               <th className="px-6 py-3 text-left">ID</th>
