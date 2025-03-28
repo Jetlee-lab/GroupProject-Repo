@@ -8,8 +8,14 @@ class Category(models.Model):
     name = models.CharField(unique=True, max_length=32)
     description = models.CharField(max_length=256, blank=False)
 
+    def __str__(self):
+        return "%s" % self.name
+
 
 class Issue(models.Model):
+
+    class Meta:
+        ordering = ('-created_at', )
 
     STATUS_OPEN = 1
     STATUS_REVIEW = 2
@@ -66,21 +72,65 @@ class Issue(models.Model):
     def __str__(self):
         return "%s" % self.title
 
-    class Meta:
-        ordering = ('-created_at', )
 
+def get_attachment_path(instance, filename):
+    import uuid
+    # return "attachments/{0}".format(uuid.uuid4()
+    return str(uuid.uuid4())
+
+def get_attachment_storage():
+    from django.core.files.storage import FileSystemStorage
+    from django.conf import settings
+    from os import path
+
+    location = path.join(settings.MEDIA_ROOT, 'attachments')
+    base_url = path.join(settings.MEDIA_URL, 'attachments')
+
+    return FileSystemStorage(location=location, base_url=base_url)
+        
+
+# class Att(models.Model):
+#     fh = models.FileField(upload_to=get_attachment_path, storage=get_attachment_storage)
+#     name = models.CharField(max_length=256, blank=True)
+# 
+#     def save(self, *args, **kwargs):
+#         if self.fh:
+#             self.name = self.fh.name
+#             self.size = self.fh.size
+#             super().save(*args, **kwargs)
+#         else:
+#             print('called save: else block')
+# 
+#     def delete(self, *args, **kwargs):
+#         super().delete(*args, **kwargs)
+#         self.fh.delete()
+# 
+#     def __str__(self):
+#         name = "%s" % self.fh
+#         return name.rpartition('/')[-1] or name
 
 class Attachment(models.Model):
-    file = models.UUIDField(primary_key=True)
+    # file = models.UUIDField(primary_key=True)
+    file = models.FileField(unique=True, upload_to=get_attachment_path, storage=get_attachment_storage, max_length=256)
     issue = models.ForeignKey(Issue, related_name='attachments', on_delete=models.CASCADE) 
-    name = models.CharField(max_length=256, blank=False)
+    name = models.CharField(max_length=1024, blank=False, editable=False)
     size = models.PositiveBigIntegerField()
     type = models.CharField(max_length=128, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        # TODO: Check for filetype (python-magic)
+        if self.file:
+            self.name = self.file.name
+            self.size = self.file.size
+            super().save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
-        # TODO: Delete coresponding file
         super().delete(*args, **kwargs)
+        self.file.delete()
+
+    def __str__(self):
+        return "%s" % self.file
 
 
 class IssueLog(models.Model):
@@ -101,5 +151,5 @@ class IssueLog(models.Model):
     escalation_level = models.PositiveSmallIntegerField(
         choices=Issue.ESCALATION_CHOICES, default=Issue.ESCALATION_L0
     )
-    attachment = models.UUIDField(null=True)
+    attachments = models.JSONField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)

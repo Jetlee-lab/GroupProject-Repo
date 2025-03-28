@@ -704,6 +704,7 @@ class AttachmentFixture:
     def __init__(self):
         self.registry = REGISTRY.setdefault(self.__class__, {
             'files': [],
+            'pks': [],
         }) 
 
     EXTS = {
@@ -779,13 +780,16 @@ class AttachmentFixture:
 
         issue_ids = [i['pk'] for i in issues]
         ret = []
-        for i in range(count):
-            issue = self.generate_attachment(issue_ids)
+        pks = len(self.registry['pks'])
+
+        for i in range(pks, pks + count):
+            attachment = self.generate_attachment(issue_ids)
             ret.append({
                 'model': self.model,
-                'pk': issue['file'],
-                'fields': issue,
+                'pk': i+1, # issue['file'],
+                'fields': attachment,
             })
+            self.registry['pks'].append(i+1)
         return ret
 
 
@@ -936,7 +940,7 @@ def main():
         *staff, *students, *categories, *issues,
         *attachments, *issuelogs
     ]
-    json.dump(data, sys.stdout, indent=2)
+    json.dump(data, sys.stdout) #, indent=2)
 
 
 if __name__ == '__main__':

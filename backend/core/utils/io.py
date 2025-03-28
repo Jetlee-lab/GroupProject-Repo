@@ -10,7 +10,7 @@ from .common import META_ATTR, EXEC_HANDLER_ATTR
 def custom_exception_handler(exc, context):
     # Call REST framework's default exception handler first,
     # to get the standard error response.
-    print(context)
+    # print(context)
     response = exception_handler(exc, context)
     # *ViewSet.finalize_response() guard
     if response is not None:
@@ -57,7 +57,8 @@ def format_response(response, meta={}, success=None):
 class IOMixin(viewsets.GenericViewSet):
     def finalize_response(self, request, response, *args, **kwargs):
         response = super().finalize_response(request, response, *args, **kwargs)
-        print('__app_meta:', hasattr(response, '__app_meta'))
+        # print('reqHEADERS:', request.headers)
+        # print('reqPOST:', request.POST)
 
         if hasattr(response, EXEC_HANDLER_ATTR):
             return response
