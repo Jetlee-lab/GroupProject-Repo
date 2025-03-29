@@ -5,6 +5,11 @@ import CarouselSlide from "../components/CarouselSlide";
 import FeatureCard from "../components/FeatureCard";
 import Footer from "../components/common/Footer";
 import { Link } from "react-router-dom";
+import issueTrackingImage from "../components/images/issuetracking.jpg";
+import notificationsImage from "../components/images/notifications.png";
+import reportsImage from "../components/images/reports.png";
+import userImage from "../components/images/user.png";
+
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -16,7 +21,7 @@ const HomePage = () => {
     <div className="flex flex-col items-center bg-blue-100 text-gray-900 p-6">
       <h1 className="text-4xl font-bold mb-6 text-center">Streamline Academic & Issue Tracking with Ease!</h1>
 
-      <div className="relative w-full ">
+      <div className="relative w-full  ">
         {/* Carousel */}
         <Carousel 
           selectedItem={currentSlide}
@@ -28,13 +33,13 @@ const HomePage = () => {
           autoPlay
           className="rounded-lg shadow-lg"
         >
-          <CarouselSlide imgSrc="https://plus.unsplash.com/premium_photo-1682310075673-b408eb1ca6fd?q=80&w=2112" alt="Issue Tracking" primaryText="📌 Issue Tracking" secondaryText="Report and resolve academic concerns quickly and efficiently." /> 
+          <CarouselSlide imgSrc={issueTrackingImage} alt="Issue Tracking" primaryText="📌 Issue Tracking" secondaryText="Report and resolve academic concerns quickly and efficiently." /> 
 
-          <CarouselSlide imgSrc="https://plus.unsplash.com/premium_photo-1682309524785-cf2288f7b544?q=80&w=2112" alt="Notifications" primaryText="🔔 Notifications" secondaryText="Get real-time updates on issue resolutions and academic progress." /> 
+          <CarouselSlide imgSrc={notificationsImage} alt="Notifications" primaryText="🔔 Notifications" secondaryText="Get real-time updates on issue resolutions and academic progress." /> 
 
-          <CarouselSlide imgSrc="https://images.unsplash.com/flagged/photo-1558963675-94dc9c4a66a9?q=80&w=1972" alt="Reports & Insights" primaryText="📊 Reports & Insights" secondaryText="View academic data and issue tracking reports in one place." />
+          <CarouselSlide imgSrc={reportsImage} alt="Reports & Insights" primaryText="📊 Reports & Insights" secondaryText="View academic data and issue tracking reports in one place." />
 
-          <CarouselSlide imgSrc="https://images.unsplash.com/photo-1593698054469-2bb6fdf4b512?q=80&w=1974" alt="User Roles" primaryText="👤 User Roles" secondaryText="Custom dashboards for students, faculty, and administrators." />
+          <CarouselSlide imgSrc={userImage} alt="User Roles" primaryText="👤 User Roles" secondaryText="Custom dashboards for students, faculty, and administrators." />
         </Carousel>
 
         {/* Navigation Buttons */}
