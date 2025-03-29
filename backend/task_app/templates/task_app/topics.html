@@ -1,0 +1,14 @@
+{% extends 'task_app/base.html' %}
+
+{% block title %}Topics{% endblock %}
+
+{% block content %}
+    <h2>Topics</h2>
+    <ul>
+        {% for topic in topics %}
+            <li><a href="{% url 'task_app:topic' topic.id %}">{{ topic.name }}</a></li>
+        {% empty %}
+            <p>No topics have been added yet.</p>
+        {% endfor %}
+    </ul>
+{% endblock %}
