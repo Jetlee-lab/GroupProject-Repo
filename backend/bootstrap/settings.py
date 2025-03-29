@@ -16,15 +16,18 @@ import os, environ
 env = environ.Env(
     DEBUG=(bool, False),
     ALLOWED_HOSTS=(tuple),
+    
     CORS_ALLOWED_ORIGINS=(tuple),
     CORS_ALLOW_ALL_ORIGINS=(bool, False),
     CORS_ALLOW_CREDENTIALS=(bool, False),
     CSRF_TRUSTED_ORIGINS=(tuple),
+
+    EMAIL_PORT=(tuple),
+    EMAIL_USE_TLS=(bool),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
@@ -240,15 +243,15 @@ SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
             'client_id': env('GOOGLE_CLIENT_ID'),
-            'secret': env('GOOGLE_SECRET'),
+            'secret': env('GOOGLE_CLIENT_SECRET'),
         }
     },
-    # 'github': {
-    #     'APP': {
-    #         'client_id': env('GITHUB_CLIENT_ID'),
-    #         'secret': env('GITHUB_CLIENT_SECRET'),
-    #     }
-    # }
+    'github': {
+        'APP': {
+            'client_id': env('GITHUB_CLIENT_ID'),
+            'secret': env('GITHUB_CLIENT_SECRET'),
+        }
+    }
 }
 
 SOCIALACCOUNT_QUERY_EMAIL = True
