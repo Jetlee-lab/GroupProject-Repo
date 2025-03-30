@@ -46,6 +46,15 @@ const IssueForm = () => {
           onChange={handleChange}
           required
         />
+
+        <TextInput
+          label="Course unit"
+          name="course unit"
+          value={formData.courseunit}
+          onChange={handleChange}
+          required
+        />
+        
         <TextareaInput
           label="Description"
           name="description"
@@ -53,7 +62,6 @@ const IssueForm = () => {
           onChange={handleChange}
           required
         />
-        
       </div>
 
       {/* Section 2: Category and Course Details */}
