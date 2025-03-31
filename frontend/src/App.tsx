@@ -6,6 +6,9 @@ import PricingPage from "@/pages/pricing";
 import BlogPage from "@/pages/blog";
 import AboutPage from "@/pages/about";
 import { Provider } from "@/provider.tsx";
+import { Suspense } from "react";
+import Dashbord from "./pages/dashbord";
+import { LogIn, SignUp } from "./routes";
 
 const router = createBrowserRouter([
   // {
@@ -56,9 +59,27 @@ const router = createBrowserRouter([
     Component: AboutPage,
   },
   {
-    path: "dashboard",
-    Component: Dashbord
-  }
+    path: "/dashboard",
+    Component: Dashbord,
+    // Component: () => (
+    //   <Suspense fallback={<div>Loading Dashboard...</div>}>
+    //     <Dashbord />
+    //   </Suspense>
+    // ),
+  },
+  {
+    path: "/account/*",
+    children: [
+      {
+        path: "login",
+        Component: LogIn,
+      },
+      {
+        path: "signup",
+        Component: SignUp,
+      },
+    ],
+  },
 ]);
 
 function App() {

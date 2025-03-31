@@ -1,0 +1,30 @@
+{
+	"folders": [
+		{
+			"path": "../../../.."
+		},
+		{
+			"path": "../../../../../../../Downloads/heroui"
+		},
+		{
+			"path": "../../../../../../../Downloads/remix.run"
+		},
+		{
+			"path": "../../../../../../../Downloads/student-issue-tracker (2)"
+		}
+	],
+	"settings": {
+		"sqltools.connections": [
+			{
+				"previewLimit": 50,
+				"server": "localhost",
+				"port": 5432,
+				"driver": "PostgreSQL",
+				"name": "postgres",
+				"group": "postgres",
+				"database": "aits",
+				"username": "postgres"
+			}
+		]
+	}
+}
