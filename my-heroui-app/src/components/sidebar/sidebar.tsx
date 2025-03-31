@@ -294,32 +294,30 @@ export function BNavItem({ icon, label, href = "#", isActive = false, endContent
 }
 
 // NavItem component: Icon remains fixed while the text label animates.
-const CNavItem = ({ isOpen, icon, label }) => {
+const CNavItem = ({ isOpen, icon, label, endContent, isActive = false, showLabel = true}) => {
   const variants = {
     collapsed: { opacity: 0}, // left: "-100%"}, //scaleX: 0, marginLeft: 0 },
     expanded: { opacity: 1}, // left: 0} //scaleX: 1, marginLeft: 8 },
   };
 
   return (
-    <div className="flex items-start min-h-14 mx-1 py-2 pl-2 rounded-md bg-red-100">
+    <div className="flex items-start min-h-24 mx-1 py-2 pl-2 rounded-md bg-red-100">
       {/* Icon is always visible */}
       <div className="felx items-centerjustify-center border-red-900 border-4">
         {icon}
       </div>
       {/* The label animates using a scale transform.
           transformOrigin left ensures the label expands from left-to-right without pushing the icon. */}
-      <div className="flex justify-between">
-        <motion.span
+      <motion.div
         animate={isOpen ? "expanded" : "collapsed"}
-        className="ml-4 orign-left whitespace-nowrap block"
+        className="mx-4 orign-left whitespace-nowrap inline-bloc flex flex-row justify-between w-full bg-blue-100"
         initial="collapsed"
         transition={{ duration: 0.3 }}
         variants={variants}
       >
-        {label}
-      </motion.span>
-      <span className="">H</span>
-      </div>
+        <div className="">{label}</div>
+        {showLabel && endContent}
+      </motion.div>
     </div>
   );
 };
