@@ -134,7 +134,11 @@ export function Sidebar() {
             icon={<LayoutGrid size={18} />}
             label="Projects"
             showLabel={isOpen}
-          />
+          /><CNavItem
+          isOpen={isOpen}
+          icon={<Home size={32} strokeWidth={2} />}
+          label="Home"
+        />
           <NavItem
             endContent={
               <button className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center">
@@ -216,20 +220,13 @@ const ANavItem = ({ isActive, icon, label, showLabel }) => {
         {icon}
         {showLabel && <span>{label}</span>}
       </div> */}
-                <div className="flex items-center justify-center w-10 h-10 mx-3 bg-green-200">{icon}</div>
-                <AnimatePresence initial={false}>
-            {showLabel && (
-              <motion.span
-                animate={{ opacity: 1, width: "100%", x: 0 }}
-                className="whitespace-nowrap overflow-hidden"
-                exit={{ opacity: 0, width: 0, x: -20 }}
-                initial={{ opacity: 0, width: 0, x: -20 }}
-                transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
-              >
-                {label}
-              </motion.span>
-            )}
-          </AnimatePresence>
+      <div className="h-10 px- flex flex-row w-full">
+        <div className="flex items-center justify-center w-10 h-10 mx-3 bg-green-200">
+          {icon}
+        </div>
+        <div className="">Heelo</div>
+        </div>
+
     </motion.div>
   );
 };
@@ -293,5 +290,36 @@ export function BNavItem({ icon, label, href = "#", isActive = false, endContent
         )}
       </AnimatePresence> */}
     </div>
-  )
+  );
 }
+
+// NavItem component: Icon remains fixed while the text label animates.
+const CNavItem = ({ isOpen, icon, label }) => {
+  const variants = {
+    collapsed: { opacity: 0}, // left: "-100%"}, //scaleX: 0, marginLeft: 0 },
+    expanded: { opacity: 1}, // left: 0} //scaleX: 1, marginLeft: 8 },
+  };
+
+  return (
+    <div className="flex items-start min-h-14 mx-1 py-2 pl-2 rounded-md bg-red-100">
+      {/* Icon is always visible */}
+      <div className="felx items-centerjustify-center border-red-900 border-4">
+        {icon}
+      </div>
+      {/* The label animates using a scale transform.
+          transformOrigin left ensures the label expands from left-to-right without pushing the icon. */}
+      <div className="flex justify-between">
+        <motion.span
+        animate={isOpen ? "expanded" : "collapsed"}
+        className="ml-4 orign-left whitespace-nowrap block"
+        initial="collapsed"
+        transition={{ duration: 0.3 }}
+        variants={variants}
+      >
+        {label}
+      </motion.span>
+      <span className="">H</span>
+      </div>
+    </div>
+  );
+};
