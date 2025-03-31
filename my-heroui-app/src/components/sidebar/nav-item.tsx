@@ -39,7 +39,7 @@ export function NavItem({ icon, label, href = "#", isActive = false, endContent,
             {showLabel && (
               <motion.span
                 initial={{ opacity: 0, width: 0, x: -20 }}
-                animate={{ opacity: 1, width: "auto", x: 0 }}
+                animate={{ opacity: 1, width: "100%", x: 0 }}
                 exit={{ opacity: 0, width: 0, x: -20 }}
                 transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
                 className="whitespace-nowrap overflow-hidden"

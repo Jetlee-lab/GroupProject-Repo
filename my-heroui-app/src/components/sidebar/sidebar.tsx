@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, delay } from "framer-motion";
 import {
   Home,
   LayoutGrid,
@@ -29,11 +29,11 @@ export function Sidebar() {
 
   return (
     <motion.aside
-      className="h-screen bg-black border-r border-gray-800 overflow-hidden flex flex-col"
-      initial={false}
       animate={{
         width: isOpen ? "280px" : "64px",
       }}
+      className="h-screen bg-gray-500 border-r border-gray-800 overflow-hidden flex flex-col"
+      initial={false}
       transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1.0] }}
     >
       {/* Logo section - fixed height and positioning */}
@@ -45,10 +45,10 @@ export function Sidebar() {
         <AnimatePresence initial={false}>
           {isOpen && (
             <motion.span
-              className="font-bold text-lg overflow-hidden whitespace-nowrap ml-3"
-              initial={{ opacity: 0, width: 0, x: -20 }}
               animate={{ opacity: 1, width: "auto", x: 0 }}
+              className="font-bold text-lg overflow-hidden whitespace-nowrap ml-3"
               exit={{ opacity: 0, width: 0, x: -20 }}
+              initial={{ opacity: 0, width: 0, x: -20 }}
               transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
             >
               ACME
@@ -61,16 +61,16 @@ export function Sidebar() {
       <div className="h-[72px] flex items-center px-4">
         <div className="flex-shrink-0 relative w-10 h-10 rounded-full overflow-hidden border border-gray-600">
           {/* <Image src="/placeholder.svg?height=40&width=40" alt="User avatar" width={40} height={40} /> */}
-          <img src="#" alt="hello" />
+          <img alt="hello" src="#" />
         </div>
 
         <AnimatePresence initial={false}>
           {isOpen && (
             <motion.div
-              className="flex flex-col overflow-hidden ml-3"
-              initial={{ opacity: 0, width: 0, x: -20 }}
               animate={{ opacity: 1, width: "auto", x: 0 }}
+              className="flex flex-col overflow-hidden ml-3"
               exit={{ opacity: 0, width: 0, x: -20 }}
+              initial={{ opacity: 0, width: 0, x: -20 }}
               transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
             >
               <span className="font-semibold whitespace-nowrap">John Doe</span>
@@ -84,20 +84,16 @@ export function Sidebar() {
 
       {/* Search icon (only in collapsed mode) */}
       <AnimatePresence initial={false}>
-        {!isOpen && (
+        {(
           <motion.div
-            className="flex justify-center py-2"
-            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            className="flex justify-center py-2"
             exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
             <button className="text-gray-400 hover:text-white">
               <Search size={20} />
-              {/* <Icon
-                className="pointer-events-none text-2xl text-default-400"
-                icon="solar:eye-closed-linear"
-              /> */}
             </button>
           </motion.div>
         )}
@@ -110,109 +106,89 @@ export function Sidebar() {
           !isOpen && "scrollbar-hide", // Hide scrollbar when collapsed
         )}
       >
-        <NavSection title="Overview" showTitle={isOpen}>
+        <NavSection showTitle={isOpen} title="Overview">
           <NavItem
-            icon={
-              <Home size={18} />
-              // <Icon
-              //   className="pointer-events-none text-2xl text-default-400"
-              //   icon="solar:eye-closed-linear"
-              // />
-            }
-            label="Home"
             isActive
+            icon={<Home size={18} />}
+            label="Home"
             showLabel={isOpen}
           />
-          <NavItem
-            icon={
-              <LayoutGrid size={18} />
-            }
-            label="Projects"
+          <ANavItem
+            isActive
+            icon={<Home size={18} />}
+            label="Home"
             showLabel={isOpen}
-            endContent={
-              <button className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center">
-                {/* <Plus size={14} /> */}
-                <Icon
-                  className="pointer-events-none text-2xl text-default-400"
-                  icon="solar:eye-closed-linear"
-                />
-              </button>
-            }
           />
+          <BNavItem
+          isActive
+          icon={<Home size={18} />}
+          label="Home"
+          showLabel={isOpen}
+        />
           <NavItem
-            icon={
-              <ClipboardList size={18} />
-            }
-            label="Tasks"
-            showLabel={isOpen}
             endContent={
               <button className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center">
                 <Plus size={14} />
               </button>
             }
-          />
-          <NavItem
-            icon={
-              <Users size={18} />
-            }
-            label="Team"
+            icon={<LayoutGrid size={18} />}
+            label="Projects"
             showLabel={isOpen}
           />
           <NavItem
-            icon={
-              <Timer size={18} />
+            endContent={
+              <button className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center">
+                <Plus size={14} />
+              </button>
             }
-            label="Tracker"
+            icon={<ClipboardList size={18} />}
+            label="Tasks"
             showLabel={isOpen}
+          />
+          <NavItem icon={<Users size={18} />} label="Team" showLabel={isOpen} />
+          <NavItem
             endContent={
               <span className="text-xs bg-blue-900/50 text-blue-400 px-2 py-0.5 rounded-md">
                 New
               </span>
             }
+            icon={<Timer size={18} />}
+            label="Tracker"
+            showLabel={isOpen}
           />
         </NavSection>
 
         {/* Divider */}
         <div className="mx-4 my-2 border-t border-gray-800" />
 
-        <NavSection title="Organization" showTitle={isOpen}>
+        <NavSection showTitle={isOpen} title="Organization">
           <NavItem
-            icon={
-              <PieChart size={18} />
-            }
+            icon={<PieChart size={18} />}
             label="Cap Table"
             showLabel={isOpen}
           />
           <NavItem
-            icon={
-              <LineChart size={18} />
-            }
+            icon={<LineChart size={18} />}
             label="Analytics"
             showLabel={isOpen}
           />
           <NavItem
-            icon={
-              <Gift size={18} />
-            }
-            label="Perks"
-            showLabel={isOpen}
             endContent={
               <span className="text-xs bg-blue-900/50 text-blue-400 px-2 py-0.5 rounded-md">
                 3
               </span>
             }
+            icon={<Gift size={18} />}
+            label="Perks"
+            showLabel={isOpen}
           />
           <NavItem
-            icon={
-              <Receipt size={18} />
-            }
+            icon={<Receipt size={18} />}
             label="Expenses"
             showLabel={isOpen}
           />
           <NavItem
-            icon={
-              <Settings size={18} />
-            }
+            icon={<Settings size={18} />}
             label="Settings"
             showLabel={isOpen}
           />
@@ -220,4 +196,102 @@ export function Sidebar() {
       </div>
     </motion.aside>
   );
+}
+
+
+const ANavItem = ({ isActive, icon, label, showLabel }) => {
+  const variants = {
+    expanded: { opacity: 1, width: "100%", transition: { duration: 0.5 } },
+    collapsed: { opacity: 1, width: "auto", transition: { duration: 0.5 } },
+  };
+
+  return (
+    <motion.div
+      initial="collapsed"
+      animate={showLabel ? "expanded" : "collapsed"}
+      variants={variants}
+      // style={{ overflow: "hidden" }}
+    >
+      {/* <div className={`nav-item flex felx-row bg-red-200 ${isActive ? "active" : ""}`}>
+        {icon}
+        {showLabel && <span>{label}</span>}
+      </div> */}
+                <div className="flex items-center justify-center w-10 h-10 mx-3 bg-green-200">{icon}</div>
+                <AnimatePresence initial={false}>
+            {showLabel && (
+              <motion.span
+                animate={{ opacity: 1, width: "100%", x: 0 }}
+                className="whitespace-nowrap overflow-hidden"
+                exit={{ opacity: 0, width: 0, x: -20 }}
+                initial={{ opacity: 0, width: 0, x: -20 }}
+                transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
+              >
+                {label}
+              </motion.span>
+            )}
+          </AnimatePresence>
+    </motion.div>
+  );
+};
+
+export function BNavItem({ icon, label, href = "#", isActive = false, endContent, showLabel = true }: NavItemProps) {
+  const variants = {
+    expanded: { opacity: 1, width: "100%", transition: { duration: 0.5 } },
+    collapsed: { opacity: 1, width: "auto", transition: { duration: 0.5 } },
+  };
+
+  return (
+    <div className="h-10 px-3 relative">
+      {/* <Link href={href} passHref> */}
+      <a href={href}>
+        <motion.div
+          initial="collapsed"
+          // animate={{
+          //   width: showLabel ? "calc(100% - 24px)" : "40px",
+          // }}
+          animate={showLabel ? "expanded" : "collapsed"}
+          variants={variants}
+          className={cn(
+            "absolute inset-0 mx-3 flex items-center rounded-sm",
+            isActive ? "bg-gray-800 text-white" : "bg-transparent text-gray-300 hover:bg-gray-800/50",
+          )}
+          title={!showLabel ? label : undefined}
+          // transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1.0] }}
+        >
+          {/* Fixed position for the icon */}
+          <div className="flex items-center justify-center w-10 h-10">{icon}</div>
+
+          {/* Text slides in/out from the icon */}
+          {/* <AnimatePresence initial={false}>
+            {showLabel && (
+              <motion.span
+                animate={{ opacity: 1, width: "100%", x: 0 }}
+                className="whitespace-nowrap overflow-hidden"
+                exit={{ opacity: 0, width: 0, x: -20 }}
+                initial={{ opacity: 0, width: 0, x: -20 }}
+                transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
+              >
+                {label}
+              </motion.span>
+            )}
+          </AnimatePresence> */}
+        </motion.div>
+        {/* </Link> */}
+      </a>
+
+      {/* <AnimatePresence initial={false}>
+        {showLabel && endContent && (
+          <motion.div
+            animate={{ opacity: 1, x: 0 }}
+            className="absolute right-6 top-1/2 -translate-y-1/2 z-10"
+            exit={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
+          >
+            {endContent}
+          </motion.div>
+        )}
+      </AnimatePresence> */}
+    </div>
+  )
 }
