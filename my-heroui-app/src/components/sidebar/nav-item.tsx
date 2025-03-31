@@ -21,14 +21,14 @@ export function NavItem({ icon, label, href = "#", isActive = false, endContent,
       {/* <Link href={href} passHref> */}
       <a href={href}>
         <motion.div
+          animate={{
+            width: showLabel ? "calc(100% - 24px)" : "40px",
+          }}
           className={cn(
             "absolute inset-0 mx-3 flex items-center rounded-sm",
             isActive ? "bg-gray-800 text-white" : "bg-transparent text-gray-300 hover:bg-gray-800/50",
           )}
           title={!showLabel ? label : undefined}
-          animate={{
-            width: showLabel ? "calc(100% - 24px)" : "40px",
-          }}
           transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1.0] }}
         >
           {/* Fixed position for the icon */}
@@ -38,11 +38,11 @@ export function NavItem({ icon, label, href = "#", isActive = false, endContent,
           <AnimatePresence initial={false}>
             {showLabel && (
               <motion.span
-                initial={{ opacity: 0, width: 0, x: -20 }}
                 animate={{ opacity: 1, width: "100%", x: 0 }}
-                exit={{ opacity: 0, width: 0, x: -20 }}
-                transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
                 className="whitespace-nowrap overflow-hidden"
+                exit={{ opacity: 0, width: 0, x: -20 }}
+                initial={{ opacity: 0, width: 0, x: -20 }}
+                transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
               >
                 {label}
               </motion.span>
@@ -55,10 +55,10 @@ export function NavItem({ icon, label, href = "#", isActive = false, endContent,
       <AnimatePresence initial={false}>
         {showLabel && endContent && (
           <motion.div
-            className="absolute right-6 top-1/2 -translate-y-1/2 z-10"
-            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
+            className="absolute right-6 top-1/2 -translate-y-1/2 z-10"
             exit={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1.0] }}
           >
             {endContent}
