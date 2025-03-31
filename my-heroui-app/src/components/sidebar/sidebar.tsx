@@ -176,7 +176,7 @@ export function Sidebar() {
       >
         <NavSection showTitle={isOpen} title="Overview">
           {overview.map((item, index) => (
-            <NavItem key={index} {...item} />
+            <NavItem key={index} {...item} isOpen={isOpen} />
           ))}
         </NavSection>
 
@@ -185,7 +185,7 @@ export function Sidebar() {
 
         <NavSection showTitle={isOpen} title="Organization">
         {organization.map((item, index) => (
-            <NavItem key={index} {...item} />
+            <NavItem key={index} {...item} isOpen={isOpen} />
           ))}
         </NavSection>
       </div>
@@ -207,7 +207,8 @@ const NavItem = ({
     collapsed: { opacity: 0 }, // left: "-100%"}, //scaleX: 0, marginLeft: 0 },
     expanded: { opacity: 1 }, // left: 0} //scaleX: 1, marginLeft: 8 },
   };
-console.log({label,href,isActive, isOpen})
+  console.log({label,href,isActive, isOpen})
+
   return (
     <a href={href}>
       <div
@@ -219,19 +220,19 @@ console.log({label,href,isActive, isOpen})
         )}
       >
         {/* Icon is always visible */}
-        <div className="felx items-centerjustify-center border-red-900border-4">
+        <div className="flex items-centerjustify-center border-red-900border-4">
           {icon}
         </div>
         {/* The label animates using a scale transform.
           transformOrigin left ensures the label expands from left-to-right without pushing the icon. */}
         <motion.div
           animate={isOpen ? "expanded" : "collapsed"}
-          className="mx-4 orign-left whitespace-nowrap inline-bloc flex flex-row justify-between w-full bg-blue-100"
-          initial="collapsed"
+          className="mx-4 orign-left whitespace-nowrap flex flex-row justify-between w-full"
+          initial={"collapsed"}
           transition={{ duration: 0.3 }}
           variants={variants}
         >
-          <div className="text-white-100x">{label}</div>
+          <div className="font-medium">{label}</div>
           {showLabel && endContent}
         </motion.div>
       </div>

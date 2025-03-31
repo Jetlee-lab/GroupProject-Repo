@@ -16,6 +16,9 @@ function App() {
       <Route element={<BlogPage />} path="/blog" />
       <Route element={<AboutPage />} path="/about" />
       <Route element={<WithSidebar />} path="/wsb" />
+      {/* <Routes>
+        <Route path="/account" >
+      </Routes> */}
     </Routes>
   );
 }

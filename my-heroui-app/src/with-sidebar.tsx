@@ -27,7 +27,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isOpen } = useSidebar();
 
   return (
-    <div className="flex h-screen bg-violet-300 text-white overflow-hidden">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar />
       <motion.main
         className="flex-1 overflow-auto"
@@ -37,6 +37,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         }}
         transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1.0] }}
       >
+       
         {children}
       </motion.main>
     </div>
