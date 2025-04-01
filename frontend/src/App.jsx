@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HelpPage from "./pages/HelpPage";
 import NotificationsPage from "./pages/NotificationsPage";
-import LecturerReportsPage from "./pages/LecturerReportsPage";
+import LecturerReportPage from "./pages/LecturerReportPage";
 import StudentReportsPage from "./pages/StudentReportsPage";
 import AcademicRegistrarReportsPage from "./pages/AcademicRegistrarReportsPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -30,7 +30,7 @@ function App() {
           <Route path="" element={<HomePage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/lecturer-reports" element={<LecturerReportsPage/>} />
+          <Route path="/lecturer-reports" element={<LecturerReportPage/>} />
           <Route path="/student-reports" element={<StudentReportsPage/>} />
           <Route path="/registrar-reports" element={<AcademicRegistrarReportsPage/>} />
           <Route path="/settings" element={<SettingsPage darkMode={darkMode} toggleTheme={toggleTheme} />} />

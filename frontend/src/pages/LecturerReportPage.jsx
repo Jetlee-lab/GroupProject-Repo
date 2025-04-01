@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const LecturerReportsPage = () => {
+const LecturerReportPage = () => {
 
 
   const initIssues = [
@@ -228,4 +228,4 @@ const LecturerReportsPage = () => {
   );
 };
 
-export default LecturerReportsPage;
+export default LecturerReportPage;
