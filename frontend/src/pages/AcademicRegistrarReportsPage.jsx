@@ -23,7 +23,7 @@ Each issue contains information about:
       priority: "High",
       reportedBy: "Mulungi Martha",
       date: "15/03/2025",
-      lecturer: "Dr. Kato Musa",
+      lecturer: "Dr. Kato Musa", 
     },
     {
       id: 2,
