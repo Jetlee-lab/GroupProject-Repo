@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HelpPage from "./pages/HelpPage";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -7,9 +8,9 @@ import SettingsPage from "./pages/SettingsPage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import IssueForm from "./components/issues/IssueForm";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AppLayout from "./components/common/AppLayout";
-import LandingPage from "./pages/LandingPage";  
+import LandingPage from "./pages/LandingPage";
+import LecturerDashboard from "./components/LecturerDashboard";
 
 function App() {
   const [darkMode, setDarkMode] = React.useState(false);
@@ -17,6 +18,7 @@ function App() {
   const toggleTheme = () => {
     setDarkMode(!darkMode);
   };
+  
   return (
     <Router>
       <Routes>
@@ -30,6 +32,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/add-issue" element={<IssueForm />} />
           <Route path="/landing" element={<LandingPage />} />
+          <Route path="/dashboard/lecturer" element={<LecturerDashboard />} />
         </Route>
       </Routes>
     </Router>
