@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HelpPage from "./pages/HelpPage";
 import NotificationsPage from "./pages/NotificationsPage";
-import LecturerReportPage from "./pages/LecturerReportPage";
+import LecturerReportsPage from "./pages/LecturerReportsPage";
 import StudentReportsPage from "./pages/StudentReportsPage";
 import AcademicRegistrarReportsPage from "./pages/AcademicRegistrarReportsPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -17,11 +17,6 @@ import LandingPage from "./pages/LandingPage";
 
 
 function App() {
-  const [darkMode, setDarkMode] = React.useState(false);
-  
-  const toggleTheme = () => {
-    setDarkMode(!darkMode);
-  };
   
   return (
     <Router>
@@ -30,10 +25,10 @@ function App() {
           <Route path="" element={<HomePage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/lecturer-reports" element={<LecturerReportPage/>} />
+          <Route path="/lecturer-reports" element={<LecturerReportsPage/>} />
           <Route path="/student-reports" element={<StudentReportsPage/>} />
           <Route path="/registrar-reports" element={<AcademicRegistrarReportsPage/>} />
-          <Route path="/settings" element={<SettingsPage darkMode={darkMode} toggleTheme={toggleTheme} />} />
+          <Route path="/settings" element={<SettingsPage/>} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/landing" element={<LandingPage />} />
