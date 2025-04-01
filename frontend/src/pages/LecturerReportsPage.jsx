@@ -2,16 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const LecturerReportsPage = () => {
-  /*Initializing the 'issues' state with an array of objects representing different academic issues.  
-Each issue contains information about:
--id: A unique identifier for the issue
--title: A brief description of the issue
--category: The type of issue (that is to say; Course Material, Exams, Technical)
--status: The current status of the issue (that is to say; In Progress, Resolved, Open)
--priority: The priority level of the issue (that is to say; High, Medium, Low)
--reportedBy: The name of the person who reported the issue
--date: The date the issue was reported
- This state will be used to render a list of issues on the page and can be updated as necessary.*/
+
 
   const initIssues = [
     {
