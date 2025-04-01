@@ -20,7 +20,7 @@ function AppLayout() {
       <Header />
       {shouldShowSidebar && <SideBar />} 
       {/* Render the sidebar only if not on excluded pages */}
-      <main className={`${shouldShowSidebar ? "col-start-2" : ""} overflow-y-scroll`}>
+      <main className={`${shouldShowSidebar ? "col-start-3" : ""} overflow-y-scroll`}>
         <Outlet />
       </main>
     </div>
