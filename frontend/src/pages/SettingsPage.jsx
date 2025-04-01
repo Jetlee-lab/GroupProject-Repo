@@ -1,6 +1,6 @@
 import  { useState } from 'react';
 
-const SettingsPage = ({darkMode, toggleTheme}) => {
+const SettingsPage = () => {
   const [notifications, setNotifications] = useState(true);
 
 
@@ -9,20 +9,10 @@ const SettingsPage = ({darkMode, toggleTheme}) => {
   };
 
   return (
-    <div className={`p-10 w-full h-screen transition-all ${darkMode ? 'bg-gray-900 text-white' : 'bg-blue-100 text-black'}`}>
+    <div className={`p-10 w-full h-screen transition-all  'bg-blue-100 text-black'}`}>
       <h1 className='text-4xl font-bold mb-6'>Settings</h1>
       
-      {/* Theme Toggle */}
-      <div className='mb-4'>
-        <label className='flex items-center cursor-pointer'>
-          <input type='checkbox' className='hidden' checked={darkMode} onChange={toggleTheme} />
-          <div className='relative w-12 h-6 bg-gray-300 rounded-full shadow-inner'>
-            <div className={`absolute w-6 h-6 bg-white rounded-full shadow-md transition-transform ${darkMode ? 'translate-x-6' : ''}`}></div>
-          </div>
-          <span className='ml-3 text-lg'>{darkMode ? 'Dark Mode' : 'Light Mode'}</span>
-        </label>
-      </div>
-      
+ 
       {/* Notification Toggle */}
       <div className='mb-4'>
         <label className='flex items-center cursor-pointer'>
