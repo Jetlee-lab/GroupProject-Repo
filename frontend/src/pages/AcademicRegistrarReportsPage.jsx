@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+
 import { Link } from "react-router-dom";
 
-const Reports = () => {
+const AcademicRegistrarReportsPage = () => {
   /*Initializing the 'issues' state with an array of objects representing different academic issues.  
 Each issue contains information about:
 -id: A unique identifier for the issue
@@ -22,6 +23,7 @@ Each issue contains information about:
       priority: "High",
       reportedBy: "Mulungi Martha",
       date: "15/03/2025",
+      lecturer: "Dr. Kato Musa",
     },
     {
       id: 2,
@@ -31,6 +33,7 @@ Each issue contains information about:
       priority: "Medium",
       reportedBy: "Mukisa John",
       date: "14/03/2025",
+      lecturer: "Dr. Nansubuga Sarah",
     },
     {
       id: 3,
@@ -40,6 +43,7 @@ Each issue contains information about:
       priority: "Low",
       reportedBy: "Nakato Mary",
       date: "12/03/2025",
+      lecturer: "Dr. Okello James",
     },
     {
       id: 4,
@@ -49,6 +53,7 @@ Each issue contains information about:
       priority: "High",
       reportedBy: "Kizito Paul",
       date: "10/03/2025",
+      lecturer: "Dr. Amani Grace",
     },
     {
       id: 5,
@@ -58,6 +63,7 @@ Each issue contains information about:
       priority: "Medium",
       reportedBy: "Namulindwa Joan",
       date: "11/03/2025",
+      lecturer: "Dr. Kiggundu David",
     },
     {
       id: 6,
@@ -67,6 +73,7 @@ Each issue contains information about:
       priority: "High",
       reportedBy: "Ssebuguzi Brian",
       date: "09/03/2025",
+      lecturer: "Dr. Nansubuga Mary",
     },
     {
       id: 7,
@@ -76,6 +83,7 @@ Each issue contains information about:
       priority: "High",
       reportedBy: "Nabirye Susan",
       date: "08/03/2025",
+      lecturer: "Dr. Martin Kiboko",
     },
     {
       id: 8,
@@ -85,6 +93,8 @@ Each issue contains information about:
       priority: "Medium",
       reportedBy: "Mugisha Kevin",
       date: "07/03/2025",
+      lecturer: "Dr. Muwanguzi Musa",
+
     },
     {
       id: 9,
@@ -94,6 +104,7 @@ Each issue contains information about:
       priority: "High",
       reportedBy: "Kaggwa Daniel",
       date: "06/03/2025",
+      lecturer: "Dr.Harmony Namukasa"
     },
     {
       id: 10,
@@ -103,6 +114,7 @@ Each issue contains information about:
       priority: "Low",
       reportedBy: "Namanya Rose",
       date: "05/03/2025",
+      lecturer: "Dr. Kato Mukisa",
     },
     {
       id: 11,
@@ -112,6 +124,7 @@ Each issue contains information about:
       priority: "High",
       reportedBy: "Tumusiime Edward",
       date: "04/03/2025",
+      lecturer: "Dr. Kiggundu Mark",
     },
     {
       id: 12,
@@ -121,6 +134,7 @@ Each issue contains information about:
       priority: "Low",
       reportedBy: "Ainembabazi Grace",
       date: "03/03/2025",
+      lecturer: "Dr. Muwanguzi Sarah",
     },
     {
       id: 13,
@@ -130,6 +144,7 @@ Each issue contains information about:
       priority: "Medium",
       reportedBy: "Ssempala Joseph",
       date: "02/03/2025",
+      lecturer: "Dr. Nakato Elizabeth",
     },
     {
       id: 14,
@@ -139,6 +154,7 @@ Each issue contains information about:
       priority: "High",
       reportedBy: "Nakimuli Lydia",
       date: "01/03/2025",
+      lecturer: "Dr. Kato Sarah",
     },
     {
       id: 15,
@@ -148,6 +164,7 @@ Each issue contains information about:
       priority: "Medium",
       reportedBy: "Bwambale Peter",
       date: "29/02/2025",
+      lecturer: "Dr. Kiggundu Grace",
     },
   ];
 
@@ -167,10 +184,10 @@ Each issue contains information about:
         Reported Academic Issues
       </h1>
       <div className="flex justify-between mb-4">
-        {/*Button for adding a new issue */}
-        <Link to="/add-issue">
+        {/*Button for assigning an issue */}
+        <Link to="/assign-issue">
           <button className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300">
-            Add New Issue
+            Assign Issue
           </button>
         </Link>
         {/*Search input field */}
@@ -192,6 +209,7 @@ Each issue contains information about:
               <th className="px-6 py-3 text-left">Status</th>
               <th className="px-6 py-3 text-left">Reported By</th>
               <th className="px-6 py-3 text-left">Date Reported</th>
+              <th className="px-6 py-3 text-left">Lecturer in charge</th>
             </tr>
           </thead>
           <tbody>
@@ -228,6 +246,7 @@ Each issue contains information about:
 
                 <td className="px-6 py-4">{issue.reportedBy}</td>
                 <td className="px-6 py-4">{issue.date}</td>
+                <td className="px-6 py-4">{issue.lecturer}</td>
               </tr>
             ))}
           </tbody>
@@ -237,4 +256,4 @@ Each issue contains information about:
   );
 };
 
-export default Reports;
+export default AcademicRegistrarReportsPage;

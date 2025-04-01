@@ -48,7 +48,7 @@ const IssueForm = () => {
         />
 
         <TextInput
-          label="Course unit"
+          label="Course code: Course unit"
           name="course unit"
           value={formData.courseunit}
           onChange={handleChange}
