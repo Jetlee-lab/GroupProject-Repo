@@ -46,6 +46,22 @@ const LecturerDashboard = () => {
     setCourses(courses.filter(course => course.id !== id));
   };
 
+  const handleCourseEdit = (id, newName, students) => {
+    setCourses((prevCourses) =>
+      prevCourses.map((course) =>
+        course.id === id ? { ...course, name: newName } : course
+      )
+    );
+  };
+
+  const handleStudentCountChange = (id, newCount) => {
+    setCourses((prevCourses) =>
+      prevCourses.map((course) =>
+        course.id === id ? { ...course, students: newCount } : course
+      )
+    );
+  };
+
   return (
     <div>
       <div className="p-4">
@@ -120,26 +136,57 @@ const LecturerDashboard = () => {
 
           {/* Course Management */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Manage Courses</h2>
+            <h2 className="text-xl font-semibold mb-4">Managment of Courses You Teach</h2>
             <button 
               className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
               onClick={handleCourseAdd}
             >
               Add New Course
             </button>
-            <ul>
-              {courses.map((course) => (
-                <li key={course.id} className="border-b py-2">
-                  {course.name} - {course.students} students
-                  <button 
-                    onClick={() => handleCourseRemove(course.id)} 
-                    className="text-red-500 ml-2 hover:text-red-700 transition"
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <table className="min-w-full table-auto border-collapse border border-gray-300">
+              <thead className="bg-gray-800 text-white">
+                <tr>
+                  <th className="px-4 py-2">Course Name</th>
+                  <th className="px-4 py-2">Number of Students</th>
+                  <th className="px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {courses.map((course) => (
+                  <tr key={course.id} className="border-b">
+                    {/* Course Name */}
+                    <td className="px-4 py-2">
+                      <input
+                        type="text"
+                        className="border px-2 py-1 rounded-md w-full"
+                        value={course.name}
+                        onChange={(e) => handleCourseEdit(course.id, e.target.value, course.students)}
+                      />
+                    </td>
+
+                    {/* Number of Students */}
+                    <td className="px-4 py-2">
+                      <input
+                        type="number"
+                        className="border px-2 py-1 rounded-md w-full"
+                        value={course.students}
+                        onChange={(e) => handleStudentCountChange(course.id, e.target.value)}
+                      />
+                    </td>
+
+                    {/* Remove Button */}
+                    <td className="px-4 py-2">
+                      <button
+                        onClick={() => handleCourseRemove(course.id)}
+                        className="text-red-500 hover:text-red-700 transition"
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           {/* Quick Links */}
@@ -147,7 +194,6 @@ const LecturerDashboard = () => {
             <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
             <div className="flex space-x-4">
               <Link to="/Settings" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Settings</Link>
-              
               <Link to="/notifications" className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Notifications</Link>
             </div>
           </div>
