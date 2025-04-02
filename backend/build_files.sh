@@ -24,14 +24,15 @@ pip install -r requirements.txt
 
 python3 manage.py collectstatic --noinput
 
-# python3 ./manage.py makemigrations
-# python3 ./manage.py migrate
-
-# python3 ./manage.py runserver
 
 echo "...BUILD END"
 
 echo "SPINNING UP THE SERVER..."
+
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+# python3 ./manage.py runserver
 
 # [optional] Start the application here 
 python manage.py runserver
