@@ -25,18 +25,18 @@ class ReferenceTokenViewSet(
     def create(self, request, *args, **kwargs):
         # email = request.data.get("email", None)
         # role = request.data.get("email", None)
-        print("request.data", request.data)
+        # print("request.data", request.data)
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         # print("serializer", serializer.data, "serializer.is_valid", serializer.is_valid(), "serializer.data", serializer.data)
         reference_token = serializer.save()
-        print("reference_token", reference_token)
+        # print("reference_token", reference_token)
 
         return Response(serializer.data, status.HTTP_200_OK)
 
     def retrieve(self, request, *args, pk=None, **kwargs):
-        print("pk", pk, "kwargs", kwargs, "args", args)
+        # print("pk", pk, "kwargs", kwargs, "args", args)
         refrence_token = RefrenceToken.objects.filter(
             # email=kwargs.get("email")
             pk=pk,
