@@ -31,6 +31,12 @@ EXPOSE 8000
 # Change to a specific folder, within /app
 WORKDIR /app/backend
 
+RUN echo ...................................................
+RUN pwd
+RUN ls
+# RUN tree
+RUN echo ...................................................
+
 # Run Django’s development server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
