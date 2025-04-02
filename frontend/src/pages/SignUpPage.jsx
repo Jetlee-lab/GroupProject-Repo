@@ -58,7 +58,9 @@ const SignUpPage = () => {
                 name="email"
                 required
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-                autoComplete="off"
+                autoComplete="new-password"
+                autoCorrect="off"
+                autoCapitalize="off"
               />
             </div>
 
