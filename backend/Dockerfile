@@ -32,8 +32,19 @@ EXPOSE 8000
 # Change to a specific folder, within /app
 WORKDIR /app/backend
 
-RUN echo STARTING SERVER...
+RUN echo RUNNING MIGRATIONS...
 
+RUN python manage.py makemigrations
+RUN python manage.py migrate
+
+RUN echo ...DONE
+
+# Collect static files
+RUN echo COLLECTING STATIC FILES...
+RUN python manage.py collectstatic --noinput
+RUN echo ...DONE
+
+RUN echo STARTING SERVER...
 # Run Django’s development server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 

@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, api_view
 from rest_framework.exceptions import ValidationError
 
-from ..serializers import IssueSerializer, IssueLogSerializer, AttachmentSerializer, CategorySerializer
+from ..serializers import IssueSerializer, IssueLogSerializer, AttachmentSerializer, CategorySerializer, StaffSerializer
 from ..models.issue import Issue, IssueLog, Category
 from ..utils.io import IOMixin, paginate_response
 
@@ -25,11 +25,15 @@ class IssueViewSet(IOMixin, viewsets.ModelViewSet):
     
     @action(detail=True, methods=['GET'])
     def assignees(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        try:
+            assigns = Issue.objects.get(pk=kwargs.get("pk")).assignee
+        except Issue.DoesNotExist:
+            raise ValidationError({'message': 'Issue not found'})
 
-        serializer.is_valid(raise_exception=True)
-
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        assigns = StaffSerializer(assigns).data
+        
+        return Response(assigns, status=status.HTTP_200_OK)
+        # return paginate_response(self, assigns, StaffSerializer, many=False)
 
     @action(detail=True, methods=['GET'])
     def attachments(self, request, pk=None, *args, **kwargs):

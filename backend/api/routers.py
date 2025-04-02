@@ -7,7 +7,7 @@ from authentication.viewsets import (
     LogoutViewSet,
     RegisterViewSet
 )
-from core.viewsets import UsersViewSet, DepartmentViewSet, FacultyViewSet, IssueViewSet
+from core.viewsets import UsersViewSet, DepartmentViewSet, FacultyViewSet, IssueViewSet, ReferenceTokenViewSet
 from search.viewsets import SearchViewSet
 
 router = routers.SimpleRouter(trailing_slash=False)
@@ -26,5 +26,6 @@ router.register(r"users", UsersViewSet, basename="users")
 router.register(r"issues", IssueViewSet, basename="issues")
 router.register(r"departments", DepartmentViewSet, basename="departments")
 router.register(r"faculties", FacultyViewSet, basename="faculties")
+router.register(r"reference-token", ReferenceTokenViewSet, basename="reference-token")
 
 router.register(r"search", SearchViewSet, basename="issue-search")

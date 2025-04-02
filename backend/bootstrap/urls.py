@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
+from core.routers import urlpatterns as core_urls
 
 from rest_framework import routers
 
@@ -26,8 +27,7 @@ else:
     router = routers.SimpleRouter(trailing_slash=False)
 router = routers.SimpleRouter(trailing_slash=False)
 
-urlpatterns = [
-    path('', include(router.urls)),
+urlpatterns = core_urls + [
     path('api/', include(("api.urls", "api"), namespace="api")),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
