@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import login
 
 from authentication.models import ActiveSession
-#from utils.io import format_response
+#from core.utils.io import format_response
 
 
 def _generate_jwt_token(user):

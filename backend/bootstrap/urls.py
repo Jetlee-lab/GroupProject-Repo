@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/', include(("api.urls", "api"), namespace="api")),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('dj-rest-auth/', include('dj_rest_auth.urls')),
+    # path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('accounts/', include('allauth.urls')),
+    path('auth/', include('allauth.headless.urls')),
 ]

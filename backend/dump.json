@@ -5,7 +5,9 @@
     "fields": {
       "name": "Can add log entry",
       "content_type": 1,
-      "codename": "add_logentry"
+      "codename": "add_logentry",
+      "description": "Permission to create new log entries for tracking system activities.",
+      "is_active": true
     }
   },
   {

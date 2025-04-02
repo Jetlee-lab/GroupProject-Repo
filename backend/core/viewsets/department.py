@@ -5,7 +5,7 @@ from django.db.models import Subquery, OuterRef, F
 
 from ..serializers import DepartmentSerializer, FacultySerializer
 from ..models import Department, Faculty
-from utils.io import IOMixin, paginate_response
+from core.utils.io import IOMixin, paginate_response
 
 
 class FacultyViewSet(IOMixin, viewsets.ModelViewSet):

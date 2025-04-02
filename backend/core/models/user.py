@@ -10,6 +10,7 @@ from django.contrib.auth.models import (
 )
 from django.utils.translation import gettext_lazy as _  # Updated import
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from .department import Department  # Ensure this import is correct
 
@@ -48,9 +49,41 @@ class UserManager(UserManager):
 
 
 class Role(models.Model):
+    """
+    Example: Admin <- Lecturer <- Student
 
-    name = models.CharField(max_length=128)
+    Lecturer.base_role = Student
+    Admin.base_role = Lecturer
+    """
+    ROLE_STUDENT = 'Student'
+    ROLE_LECTURER = 'Lecturer'
+    ROLE_REGISTRAR = 'Registrar'
+    ROLE_ADMINISTRATOR = 'Administrator'
+
+    name = models.CharField(unique=True, max_length=64)
+    permissions = models.ManyToManyField(Permission, blank=True)
     description = models.CharField(max_length=256, blank=False, default='')
+    # base_role = models.ForeignKey('self', # unique=True, # editable=False,
+    #     null=True, blank=True, related_name='derived_roles', on_delete=models.SET_NULL
+    # )
+
+    # def get_permissions(self):
+    #     """Recursively get all permissions, including from parent roles."""
+    #     permissions = self.permissions.all()
+    #     base_role = self.base_role
+    #     while base_role:
+    #         permissions.union(base_role.permissions.all())
+    #         base_role = base_role.base_role
+
+    #     return permissions
+
+    def save(self, *args, **kwargs):
+        if self.base_role and self.derived_roles.filter(pk=self.base_role.pk).exists():
+            raise ValidationError("Can not create a backward relationship if a forward relationship exists")
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return "%s" % (self.name)
 
 
 #class User(AbstractBaseUser, PermissionsMixin):
@@ -70,10 +103,10 @@ class Role(models.Model):
 
 
 class User(AbstractUser):
-    # USERNAME_FIELD = "email"
-    # REQUIRED_FIELDS = ["username"]
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
-    email = models.EmailField(_("email address"), db_index=True) #, unique=False)
+    email = models.EmailField(_("email address"), db_index=True, unique=True)
     roles = models.ManyToManyField(Role,
         blank=True,
         related_name="users",

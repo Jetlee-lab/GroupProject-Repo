@@ -1,10 +1,10 @@
-from rest_framework import viewsets, status, mixins
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework import mixins
 from rest_framework.decorators import action
 from django.db.models import Count
-from django.core.mail import send_mail
 
 from ..serializers import (
     UserSerializer,
@@ -12,22 +12,22 @@ from ..serializers import (
     FacultySerializer,
     IssueSerializer
 )
-from ..models import User, Student, Staff, Faculty
-from utils.io import IOMixin, paginate_response #format_response
+from ..models import User, Role, Student, Staff, Faculty
+from ..utils.io import IOMixin, paginate_response #format_response
 
 
 class UsersViewSet(
     IOMixin,
-    #viewsets.GenericViewSet,
-    mixins.CreateModelMixin,
-    mixins.UpdateModelMixin,
+    # viewsets.GenericViewSet,
+    # mixins.CreateModelMixin,
+    # mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
 ):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
-    error_message = "Error updating user"
+    # error_message = "Error updating user"
 
     # def retrieve(self, request, *args, **kwargs):
     #     pk = kwargs.get('pk')
@@ -44,33 +44,33 @@ class UsersViewSet(
 
     #     return super().retrieve(request, *args, **self.kwargs)
 
-    def update(self, request, *args, **kwargs):
-        print('update():',{'args':args,'kwargs':kwargs,'request.data':request.data})
-        partial = kwargs.pop("partial", True)
-        instance = User.objects.get(id=request.data.get("userID"))
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+    # def update(self, request, *args, **kwargs):
+    #     print('update():',{'args':args,'kwargs':kwargs,'request.data':request.data})
+    #     partial = kwargs.pop("partial", True)
+    #     instance = User.objects.get(id=request.data.get("userID"))
+    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
 
-        if getattr(instance, "_prefetched_objects_cache", None):
-            instance._prefetched_objects_cache = {}
+    #     if getattr(instance, "_prefetched_objects_cache", None):
+    #         instance._prefetched_objects_cache = {}
 
-        return Response(serializer.data)
+    #     return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        print('create():',{'args':args,'kwargs':kwargs,'request.data':request.data})
-        user_id = request.data.get("userID")
+    # def create(self, request, *args, **kwargs):
+    #     print('create():',{'args':args,'kwargs':kwargs,'request.data':request.data})
+    #     user_id = request.data.get("userID")
 
-        if not user_id:
-            raise ValidationError({'message': 'User not found'})
+    #     if not user_id:
+    #         raise ValidationError({'message': 'User not found'})
 
-        if self.request.user.pk != int(user_id) and not self.request.user.is_superuser:
-            raise ValidationError({'message': 'Error updating user'})
+    #     if self.request.user.pk != int(user_id) and not self.request.user.is_superuser:
+    #         raise ValidationError({'message': 'Error updating user'})
 
-        self.update(request)
+    #     self.update(request)
 
-        #return Response(format_response({}), status.HTTP_200_OK)
-        return Response({}, status.HTTP_200_OK)
+    #     #return Response(format_response({}), status.HTTP_200_OK)
+    #     return Response({}, status.HTTP_200_OK)
     
     @action(methods=["GET"], detail=False, url_path="students", url_name="students")
     def students(self, request, *args, **kwargs):
@@ -82,10 +82,25 @@ class UsersViewSet(
         staff = User.objects.filter(staff__isnull=False)
         return paginate_response(self, staff, UserSerializer)
 
+    @action(methods=["GET"], detail=False, url_path="registrars", url_name="registrars")
+    def registrars(self, request, *args, **kwargs):
+        registrars = User.objects.filter(roles__name=Role.ROLE_REGISTRAR)
+        return paginate_response(self, registrars, UserSerializer)
+
+    @action(methods=["GET"], detail=False, url_path="lecturers", url_name="lecturers")
+    def lecturers(self, request, *args, **kwargs):
+        lecturers = User.objects.filter(roles__name=Role.ROLE_LECTURER)
+        return paginate_response(self, lecturers, UserSerializer)
+
+    @action(methods=["GET"], detail=False, url_path="administrators", url_name="administrators")
+    def admins(self, request, *args, **kwargs):
+        admins = User.objects.filter(roles__name=Role.ROLE_ADMINISTRATOR, is_staff=True)
+        return paginate_response(self, admins, UserSerializer)
+
     @action(methods=["GET"], detail=True, url_path="issues", url_name="issues")
     def issues(self, request, *args, pk=None, **kwargs):
         try:
-            issues = Student.objects.get(pk=pk).issues.all()
+            issues = Student.objects.get(user=pk).issues.all()
         except Student.DoesNotExist:
             raise NotFound({'details': 'Student details not found'})
 
@@ -114,16 +129,6 @@ class UsersViewSet(
 
         return paginate_response(self, faculties, FacultySerializer)
 
-    @action(methods=["GET"], detail=False, url_path="email", url_name="email")
-    def email(self, request, *args, pk=None, **kwargs):
-        send_mail(
-            'Subject here',
-            'Here is the message.',
-            'from@example.com',
-            ['to@example.com']
-        )
-        return Response({'message': 'Email sent'})
-
     def get_queryset(self):
         return User.objects.all() #prefetch_related('student_details', )
 
@@ -136,4 +141,3 @@ class UsersViewSet(
     #     obj = get_object_or_404(queryset, **filter)  # Lookup the object
     #     self.check_object_permissions(self.request, obj)
     #     return obj
-

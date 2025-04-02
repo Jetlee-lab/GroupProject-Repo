@@ -16,11 +16,18 @@ import os, environ
 env = environ.Env(
     DEBUG=(bool, False),
     ALLOWED_HOSTS=(tuple),
+    
+    CORS_ALLOWED_ORIGINS=(tuple),
+    CORS_ALLOW_ALL_ORIGINS=(bool, False),
+    CORS_ALLOW_CREDENTIALS=(bool, False),
+    CSRF_TRUSTED_ORIGINS=(tuple),
+
+    EMAIL_PORT=(tuple),
+    EMAIL_USE_TLS=(bool),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
@@ -50,20 +57,22 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 
-    'dj_rest_auth',
+    # 'dj_rest_auth',
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
+    "allauth.mfa",
+    "allauth.headless",
+    "allauth.usersessions",
 
     'api',
     'authentication',
     'bootstrap',
     'core',
     'search',
-    'utils',
 ]
 
 MIDDLEWARE = [
@@ -185,7 +194,7 @@ REST_FRAMEWORK = {
     #    #"rest_framework.renderers.JSONRenderer",
     #),
 
-    "DEFAULT_AUTHENTICAT`ION_`CLASSES": (
+    "DEFAULT_AUTHENTICATION_CLASSES": (
         # 'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         "authentication.backends.ActiveSessionAuthentication",
@@ -198,7 +207,7 @@ REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
 
     #'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
-    'EXCEPTION_HANDLER': 'utils.io.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'core.utils.io.custom_exception_handler',
     
     #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_PAGINATION_CLASS': 'core.pagination.LimitOffsetPagination',
@@ -209,16 +218,12 @@ REST_FRAMEWORK = {
 #  CORS 
 # ##################################################################### #
 
-CORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=ALLOWED_HOSTS)
+CORS_ALLOW_ALL_ORIGINS =env("CORS_ALLOW_ALL_ORIGINS")
+CORS_ALLOW_CREDENTIALS = env("CORS_ALLOW_CREDENTIALS")
 
-# Load the default ones
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
-
-# Leaded from Environment
-CORS_ALLOWED_ORIGINS_ENV = env("CORS_ALLOWED_ORIGINS", default=None)
-
-if CORS_ALLOWED_ORIGINS_ENV:
-    CORS_ALLOWED_ORIGINS += CORS_ALLOWED_ORIGINS_ENV.split(' ')
+#  CSRF
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=ALLOWED_HOSTS)
 
 # ##################################################################### #
 # ALLAUTH
@@ -231,19 +236,23 @@ AUTHENTICATION_BACKENDS = [
     # 'allauth.socialaccount.auth_backends.AuthenticationBackend',
 ]
 
+ACCOUNT_LOGIN_METHODS = {"email", "username"}
+# ACCOUNT_EMAIL_REQUIRED = True
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
             'client_id': env('GOOGLE_CLIENT_ID'),
-            'secret': env('GOOGLE_SECRET'),
+            'secret': env('GOOGLE_CLIENT_SECRET'),
         }
     },
-    # 'github': {
-    #     'APP': {
-    #         'client_id': env('GITHUB_CLIENT_ID'),
-    #         'secret': env('GITHUB_CLIENT_SECRET'),
-    #     }
-    # }
+    'github': {
+        'APP': {
+            'client_id': env('GITHUB_CLIENT_ID'),
+            'secret': env('GITHUB_CLIENT_SECRET'),
+        }
+    }
 }
 
 SOCIALACCOUNT_QUERY_EMAIL = True
+# HEADLESS_ONLY = True
