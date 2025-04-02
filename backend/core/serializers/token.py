@@ -17,7 +17,6 @@ class RefrenceTokenSerializer(serializers.ModelSerializer):
         """
         Create a new RefrenceToken instance.
         """
-        print("validated_data", validated_data)
         # email = validated_data.get("email")
         # role = validated_data.get("role")
 
