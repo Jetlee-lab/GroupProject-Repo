@@ -124,6 +124,26 @@ const SignUpPage = () => {
               />
             </div>
 
+            {/* User Role Dropdown */}
+            <div className="mb-4">
+              <label htmlFor="userRole" className="block text-gray-800">
+                User Role
+              </label>
+              <select
+                id="userRole"
+                name="userRole"
+                required
+                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              >
+                <option value="" disabled selected>
+                  Select your role
+                </option>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
             {/* Sign Up Button */}
             <button
               type="submit"
