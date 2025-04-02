@@ -212,7 +212,7 @@ class UserFixture:
         size = min(randint(2, 5), len(alphabet))
         uname = generate_id(size, alphabet)
 
-        while u := uname.casefold() in self.registry['usernames']:
+        while (u := uname.casefold()) in self.registry['usernames']:
             uname = generate_id(size, alphabet)
 
         self.registry['usernames'].append(u)
@@ -670,7 +670,7 @@ class IssueLogFixture:
         issuelog = {
             'issue_id': issue['pk'],
             'actor': self.generate_actor(issue, users),
-            'attachment': self.generate_attachment(issue, attachments),
+            'attachments': self.generate_attachment(issue, attachments),
             'created_at': created_at,
         }
         for field in self._sample_fields:

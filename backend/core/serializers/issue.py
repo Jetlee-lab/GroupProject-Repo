@@ -1,9 +1,20 @@
 from ..models import Issue, Role
 from rest_framework import serializers
 
-from ..models import Issue, IssueLog, Attachment
+from ..models import Issue, IssueLog, Category, Attachment
+
+# class CategoriesListingField(serializers.RelatedField):
+#     # def get_queryset(self, *args, **kwargs):
+#     #     return Category.objects.all()
+
+#     def to_representation(self, instance, *args, **kwargs):
+#         return {
+#             "id": instance.id,
+#             "name": instance.name,
+#         }
 
 class IssueSerializer(serializers.ModelSerializer):
+    # categories = CategoriesListingField(many=True) #, read_only=True)
     class Meta:
         model = Issue
         fields = '__all__'
@@ -68,6 +79,25 @@ class IssueSerializer(serializers.ModelSerializer):
             )
         return value
 
+    def to_representation(self, instance, *args, **kwargs):
+        data = super().to_representation(instance, *args, **kwargs)
+
+        if priority := data.get("priority", None):
+            data["priority"] = Issue.PRIORITY_CHOICES[priority]
+        
+        if status := data.get("status", None):
+            data["status"] = Issue.STATUS_CHOICES[status]
+        
+        if escalation_level := data.get("escalation_level", None):
+            data["escalation_level"] = Issue.ESCALATION_CHOICES[escalation_level]
+
+        if categories := data.get("categories", None):
+            data["categories"] = Category.objects.filter(id__in=categories).values("id", "name")
+            # data["categories"] = list(map(lambda c: Category.objects.values(), categories))
+        
+        # print({"my_trep": data})
+        return data
+
 
 class IssueLogSerializer(serializers.ModelSerializer):
 
@@ -85,4 +115,15 @@ class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
         fields = '__all__'
+        # exclude = ['id']
         read_only_fields = ['issue', 'name', 'size', 'type']
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+        # exclude = ["id"]
+        read_only_fields = ["id"]
+    
+    # def to_representation(self, instance, *args, **kwargs):
+    #     return instance.name

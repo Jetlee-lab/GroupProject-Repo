@@ -63,19 +63,19 @@ class Role(models.Model):
     name = models.CharField(unique=True, max_length=64)
     permissions = models.ManyToManyField(Permission, blank=True)
     description = models.CharField(max_length=256, blank=False, default='')
-    base_role = models.ForeignKey('self', # unique=True, # editable=False,
-        null=True, blank=True, related_name='derived_roles', on_delete=models.SET_NULL
-    )
+    # base_role = models.ForeignKey('self', # unique=True, # editable=False,
+    #     null=True, blank=True, related_name='derived_roles', on_delete=models.SET_NULL
+    # )
 
-    def get_permissions(self):
-        """Recursively get all permissions, including from parent roles."""
-        permissions = self.permissions.all()
-        base_role = self.base_role
-        while base_role:
-            permissions.union(base_role.permissions.all())
-            base_role = role.base_role
+    # def get_permissions(self):
+    #     """Recursively get all permissions, including from parent roles."""
+    #     permissions = self.permissions.all()
+    #     base_role = self.base_role
+    #     while base_role:
+    #         permissions.union(base_role.permissions.all())
+    #         base_role = base_role.base_role
 
-        return permissions
+    #     return permissions
 
     def save(self, *args, **kwargs):
         if self.base_role and self.derived_roles.filter(pk=self.base_role.pk).exists():

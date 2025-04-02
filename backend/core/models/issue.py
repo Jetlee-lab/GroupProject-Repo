@@ -23,11 +23,11 @@ class Issue(models.Model):
     STATUS_RESOLVED = 8
     STATUS_CLOSED = 16
     STATUS_CHOICES = {
-        STATUS_OPEN: 'Open',
-        STATUS_REVIEW: 'In Review',
-        STATUS_ESCALATED: 'Escalated',
-        STATUS_RESOLVED: 'Resolved',
-        STATUS_CLOSED: 'Closed',
+        STATUS_OPEN: 'open',
+        STATUS_REVIEW: 'in_review',
+        STATUS_ESCALATED: 'escalated',
+        STATUS_RESOLVED: 'resolved',
+        STATUS_CLOSED: 'closed',
     }
 
     PRIOTITY_LOW = 1
@@ -35,19 +35,19 @@ class Issue(models.Model):
     PRIOTITY_HIGH = 4
     PRIOTITY_CRITICAL = 8
     PRIORITY_CHOICES = {
-        PRIOTITY_LOW: 'Low',
-        PRIOTITY_MODERATE: 'Moderate',
-        PRIOTITY_HIGH: 'High',
-        PRIOTITY_CRITICAL: 'Critical',
+        PRIOTITY_LOW: 'low',
+        PRIOTITY_MODERATE: 'moderate',
+        PRIOTITY_HIGH: 'high',
+        PRIOTITY_CRITICAL: 'critical',
     }
 
     ESCALATION_L0 = 1
     ESCALATION_L1 = 2
     ESCALATION_L2 = 4
     ESCALATION_CHOICES = {
-        ESCALATION_L0: 'Level 0',
-        ESCALATION_L1: 'Level 1',
-        ESCALATION_L2: 'Level 2',
+        ESCALATION_L0: 'level_0',
+        ESCALATION_L1: 'level_1',
+        ESCALATION_L2: 'level_2',
     }
 
     owner = models.ForeignKey(Student, related_name='issues', on_delete=models.CASCADE)

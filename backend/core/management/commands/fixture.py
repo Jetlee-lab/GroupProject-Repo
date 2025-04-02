@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from ..utils import fixtures
+from ...utils import fixtures
 
 
 class Command(BaseCommand):

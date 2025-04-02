@@ -5,8 +5,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action, api_view
 from rest_framework.exceptions import ValidationError
 
-from ..serializers import IssueSerializer, IssueLogSerializer, AttachmentSerializer
-from ..models.issue import Issue, IssueLog
+from ..serializers import IssueSerializer, IssueLogSerializer, AttachmentSerializer, CategorySerializer
+from ..models.issue import Issue, IssueLog, Category
 from ..utils.io import IOMixin, paginate_response
 
 class IssueViewSet(IOMixin, viewsets.ModelViewSet):
@@ -16,6 +16,7 @@ class IssueViewSet(IOMixin, viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data) #, many=True
+        print("testinhgf", data)
 
         serializer.is_valid(raise_exception=True)
         issue = serializer.save()
@@ -47,6 +48,12 @@ class IssueViewSet(IOMixin, viewsets.ModelViewSet):
             raise ValidationError({'message': 'Issue not found'})
 
         return paginate_response(self, logs, IssueLogSerializer)
+
+    @action(detail=False, methods=['GET'])
+    def categories(self, request, *args, **kwargs):
+        cats = Category.objects.all()
+
+        return paginate_response(self, cats, CategorySerializer)
 
     def get_queryset(self):
         user = self.request.user
