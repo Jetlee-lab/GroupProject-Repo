@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import IssueStats from './issues/IssueStats'; 
 import IssuesTable from './issues/IssueTable';
 import ActivityFeed from './issues/ActivityFeed'; 
@@ -15,8 +16,17 @@ export default function RegistrarDashboard() {
 
       {/* Issues Table */}
       <div className="mb-8">
-        <h3 className="text-xl text-center font-semibold ">ISSUE MANAGEMENT</h3>
+        <h3 className="text-xl text-center font-semibold">ISSUE MANAGEMENT</h3>
         <IssuesTable />
+
+        {/* Button to Registrar Reports Page */}
+        <div className="mt-4 text-left">
+          <Link to="/registrar-reports">
+            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+              View and Assign Issues
+            </button>
+          </Link>
+        </div>
       </div>
 
       {/* Activity Feed */}
