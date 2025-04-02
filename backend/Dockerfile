@@ -16,9 +16,11 @@ ENV PYTHONUNBUFFERED=1
 # Upgrade pip
 RUN pip install --upgrade pip 
 
-COPY backend/  /app/
+# COPY backend/  /app/
+# Copy the Django project to the container
+COPY . /app/
 
-RUN echo --------------------------------------------------
+RUN echo **************************************************
 RUN pwd
 RUN ls
 # RUN tree
@@ -30,8 +32,8 @@ RUN echo ...................................................
 # run this command to install all dependencies 
 RUN pip install --no-cache-dir -r backend/requirements.txt
  
-# Copy the Django project to the container
-COPY . /app/
+# # Copy the Django project to the container
+# COPY . /app/
  
 # Expose the Django port
 EXPOSE 8000
