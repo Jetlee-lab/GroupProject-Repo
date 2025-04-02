@@ -67,10 +67,10 @@ class IOMixin(viewsets.GenericViewSet):
         return format_response(response, meta=meta)
 
 
-def paginate_response(viewset, queryset, serializer):
+def paginate_response(viewset, queryset, serializer, many=True):
     page = viewset.paginate_queryset(queryset)
 
     if page is None:
-        return Response(serializer(queryset, many=True).data)
+        return Response(serializer(queryset, many).data)
 
-    return viewset.get_paginated_response(serializer(page, many=True).data)
+    return viewset.get_paginated_response(serializer(page, many).data)

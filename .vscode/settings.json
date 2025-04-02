@@ -9,6 +9,12 @@
             "group": "postgres",
             "database": "aits",
             "username": "postgres"
+        },
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "sqlite3",
+            "database": "${workspaceFolder:GroupProject-Repo}/backend/aits"
         }
     ]
 }
