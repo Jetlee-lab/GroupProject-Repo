@@ -61,11 +61,3 @@ tzdata==2025.1
 uritemplate==4.1.1
 urllib3==2.3.0
 yarl==1.18.3
-
-
-# Django==3.2.13
-# djangorestframework==3.13.1
-# PyJWT==2.4.0
-# django-cors-headers==3.13.0
-# gunicorn==20.1.0
-# django-environ==0.8.1
