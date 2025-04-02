@@ -7,20 +7,20 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 # install the required packages
-pip install -r requirements.txt
-# pip install \
-#     psycopg2-binary \
-#     django \
-#     django-cors-headers \
-#     djangorestframework \
-#     djangorestframework-simplejwt \
-#     django-allauth[socialaccount,mfa] \
-#     django-rest-auth \
-#     django-environ \
-#     pyJWT \
-#     twilio \
-#     sendgrid \
-#     gunicorn
+# pip install -r requirements.txt
+pip install \
+    django \
+    django-cors-headers \
+    djangorestframework \
+    djangorestframework-simplejwt \
+    django-allauth[socialaccount,mfa] \
+    django-rest-auth \
+    django-environ \
+    pyJWT \
+    psycopg2-binary \
+    twilio \
+    sendgrid \
+    gunicorn
 
 python3 manage.py collectstatic --noinput
 
