@@ -16,6 +16,13 @@ ENV PYTHONUNBUFFERED=1
 # Upgrade pip
 RUN pip install --upgrade pip 
  
+
+RUN echo ...................................................
+RUN pwd
+RUN ls
+# RUN tree
+RUN echo ...................................................
+
 # Copy the Django project  and install dependencies
 COPY requirements.txt  /app/
  
