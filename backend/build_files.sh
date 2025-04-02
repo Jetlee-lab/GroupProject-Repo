@@ -7,23 +7,22 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 # install the required packages
-# pip install -r requirements.txt
-pip install \
-    django \
-    django-cors-headers \
-    djangorestframework \
-    djangorestframework-simplejwt \
-    django-allauth[socialaccount,mfa] \
-    django-rest-auth \
-    django-environ \
-    pyJWT \
-    psycopg2-binary \
-    twilio \
-    sendgrid \
-    gunicorn
+pip install -r requirements.txt
+# pip install \
+#     django \
+#     django-cors-headers \
+#     djangorestframework \
+#     djangorestframework-simplejwt \
+#     django-allauth[socialaccount,mfa] \
+#     django-rest-auth \
+#     django-environ \
+#     pyJWT \
+#     psycopg2-binary \
+#     twilio \
+#     sendgrid \
+#     gunicorn
 
 python3 manage.py collectstatic --noinput
-
 
 echo "...BUILD END"
 
@@ -35,4 +34,4 @@ python3 manage.py migrate
 # python3 ./manage.py runserver
 
 # [optional] Start the application here 
-# python manage.py runserver
+python manage.py runserver

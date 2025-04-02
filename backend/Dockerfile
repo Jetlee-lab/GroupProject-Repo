@@ -20,20 +20,11 @@ RUN pip install --upgrade pip
 # Copy the Django project to the container
 COPY . /app/
 
-RUN echo **************************************************
-RUN pwd
-RUN ls
-# RUN tree
-RUN echo ...................................................
-
 # Copy the Django project  and install dependencies
 # COPY requirements.txt  /app/
  
 # run this command to install all dependencies 
 RUN pip install --no-cache-dir -r backend/requirements.txt
- 
-# # Copy the Django project to the container
-# COPY . /app/
  
 # Expose the Django port
 EXPOSE 8000
@@ -41,8 +32,7 @@ EXPOSE 8000
 # Change to a specific folder, within /app
 WORKDIR /app/backend
 
-
-RUN echo =============================================
+RUN echo STARTING SERVER...
 
 # Run Django’s development server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
