@@ -14,6 +14,8 @@ import LecturerEditIssueForm from "./components/issues/LecturerEditIssueForm";
 import AssignIssue from "./components/issues/AssignIssue";
 import AppLayout from "./components/common/AppLayout";
 import LandingPage from "./pages/LandingPage"; 
+import LecturerDashboard from "./components/LecturerDashboard";
+import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
 
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
           <Route path="/edit-issue-lecturer" element={<LecturerEditIssueForm />} />
           <Route path="/add-issue" element={<StudentIssueForm />} />
           <Route path="/assign-issue" element={<AssignIssue />} />
+          <Route path="/lecturer-dashboard" element={<LecturerDashboard />} />
+          <Route path="/registrar-dashboard" element={<AcademicRegistrarDashboard />} />
          
         </Route>
       </Routes>
