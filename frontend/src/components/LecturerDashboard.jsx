@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; 
 import { Link } from "react-router-dom";
 
 const LecturerDashboard = () => {
@@ -62,16 +62,19 @@ const LecturerDashboard = () => {
     );
   };
 
+  const escalatedIssues = issues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
+
   return (
     <div>
       <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Lecturer Dashboard</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Manage Student Issues */}
+
+          {/* Manage Student Issues Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
             <h2 className="text-xl font-semibold mb-4">Manage Student Issues</h2>
-            <table className="min-w-full table-auto border-collapse border border-gray-300">
-              <thead className="bg-gray-800 text-white">
+            <table className="min-w-full table-auto">
+              <thead className="bg-blue-600 text-white">
                 <tr>
                   <th className="px-4 py-2">ID</th>
                   <th className="px-4 py-2">Issue</th>
@@ -84,7 +87,7 @@ const LecturerDashboard = () => {
               </thead>
               <tbody>
                 {issues.map((issue) => (
-                  <tr key={issue.id} className="border-b">
+                  <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td>
                     <td className="px-4 py-2">
                       <input
@@ -124,9 +127,7 @@ const LecturerDashboard = () => {
                       />
                     </td>
                     <td className="px-4 py-2">
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                        Save
-                      </button>
+                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Save</button>
                     </td>
                   </tr>
                 ))}
@@ -134,17 +135,82 @@ const LecturerDashboard = () => {
             </table>
           </div>
 
-          {/* Course Management */}
+          {/* Escalated Issues Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Managment of Courses You Teach</h2>
-            <button 
+            <h2 className="text-xl font-semibold mb-4">Escalated Issues</h2>
+            <table className="min-w-full table-auto">
+              <thead className="bg-blue-600 text-white">
+                <tr>
+                  <th className="px-4 py-2">ID</th>
+                  <th className="px-4 py-2">Issue</th>
+                  <th className="px-4 py-2">Description</th>
+                  <th className="px-4 py-2">Student</th>
+                  <th className="px-4 py-2">Status</th>
+                  <th className="px-4 py-2">Comment</th>
+                  <th className="px-4 py-2">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {escalatedIssues.map((issue) => (
+                  <tr key={issue.id}>
+                    <td className="px-4 py-2">{issue.id}</td>
+                    <td className="px-4 py-2">
+                      <input
+                        type="text"
+                        className="border px-2 py-1 rounded-md w-full"
+                        value={issue.title}
+                        onChange={(e) => handleIssueEdit(issue.id, e.target.value, issue.description)}
+                      />
+                    </td>
+                    <td className="px-4 py-2">
+                      <textarea
+                        className="border px-2 py-1 rounded-md w-full"
+                        value={issue.description}
+                        onChange={(e) => handleIssueEdit(issue.id, issue.title, e.target.value)}
+                      />
+                    </td>
+                    <td className="px-4 py-2">{issue.student}</td>
+                    <td className="px-4 py-2">
+                      <select
+                        className="border px-2 py-1 rounded-md"
+                        value={issue.status}
+                        onChange={(e) => handleStatusChange(issue.id, e.target.value)}
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
+                    </td>
+                    <td className="px-4 py-2">
+                      <input
+                        type="text"
+                        className="border px-2 py-1 rounded-md w-full"
+                        value={issue.comment || ""}
+                        onChange={(e) => handleCommentChange(issue.id, e.target.value)}
+                        placeholder="Add comment"
+                      />
+                    </td>
+                    <td className="px-4 py-2">
+                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Save</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Course Management Section */}
+          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
+            <h2 className="text-xl font-semibold mb-4">Courses You Teach</h2>
+            <button
               className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
               onClick={handleCourseAdd}
             >
               Add New Course
             </button>
-            <table className="min-w-full table-auto border-collapse border border-gray-300">
-              <thead className="bg-gray-800 text-white">
+            <table className="min-w-full table-auto">
+              <thead className="bg-blue-600 text-white">
                 <tr>
                   <th className="px-4 py-2">Course Name</th>
                   <th className="px-4 py-2">Number of Students</th>
@@ -153,8 +219,7 @@ const LecturerDashboard = () => {
               </thead>
               <tbody>
                 {courses.map((course) => (
-                  <tr key={course.id} className="border-b">
-                    {/* Course Name */}
+                  <tr key={course.id}>
                     <td className="px-4 py-2">
                       <input
                         type="text"
@@ -163,8 +228,6 @@ const LecturerDashboard = () => {
                         onChange={(e) => handleCourseEdit(course.id, e.target.value, course.students)}
                       />
                     </td>
-
-                    {/* Number of Students */}
                     <td className="px-4 py-2">
                       <input
                         type="number"
@@ -173,8 +236,6 @@ const LecturerDashboard = () => {
                         onChange={(e) => handleStudentCountChange(course.id, e.target.value)}
                       />
                     </td>
-
-                    {/* Remove Button */}
                     <td className="px-4 py-2">
                       <button
                         onClick={() => handleCourseRemove(course.id)}
@@ -189,7 +250,7 @@ const LecturerDashboard = () => {
             </table>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
             <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
             <div className="flex space-x-4">
