@@ -146,8 +146,8 @@ const LecturerDashboard = () => {
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
             <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
             <div className="flex space-x-4">
-              <Link to="/profile" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Profile</Link>
-              <Link to="/courses" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Courses</Link>
+              <Link to="/Settings" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Settings</Link>
+              
               <Link to="/notifications" className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Notifications</Link>
             </div>
           </div>
