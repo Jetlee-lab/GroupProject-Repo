@@ -1,23 +1,26 @@
 #!/usr/bin/env bash
 # exit on error
 
-env
+# env
 
-print ----------+++++++++++++++++++++++++++++++++++++----------------------------
+# print ----------+++++++++++++++++++++++++++++++++++++----------------------------
 
-# RUN python manage.py collectstatic --noinput
+
+RUN echo RUNNING MIGRATIONS...
+
+python manage.py makemigrations
+python manage.py migrate
+
+# Collect static files
+echo COLLECTING STATIC FILES...
+
+python manage.py collectstatic --noinput
 # mkdir -p /app/backend/staticfiles
+mv /app/frontend/dist /app/backend/staticfiles/frontend
 
-# mv /app/frontend/dist /app/backend/staticfiles/frontend
+echo SPINING UP SERVER...
 
-echo ...DONE
-
-echo STARTING SERVER...
-
-pwd
-
-echo ===================================================
-# python manage.py runserver 0.0.0.0:8000
+python manage.py runserver 0.0.0.0:8000
 
 
 
