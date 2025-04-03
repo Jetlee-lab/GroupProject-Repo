@@ -57,4 +57,3 @@ ENTRYPOINT ["bash", "build.sh"]
 
 # # gunicorn
 # CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"]
-
