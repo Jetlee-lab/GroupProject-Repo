@@ -20,7 +20,12 @@ echo COLLECTING STATIC FILES...
 
 python manage.py collectstatic --noinput
 # mkdir -p /app/backend/staticfiles
+ls /app/backend/
+
 mv /app/frontend/dist /app/backend/staticfiles/frontend
+
+echo =======================================================
+ls /app/backend/staticfiles/
 
 echo SPINING UP SERVER...
 
