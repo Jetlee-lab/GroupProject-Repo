@@ -5,7 +5,18 @@ env
 
 print ----------+++++++++++++++++++++++++++++++++++++----------------------------
 
-python manage.py runserver 0.0.0.0:8000
+# RUN python manage.py collectstatic --noinput
+RUN mkdir -p /app/backend/staticfiles
+RUN mv /app/frontend/dist /app/backend/staticfiles/frontend
+
+RUN echo ...DONE
+
+RUN echo STARTING SERVER...
+
+pwd
+
+echo ===================================================
+# python manage.py runserver 0.0.0.0:8000
 
 
 
