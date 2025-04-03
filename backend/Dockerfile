@@ -6,6 +6,9 @@ RUN mkdir /app
  
 # Set the working directory inside the container
 WORKDIR /app
+
+# Copy the Django project to the container
+COPY . /app/
  
 # Set environment variables 
 # Prevents Python from writing pyc files to disk
@@ -16,13 +19,6 @@ ENV PYTHONUNBUFFERED=1
 # Upgrade pip
 RUN pip install --upgrade pip 
 
-# COPY backend/  /app/
-# Copy the Django project to the container
-COPY . /app/
-
-# Copy the Django project  and install dependencies
-# COPY requirements.txt  /app/
- 
 # run this command to install all dependencies 
 RUN pip install --no-cache-dir -r backend/requirements.txt
  
@@ -43,14 +39,17 @@ RUN echo ...DONE
 RUN echo COLLECTING STATIC FILES...
 
 # RUN python manage.py collectstatic --noinput
-RUN mkdir -p /app/backend/staticfiles
-RUN mv /app/frontend/dist /app/backend/staticfiles/frontend -r
+RUN mkdir /app/backend/staticfiles
+RUN mv /app/frontend/dist /app/backend/staticfiles/frontend
 
 RUN echo ...DONE
 
 RUN echo STARTING SERVER...
+
+RUN chmod +x build.sh
 # Run Django’s development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["build.sh"]
 
 
 

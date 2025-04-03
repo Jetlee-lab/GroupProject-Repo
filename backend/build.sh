@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
 # exit on error
-set -o errexit
 
-pip install --upgrade pip
-pip install -r requirements.txt
+env
 
-python manage.py migrate
+print ----------+++++++++++++++++++++++++++++++++++++----------------------------
+
+python manage.py runserver 0.0.0.0:8000
+
+
+
+# set -o errexit
+
+# pip install --upgrade pip
+# pip install -r requirements.txt
+
+# python manage.py migrate
