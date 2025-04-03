@@ -1,16 +1,38 @@
 import React, { useState } from "react";
-import AITS_Logo from "../components/images/logo2.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import AITS_Logo from "../components/images/logo2.jpg";
+import { useConfig, sleep } from '../auth'
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("student"); // Default role is "student"
+  const [role, setRole] = useState(null); // Default role is "student"
+
+  const [response, setResponse] = useState({ fetching: false, content: null })
+  const config = useConfig()
+  const hasProviders = config.data.socialaccount?.providers?.length > 0
+
+  async function submit () {
+    e.preventDefault()
+    await sleep(1000)
+    alert()
+
+    setResponse({ ...response, fetching: true })
+    login({ email, password }).then((content) => {
+      setResponse((r) => { return { ...r, content } })
+    }).catch((e) => {
+      console.error(e)
+      // window.alert(e)
+    }).then(() => {
+      setResponse((r) => { return { ...r, fetching: false } })
+    })
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    sleep(1000)
     await axios.get("https://groupproject-repo.onrender.com/auth/browser/auth/session/").then((response) => {
       console.log(response.data); // Check the response data
     });
@@ -51,7 +73,7 @@ const LoginPage = () => {
         <h1 className="text-2xl font-semibold mb-4 text-center">
           Log in to Academic Issue Tracking System
         </h1>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={submit}>
           {/* Email Input */}
           <div className="mb-4 bg-sky-100">
             <label htmlFor="email" className="block text-gray-600">
@@ -85,7 +107,7 @@ const LoginPage = () => {
           </div>
 
           {/* Role Selection */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label htmlFor="role" className="block text-gray-800">
               Select Role
             </label>
@@ -101,7 +123,7 @@ const LoginPage = () => {
               <option value="registrar">Registrar</option>
               <option value="lecturer">Lecturer</option>
             </select>
-          </div>
+          </div> */}
 
           {/* Remember Me Checkbox */}
           <div className="mb-4 flex items-center">
