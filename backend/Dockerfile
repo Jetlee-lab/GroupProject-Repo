@@ -39,7 +39,7 @@ RUN echo ...DONE
 RUN echo COLLECTING STATIC FILES...
 
 # RUN python manage.py collectstatic --noinput
-RUN mkdir /app/backend/staticfiles
+RUN mkdir -p /app/backend/staticfiles
 RUN mv /app/frontend/dist /app/backend/staticfiles/frontend
 
 RUN echo ...DONE
