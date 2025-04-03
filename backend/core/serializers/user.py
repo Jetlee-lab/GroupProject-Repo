@@ -4,8 +4,18 @@ from rest_framework import serializers
 from ..models import User, Role, Staff, Student
 
 
+class RoleListingField(serializers.RelatedField):
+    def get_queryset(self, *args, **kwargs):
+        return Role.objects.all()
+
+    def to_representation(self, instance, *args, **kwargs):
+        return {
+            "id": instance.id,
+            "name": instance.name,
+        }
+
 class UserSerializer(serializers.ModelSerializer):
-    #date_joined = serializers.DateTimeField(read_only=True)
+    roles = RoleListingField(many=True) #, read_only=True)
 
     class Meta:
         model = User
@@ -19,6 +29,15 @@ class RoleSerializer(serializers.ModelSerializer):
         model = Role
         fields = '__all__'
         read_only_field = ["id"]
+    
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if 'permissions' in data:
+            data['permissions'] = [permission['name'] for permission in data['permissions']]
+        return {
+            "id": data['id'],
+        }
+        return data
 
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:

@@ -55,12 +55,18 @@ class Role(models.Model):
     Lecturer.base_role = Student
     Admin.base_role = Lecturer
     """
-    ROLE_STUDENT = 'Student'
-    ROLE_LECTURER = 'Lecturer'
-    ROLE_REGISTRAR = 'Registrar'
-    ROLE_ADMINISTRATOR = 'Administrator'
+    ROLE_STUDENT = 'student'
+    ROLE_LECTURER = 'lecturer'
+    ROLE_REGISTRAR = 'registrar'
+    ROLE_ADMINISTRATOR = 'administrator'
+    ROLE_CHOICES = {
+        ROLE_STUDENT: 'Student',
+        ROLE_LECTURER: 'Lecturer',
+        ROLE_REGISTRAR: 'Registrar',
+        ROLE_ADMINISTRATOR: 'Administrator',
+    }
 
-    name = models.CharField(unique=True, max_length=64)
+    name = models.CharField(unique=True, max_length=64, choices=ROLE_CHOICES,)
     permissions = models.ManyToManyField(Permission, blank=True)
     description = models.CharField(max_length=256, blank=False, default='')
     # base_role = models.ForeignKey('self', # unique=True, # editable=False,
