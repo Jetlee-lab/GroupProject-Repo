@@ -1,0 +1,11 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "sqlite3",
+            "database": "${workspaceFolder:GroupProject-Repo}/backend/aits"
+        }
+    ]
+}

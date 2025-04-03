@@ -12,6 +12,11 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  LayoutGrid,
+  NotebookPen,
+  BellDot,
+  Settings,
+  CircleHelp,
   LogOut,
 } from "lucide-react"
 
@@ -33,9 +38,9 @@ function getData(role) {
 const data = {
    teams: [
     {
-      name: "Acme Inc",
+      name: "AITS",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "system",
     },
     {
       name: "Acme Corp.",
@@ -50,111 +55,111 @@ const data = {
   ],
   navMain: [
     {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutGrid,
+      items: [
+        // {
+        //   title: "Genesis",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Explorer",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Quantum",
+        //   url: "#",
+        // },
+      ],
+    },
+    {
       title: "Reports",
       url: "/student-reports",
-      icon: SquareTerminal,
+      icon: NotebookPen,
       isActive: true,
       items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
+        // {
+        //   title: "History",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Starred",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Settings",
+        //   url: "#",
+        // },
       ],
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
+      title: "Notifications",
+      url: "/notifications",
+      icon: BellDot,
       items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
+        // {
+        //   title: "Introduction",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Get Started",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Tutorials",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Changelog",
+        //   url: "#",
+        // },
       ],
     },
     {
       title: "Settings",
-      url: "#",
-      icon: Settings2,
+      url: "/settings",
+      icon: Settings,
       items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
+        // {
+        //   title: "General",
+        //   url: "/",
+        // },
+        // {
+        //   title: "Team",
+        //   url: "vv",
+        // },
+        // {
+        //   title: "Billing",
+        //   url: "#",
+        // },
+        // {
+        //   title: "Limits",
+        //   url: "#",
+        // },
       ],
     },
   ],
   projects: [
-    {
-      name: "Dashboard",
-      url: "/dashboard",
-      icon: Frame,
-    },
-    {
-      name: "Reports",
-      url: `/${role}-reports`,
-      icon: PieChart,
-    },
-    {
-      name: "Notifications",
-      url: "/notifications",
-      icon: Map,
-    },{
-      name: "Settings",
-      url: "/notifications",
-      icon: Settings2,
-    },
+    // {
+    //   name: "Dashboard",
+    //   url: "/dashboard",
+    //   icon: Frame,
+    // },
+    // {
+    //   name: "Reports",
+    //   url: `/${role}-reports`,
+    //   icon: PieChart,
+    // },
+    // {
+    //   name: "Notifications",
+    //   url: "/notifications",
+    //   icon: Map,
+    // },{
+    //   name: "Settings",
+    //   url: "/notifications",
+    //   icon: Settings2,
+    // },
     {
       name: "Help & Support",
       url: "/help",

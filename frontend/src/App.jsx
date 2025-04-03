@@ -54,30 +54,7 @@ function createRouter(config) {
           path: "/logout",
           element: <LogoutPage />,
         },
-        {
-          path: "/notifications",
-          element: <NotificationsPage />,
-        },
-        {
-          path: "/settings",
-          element: <SettingsPage />,
-        },
-        {
-          path: "/lecturer-reports",
-          element: <LecturerReportsPage />,
-        },
-        {
-          path: "/student-reports",
-          element: <StudentReportsPage />,
-        },
-        {
-          path: "/registrar-reports",
-          element: <AcademicRegistrarReportsPage />,
-        },
-        {
-          path: "/edit-issue-lecturer",
-          element: <LecturerEditIssueForm />,
-        },
+        
         {
           path: "/add-issue",
           element: <StudentIssueForm />,
@@ -108,11 +85,33 @@ function createRouter(config) {
       ]
     },
     {
-      element: <AuthenticatedRoute />,
+      element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>,
       children: [
     {
       path: "/dashboard",
-      element: <Dashboard />
+    },{
+      path: "/notifications",
+      element: <NotificationsPage />,
+    },
+    {
+      path: "/settings",
+      element: <SettingsPage />,
+    },
+    {
+      path: "/lecturer-reports",
+      element: <LecturerReportsPage />,
+    },
+    {
+      path: "/student-reports",
+      element: <StudentReportsPage />,
+    },
+    {
+      path: "/registrar-reports",
+      element: <AcademicRegistrarReportsPage />,
+    },
+    {
+      path: "/edit-issue-lecturer",
+      element: <LecturerEditIssueForm />,
     },
   ],
 }
