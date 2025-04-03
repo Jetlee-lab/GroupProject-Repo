@@ -21,6 +21,7 @@ export default function IssueStats() {
         <h2 className="text-xl">Total Issues</h2>
         <p className="text-3xl">{stats.total}</p>
       </div>
+
     </div>
   );
 }

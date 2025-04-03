@@ -23,6 +23,8 @@ import AppLayout from "./components/common/AppLayout";
 import LandingPage from "./pages/LandingPage";
 import LecturerDashboard from "./components/LecturerDashboard";
 import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
+import StudentDashboard from './components/StudentDashboard';
+
 import LogoutPage from "./pages/LogoutPage"
 import { useConfig } from "./auth/hooks";
 
@@ -99,6 +101,10 @@ function createRouter(config) {
           path: "/help",
           element: <HelpPage />,
         },
+        {
+          path:"/student-dashboard",
+          element: <StudentDashboard />,
+        }
       ],
     },
   ]);
