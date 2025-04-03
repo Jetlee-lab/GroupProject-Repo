@@ -49,7 +49,7 @@ RUN echo STARTING SERVER...
 RUN chmod +x build.sh
 # Run Django’s development server
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-ENTRYPOINT ["build.sh"]
+ENTRYPOINT ["bash", "build.sh"]
 
 
 
