@@ -43,31 +43,17 @@ function createRouter(config) {
           path: "",
           element: <HomePage />,
         },
-        {
-          path: "/landing",
-          element: <LandingPage />,
-        },
-        {
-          path: "/login",
-          element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
-        }, {
-          path: "/logout",
-          element: <LogoutPage />,
-        },
-        
-        {
-          path: "/add-issue",
-          element: <StudentIssueForm />,
-        },
-        {
-          path: "/assign-issue",
-          element: <AssignIssue />,
-        },
-                {
-          path: "/help",
-          element: <HelpPage />,
-        },
-       
+        // {
+        //   path: "/landing",
+        //   element: <LandingPage />,
+        // },
+        // {
+        //   path: "/login",
+        //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
+        // }, {
+        //   path: "/logout",
+        //   element: <LogoutPage />,
+        // },
       ],
     },
     {
@@ -112,6 +98,19 @@ function createRouter(config) {
     {
       path: "/edit-issue-lecturer",
       element: <LecturerEditIssueForm />,
+    },
+      
+    {
+      path: "/add-issue",
+      element: <StudentIssueForm />,
+    },
+    {
+      path: "/assign-issue",
+      element: <AssignIssue />,
+    },
+    {
+      path: "/help",
+      element: <HelpPage />,
     },
   ],
 }

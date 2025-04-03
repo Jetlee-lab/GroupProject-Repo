@@ -1,5 +1,5 @@
 import { getCSRFToken } from './django'
-import { BACKEND_URL } from '@/constants'
+import { BACKEND_URL } from '@/lib/constants'
 
 export const Client = Object.freeze({
   APP: 'app',
@@ -14,7 +14,7 @@ export const settings = {
   // withCredentials: false
   withCredentials: true
 }
-alert("BACKEND_URL: " + BACKEND_URL)
+
 const ACCEPT_JSON = {
   accept: 'application/json'
 }
