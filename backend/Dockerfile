@@ -33,17 +33,17 @@ EXPOSE 8000
 WORKDIR /app/backend
 
 RUN echo RUNNING MIGRATIONS...
-RUN env
 
-RUN python manage.py makemigrations
-RUN python manage.py migrate
+# RUN python manage.py makemigrations
+# RUN python manage.py migrate
 
 RUN echo ...DONE
 
 # Collect static files
 RUN echo COLLECTING STATIC FILES...
 
-RUN python manage.py collectstatic --noinput
+# RUN python manage.py collectstatic --noinput
+RUN mkdir -p /app/backend/staticfiles
 RUN mv /app/frontend/dist /app/backend/staticfiles/frontend -r
 
 RUN echo ...DONE
