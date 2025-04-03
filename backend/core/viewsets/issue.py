@@ -16,7 +16,7 @@ class IssueViewSet(IOMixin, viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data) #, many=True
-        print("testinhgf", data)
+        # print("testinhgf", data)
 
         serializer.is_valid(raise_exception=True)
         issue = serializer.save()
@@ -85,7 +85,7 @@ def send_sms(request):
         body='Hello there! This is a test message from the Django backend. to paul'
     )
 
-    print(message.sid)
+    # print(message.sid)
     return Response({'message': f'SMS sent, (sid:{message.sid})'}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -102,7 +102,7 @@ def send_email(request):
     subject=data.get('subject', 'Subject here')
     message=data.get('message', 'Here is the message.')
 
-    print(request.data, from_email, subject, message)
+    # print(request.data, from_email, subject, message)
 
     send_mail(
         subject=subject,

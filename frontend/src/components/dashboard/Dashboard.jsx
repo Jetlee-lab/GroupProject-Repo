@@ -57,7 +57,7 @@ export default function DashboardLayout() {
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div> */}
           <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            { pathname.startsWith("/dashbord") && (role === "student" ? (
+            { pathname.startsWith("/dashboard") && (role === "student" ? (
               <StudentDashboard />
             ) : role === "lecturer" ? (
               <LecturerDashboard />

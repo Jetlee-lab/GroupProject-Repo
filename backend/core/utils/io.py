@@ -39,7 +39,7 @@ def format_response(response, meta={}, success=None):
                 response.data = {'message': response.data}
 
 
-        print(response.context_data)
+        # print(response.context_data)
         #response_meta = response.
         response.data = {
             'meta': {
@@ -71,6 +71,6 @@ def paginate_response(viewset, queryset, serializer, many=True):
     page = viewset.paginate_queryset(queryset)
 
     if page is None:
-        return Response(serializer(queryset, many).data)
+        return Response(serializer(queryset, many=many).data)
 
-    return viewset.get_paginated_response(serializer(page, many).data)
+    return viewset.get_paginated_response(serializer(page, many=many).data)

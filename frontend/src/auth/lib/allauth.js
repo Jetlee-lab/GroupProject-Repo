@@ -1,4 +1,5 @@
 import { getCSRFToken } from './django'
+import { BACKEND_URL } from '@/constants'
 
 export const Client = Object.freeze({
   APP: 'app',
@@ -8,12 +9,12 @@ export const Client = Object.freeze({
 export const settings = {
   client: Client.BROWSER,
   // baseUrl: `/_allauth/${Client.BROWSER}/v1`,
-  baseUrl: `http://localhost:8000/auth/${Client.BROWSER}/v1`,
+  baseUrl: `${BACKEND_URL}/auth/${Client.BROWSER}/v1`,
   // baseUrl: `https://1a19-102-134-149-102.ngrok-free.app/auth/${Client.BROWSER}/v1`,
   // withCredentials: false
   withCredentials: true
 }
-
+alert("BACKEND_URL: " + BACKEND_URL)
 const ACCEPT_JSON = {
   accept: 'application/json'
 }

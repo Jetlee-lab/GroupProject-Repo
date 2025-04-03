@@ -11,6 +11,10 @@ echo RUNNING MIGRATIONS...
 python manage.py makemigrations
 python manage.py migrate
 
+echo POPULATING DATABASE...
+
+python manage.py loaddata d
+
 # Collect static files
 echo COLLECTING STATIC FILES...
 

@@ -12,7 +12,7 @@ from ..serializers import (
     FacultySerializer,
     IssueSerializer
 )
-from ..models import User, Role, Student, Staff, Faculty
+from ..models import User, Role, Student, Staff, Faculty, Issue
 from ..utils.io import IOMixin, paginate_response #format_response
 
 
@@ -100,9 +100,16 @@ class UsersViewSet(
     @action(methods=["GET"], detail=True, url_path="issues", url_name="issues")
     def issues(self, request, *args, pk=None, **kwargs):
         try:
-            issues = Student.objects.get(user=pk).issues.all()
-        except Student.DoesNotExist:
-            raise NotFound({'details': 'Student details not found'})
+            role = self.request.user.roles.first()
+            print({"role": role})
+            if role.name == Role.ROLE_STUDENT:
+                issues = Student.objects.get(pk=pk).issues.all()
+            elif role.name == Role.ROLE_LECTURER:
+                issues = Staff.objects.get(pk=pk).assingned_issues.all()
+            else:
+                issues = Issue.objects.all()
+        except (Student.DoesNotExist, Staff.DoesNotExist):
+            raise NotFound({'details': 'Issues not found'})
 
         return paginate_response(self, issues, IssueSerializer)
 
