@@ -1,12 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  AuthContextProvider,
-  AuthChangeRedirector,
-  AnonymousRoute,
-  AuthenticatedRoute,
-} from "./auth";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HelpPage from "./pages/HelpPage";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -20,7 +13,7 @@ import StudentIssueForm from "./components/issues/StudentIssueForm";
 import LecturerEditIssueForm from "./components/issues/LecturerEditIssueForm";
 import AssignIssue from "./components/issues/AssignIssue";
 import AppLayout from "./components/common/AppLayout";
-import LandingPage from "./pages/LandingPage";
+import LandingPage from "./pages/LandingPage"; 
 import LecturerDashboard from "./components/LecturerDashboard";
 import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
 import StudentDashboard from './components/StudentDashboard';
@@ -128,8 +121,50 @@ export function Router() {
 
 export default function App() {
   return (
-    <AuthContextProvider>
-      <Router />
-    </AuthContextProvider>
+    <Router>
+      <Routes>
+        <Route path="" element={<AppLayout />}>
+          <Route path="" element={<HomePage />} />
+          <Route path="/help" element={<HelpPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/lecturer-reports" element={<LecturerReportsPage/>} />
+          <Route path="/student-reports" element={<StudentReportsPage/>} />
+          <Route path="/registrar-reports" element={<AcademicRegistrarReportsPage/>} />
+          <Route path="/settings" element={<SettingsPage/>} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/edit-issue-lecturer" element={<LecturerEditIssueForm />} />
+          <Route path="/add-issue" element={<StudentIssueForm />} />
+          <Route path="/assign-issue" element={<AssignIssue />} />
+          <Route path="/lecturer-dashboard" element={<LecturerDashboard />} />
+          <Route path="/registrar-dashboard" element={<AcademicRegistrarDashboard />} />
+          <Route path="/student-dashboard" element={<Student_dashboard />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
+
+// <Router>
+// <Routes>
+//   <Route path="" element={<AppLayout />}>
+//     <Route path="" element={<HomePage />} />
+//     <Route path="/help" element={<HelpPage />} />
+//     <Route path="/notifications" element={<NotificationsPage />} />
+//     <Route path="/lecturer-reports" element={<LecturerReportsPage/>} />
+//     <Route path="/student-reports" element={<StudentReportsPage/>} />
+//     <Route path="/registrar-reports" element={<AcademicRegistrarReportsPage/>} />
+//     <Route path="/settings" element={<SettingsPage/>} />
+//     <Route path="/signup" element={<SignUpPage />} />
+//     <Route path="/login" element={<LoginPage />} />
+//     <Route path="/landing" element={<LandingPage />} />
+//     <Route path="/edit-issue-lecturer" element={<LecturerEditIssueForm />} />
+//     <Route path="/add-issue" element={<StudentIssueForm />} />
+//     <Route path="/assign-issue" element={<AssignIssue />} />
+//     <Route path="/lecturer-dashboard" element={<LecturerDashboard />} />
+//     <Route path="/registrar-dashboard" element={<AcademicRegistrarDashboard />} />
+//     <Route path="/student-dashboard" element={<Student_dashboard />} />
+//   </Route>
+// </Routes>
+// </Router>
