@@ -33,6 +33,7 @@ EXPOSE 8000
 WORKDIR /app/backend
 
 RUN echo RUNNING MIGRATIONS...
+RUN env
 
 RUN python manage.py makemigrations
 RUN python manage.py migrate
