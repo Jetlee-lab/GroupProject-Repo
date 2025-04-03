@@ -6,7 +6,7 @@
 # print ----------+++++++++++++++++++++++++++++++++++++----------------------------
 
 
-RUN echo RUNNING MIGRATIONS...
+echo RUNNING MIGRATIONS...
 
 python manage.py makemigrations
 python manage.py migrate
