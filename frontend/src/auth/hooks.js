@@ -102,3 +102,9 @@ export function useAuthStatus () {
   const auth = useAuth()
   return [auth, authInfo(auth)]
 }
+
+export function useRole(){
+  const user = useUser()
+  const role = user?.roles[0]
+  return role ? role.name : null
+}

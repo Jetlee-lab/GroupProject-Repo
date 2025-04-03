@@ -25,7 +25,7 @@ function AppLayout() {
     >
       <Header />
       {shouldShowSidebar && <SideBar userRole={userRole} />} {/* Pass userRole to SideBar */}
-      <main className={`${shouldShowSidebar ? 'col-start-2' : ''} overflow-y-scroll  border-2 border-amber-900`}>
+      <main className={`${shouldShowSidebar ? 'col-start-2' : ''} overflow-y-scroll`}>
         <Outlet />
       </main>
     </div>

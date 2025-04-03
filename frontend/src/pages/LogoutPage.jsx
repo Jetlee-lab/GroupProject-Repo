@@ -5,7 +5,7 @@ import { logout } from '../auth/lib/allauth'
 
 export default function Logout () {
   const [response, setResponse] = useState({ fetching: false, content: null })
-
+  
   function submit () {
     setResponse({ ...response, fetching: true })
     logout().then((content) => {

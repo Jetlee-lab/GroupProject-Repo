@@ -24,9 +24,10 @@ import LandingPage from "./pages/LandingPage";
 import LecturerDashboard from "./components/LecturerDashboard";
 import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
 import StudentDashboard from './components/StudentDashboard';
-import Dashboard from "./components/Dashboard";``
+import Dashboard from "./components/dashboard/Dashboard";``
 import LogoutPage from "./pages/LogoutPage"
 import { useConfig } from "./auth/hooks";
+import Login from "@/components/auth/Login"
 
 function createRouter(config) {
   return createBrowserRouter([
@@ -47,15 +48,11 @@ function createRouter(config) {
           element: <LandingPage />,
         },
         {
-          path: "/signup",
-          element: <AnonymousRoute><SignUpPage /></AnonymousRoute>,
-        },
-        {
           path: "/login",
           element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
         }, {
           path: "/logout",
-          element: <AnonymousRoute><LogoutPage /></AnonymousRoute>,
+          element: <LogoutPage />,
         },
         {
           path: "/notifications",
@@ -89,28 +86,41 @@ function createRouter(config) {
           path: "/assign-issue",
           element: <AssignIssue />,
         },
-        {
-          path: "/lecturer-dashboard",
-          element: <LecturerDashboard />,
-        },
-        {
-          path: "/registrar-dashboard",
-          element: <AcademicRegistrarDashboard />,
-        },
-        {
+                {
           path: "/help",
           element: <HelpPage />,
         },
-        {
-          path:"/student-dashboard",
-          element: <StudentDashboard />,
-        },
-        {
-          path: "/dashboard",
-          element: <Dashboard />
-        }
+       
       ],
     },
+    {
+      path: "/account/*",
+      element: <AnonymousRoute/>,
+      children: [
+        {
+          path: "signup",
+          element: <SignUpPage/>,
+        },
+        {
+          path: "login",
+          element: <Login/>
+        }
+      ]
+    },
+    {
+      element: <AuthenticatedRoute />,
+      children: [
+    {
+      path: "/dashboard",
+      element: <Dashboard />
+    },
+  ],
+}
+
+// {
+//   path: "/dashboard",
+//   element: <Dashboard />
+// },
   ]);
 }
 
