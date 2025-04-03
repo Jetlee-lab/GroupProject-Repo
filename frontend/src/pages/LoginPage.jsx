@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AITS_Logo from "../components/images/logo2.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AITS_Logo from "../components/images/logo2.jpg";
@@ -58,13 +57,16 @@ const LoginPage = () => {
         <h1 className="text-2xl font-semibold mb-4 text-center">
           Log in to Academic Issue Tracking System
         </h1>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={submit}>
           {/* Email Input */}
           <div className="mb-4 bg-sky-100">
-            <label htmlFor="email" className="block text-gray-600">Email</label>
+            <label htmlFor="email" className="block text-gray-600">
+              Email
+            </label>
             <input
               type="email"
               id="email"
+              name="email"
               className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
               autoComplete="off"
               required
@@ -74,10 +76,13 @@ const LoginPage = () => {
 
           {/* Password Input */}
           <div className="mb-4">
-            <label htmlFor="password" className="block text-gray-800">Password</label>
+            <label htmlFor="password" className="block text-gray-800">
+              Password
+            </label>
             <input
               type="password"
               id="password"
+              name="password"
               className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
               autoComplete="off"
               required
@@ -86,10 +91,13 @@ const LoginPage = () => {
           </div>
 
           {/* Role Selection */}
-          <div className="mb-4">
-            <label htmlFor="role" className="block text-gray-800">Select Role</label>
+          {/* <div className="mb-4">
+            <label htmlFor="role" className="block text-gray-800">
+              Select Role
+            </label>
             <select
               id="role"
+              name="role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
               className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
@@ -99,17 +107,21 @@ const LoginPage = () => {
               <option value="registrar">Registrar</option>
               <option value="lecturer">Lecturer</option>
             </select>
-          </div>
+          </div> */}
 
           {/* Remember Me Checkbox */}
           <div className="mb-4 flex items-center">
-            <input type="checkbox" id="remember" className="text-red-500" />
-            <label htmlFor="remember" className="text-green-900 ml-2">Remember Me</label>
+            <input type="checkbox" id="remember" name="remember" className="text-red-500" />
+            <label htmlFor="remember" className="text-green-900 ml-2">
+              Remember Me
+            </label>
           </div>
 
           {/* Forgot Password Link */}
           <div className="mb-6 text-blue-500">
-            <a href="/" className="hover:underline">Forgot Password?</a>
+            <a href="/" className="hover:underline">
+              Forgot Password?
+            </a>
           </div>
 
           {/* Login Button */}
@@ -123,7 +135,9 @@ const LoginPage = () => {
 
         {/* Sign Up Link */}
         <div className="mt-6 text-green-500 text-center">
-          <Link to="/signup" className="hover:underline">Sign Up Here</Link>
+          <Link to="/signup" className="hover:underline">
+            Sign Up Here
+          </Link>
         </div>
       </div>
     </div>
@@ -131,3 +145,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+

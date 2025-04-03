@@ -1,6 +1,7 @@
 import {
   Navigate,
-  useLocation
+  useLocation,
+  Outlet,
 } from 'react-router-dom'
 import { useAuthChange, AuthChangeEvent, useAuthStatus } from './hooks'
 import { Flows, AuthenticatorType } from './lib/allauth'
@@ -61,7 +62,7 @@ export function AuthenticatedRoute ({ children }) {
   const [, status] = useAuthStatus()
   const next = `next=${encodeURIComponent(location.pathname + location.search)}`
   if (status.isAuthenticated) {
-    return children
+    return children || <Outlet />
   } else {
     return <Navigate to={`${URLs.LOGIN_URL}?${next}`} />
   }
@@ -70,7 +71,7 @@ export function AuthenticatedRoute ({ children }) {
 export function AnonymousRoute ({ children }) {
   const [, status] = useAuthStatus()
   if (!status.isAuthenticated) {
-    return children
+    return children || <Outlet />
   } else {
     return <Navigate to={URLs.LOGIN_REDIRECT_URL} />
   }

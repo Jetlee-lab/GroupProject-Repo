@@ -27,76 +27,76 @@ const IssueForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    console.log("Submitting form...");
+    console.log('submitting form')
+    // Handle your form submission (API call)
   };
 
   return (
-    // Center the form and remove extra spacing
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-lg bg-white shadow-lg rounded-xl p-6 sm:p-8 space-y-4"
-      >
-        <h2 className="text-2xl font-semibold text-center">Submit a New Issue</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-screen-xl mx-auto p-8 bg-white shadow-lg rounded-xl space-y-6 sm:space-y-8"
+    >
+      <h2 className="text-4xl font-semibold text-center mb-6">Submit a New Issue</h2>
 
-        {/* Issue Title & Description */}
-        <div className="grid grid-cols-1 gap-4">
-          <TextInput
-            label="Issue Title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-          <TextareaInput
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-          />
-        </div>
+      {/* Section 1: Issue Information */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <TextInput
+          label="Issue Title"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+        />
+        <TextareaInput
+          label="Description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          required
+        />
+        
+      </div>
 
-        {/* Category & Course Details */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <SelectInput
-            label="Category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            options={["Assignment", "Exam Results", "Course Materials", "Technical Issue"]}
-          />
-          <TextInput
-            label="Course/Department"
-            name="course"
-            value={formData.course}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Lecturer Name */}
+      {/* Section 2: Category and Course Details */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <SelectInput
+          label="Category"
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          options={["Assignment", "Exam Results", "Course Materials", "Technical Issue"]}
+        />
+        <TextInput
+          label="Course/Department"
+          name="course"
+          value={formData.course}
+          onChange={handleChange}
+          required
+        />
         <TextInput
           label="Lecturer/Professor Name"
           name="instructor"
           value={formData.instructor}
           onChange={handleChange}
         />
+      </div>
 
-        {/* File Upload */}
+      {/* Section 3: Attachments */}
+      <div className="mt-6">
         <FileUpload onFileChange={handleFileChange} />
+      </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="w-full sm:w-auto py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-          >
-            Submit Issue
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="flex justify-center mt-6">
+        <button
+          type="submit"
+          className="w-full sm:w-auto py-3 px-8 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+       onClick={()=>{
+        console.log('handling issue')
+       }} >
+          Submit Issue
+        </button>
+      </div>
+    </form>
   );
 };
 
