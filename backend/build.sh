@@ -18,14 +18,14 @@ python manage.py loaddata d
 # Collect static files
 echo COLLECTING STATIC FILES...
 
-python manage.py collectstatic --noinput
+# python manage.py collectstatic --noinput
 # mkdir -p /app/backend/staticfiles
 ls /app/backend/
 
-mv /app/frontend/dist /app/backend/staticfiles/frontend
+# mv /app/frontend/dist /app/backend/staticfiles/frontend
 
 echo =======================================================
-ls /app/backend/staticfiles/
+ls /app/backend/staticfiles/frontend/
 
 echo SPINING UP SERVER...
 
