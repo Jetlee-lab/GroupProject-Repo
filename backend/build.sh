@@ -6,12 +6,13 @@ env
 print ----------+++++++++++++++++++++++++++++++++++++----------------------------
 
 # RUN python manage.py collectstatic --noinput
-RUN mkdir -p /app/backend/staticfiles
-RUN mv /app/frontend/dist /app/backend/staticfiles/frontend
+# mkdir -p /app/backend/staticfiles
 
-RUN echo ...DONE
+# mv /app/frontend/dist /app/backend/staticfiles/frontend
 
-RUN echo STARTING SERVER...
+echo ...DONE
+
+echo STARTING SERVER...
 
 pwd
 
