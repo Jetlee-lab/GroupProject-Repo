@@ -41,7 +41,10 @@ RUN echo ...DONE
 
 # Collect static files
 RUN echo COLLECTING STATIC FILES...
+
 RUN python manage.py collectstatic --noinput
+RUN mv /app/frontend/dist /app/backend/staticfiles/frontend -r
+
 RUN echo ...DONE
 
 RUN echo STARTING SERVER...

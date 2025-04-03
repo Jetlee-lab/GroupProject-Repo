@@ -89,10 +89,21 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bootstrap.urls'
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [
+    os.path.join(STATIC_ROOT, "frontend"),
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(STATIC_ROOT, 'frontend'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,7 +126,7 @@ DATABASES = {
     #'default': {
     #    'ENGINE': 'django.db.backends.sqlite3',
     #    'NAME': BASE_DIR / 'db.sqlite3',
-    #} 
+    #}
     
     'default': {
         'ENGINE': env('DB_ENGINE', default='django.db.backends.postgresql'),
@@ -156,13 +167,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -255,6 +259,8 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+HEADLESS_ADAPTER = "core.adapters.CustomHeadlessAdapter"
 
 SOCIALACCOUNT_QUERY_EMAIL = True
 # HEADLESS_ONLY = True

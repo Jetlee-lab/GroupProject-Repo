@@ -15,8 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf import settings
+from django.views.generic import TemplateView
 from core.routers import urlpatterns as core_urls
 
 from rest_framework import routers
@@ -27,6 +28,15 @@ else:
     router = routers.SimpleRouter(trailing_slash=False)
 router = routers.SimpleRouter(trailing_slash=False)
 
+FRONTEND_EXCULDES = "|".join([
+    'api/',
+    'admin/',
+    'accounts/',
+    'api-auth/',
+    'dj-rest-auth/',
+    'auth/',
+])
+
 urlpatterns = core_urls + [
     path('api/', include(("api.urls", "api"), namespace="api")),
     path('admin/', admin.site.urls),
@@ -34,4 +44,7 @@ urlpatterns = core_urls + [
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('accounts/', include('allauth.urls')),
     path('auth/', include('allauth.headless.urls')),
+
+    re_path(f"^(?!{FRONTEND_EXCULDES}).*", TemplateView.as_view(template_name='index.html'), name='react_app'),
+    # path('', TemplateView.as_view(template_name='index.html'), name='react_app'),
 ]

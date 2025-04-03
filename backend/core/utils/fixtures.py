@@ -46,9 +46,11 @@ FACULTY_DATA = {
 }
 
 ROLE_DATA = {
-    'REGISTRAR': 'Registrar',
-    'LECTURER': 'Lecturer',
-    'STUDENT': 'Student',
+    'REGISTRAR': 'registrar',
+    'LECTURER': 'lecturer',
+    'STUDENT': 'student',
+    # 'ADMINISTRATOR': 'administrator',
+
 }
 
 HOST_DATA = [
