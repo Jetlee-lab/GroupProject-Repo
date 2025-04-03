@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AITS_Logo from "../components/images/logo2.jpg";
 import { useConfig, sleep } from '../auth'
+import { login } from '../auth/lib/allauth'
+
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -14,14 +16,13 @@ const LoginPage = () => {
   const config = useConfig()
   const hasProviders = config.data.socialaccount?.providers?.length > 0
 
-  async function submit () {
+  async function submit (e) {
     e.preventDefault()
-    await sleep(1000)
-    alert()
 
     setResponse({ ...response, fetching: true })
     login({ email, password }).then((content) => {
       setResponse((r) => { return { ...r, content } })
+      console.log(`User logged in as ${role}`);
     }).catch((e) => {
       console.error(e)
       // window.alert(e)
@@ -31,25 +32,8 @@ const LoginPage = () => {
   }
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    sleep(1000)
-    await axios.get("https://groupproject-repo.onrender.com/auth/browser/auth/session/").then((response) => {
-      console.log(response.data); // Check the response data
-    });
-
-    await axios.post("https://groupproject-repo.onrender.com/auth/browser/auth/login/", {email, password}, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    }).then((response) => {
-      console.log(response.data); // Check the response data
-    }).catch((error) => {
-      console.error("Error fetching session data:", error);
-    });
-
     // Perform login logic here (e.g., validate credentials)
-    console.log(`User logged in as ${role}`);
+    
 
     // Redirect to the appropriate dashboard based on the role
     if (role === "student") {

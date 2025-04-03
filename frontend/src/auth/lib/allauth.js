@@ -11,7 +11,7 @@ export const settings = {
   baseUrl: `http://localhost:8000/auth/${Client.BROWSER}/v1`,
   // baseUrl: `https://1a19-102-134-149-102.ngrok-free.app/auth/${Client.BROWSER}/v1`,
   // withCredentials: false
-  // withCredentials: true
+  withCredentials: true
 }
 
 const ACCEPT_JSON = {

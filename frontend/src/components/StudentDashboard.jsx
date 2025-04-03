@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { Link } from "react-router-dom"; // Import Link for navigation
 
 const StudentDashboard = () => {
   const [activities, setActivities] = useState([]);
