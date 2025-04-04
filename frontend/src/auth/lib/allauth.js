@@ -1,5 +1,5 @@
 import { getCSRFToken } from './django'
-import { BACKEND_URL } from '@/constants'
+import { BACKEND_URL } from '@/lib/constants'
 
 export const Client = Object.freeze({
   APP: 'app',
