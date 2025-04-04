@@ -6,6 +6,7 @@ import {
   AuthenticatedRoute,
 } from "./auth";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HelpPage from "./pages/HelpPage";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -19,6 +20,9 @@ import StudentIssueForm from "./components/issues/StudentIssueForm";
 import LecturerEditIssueForm from "./components/issues/LecturerEditIssueForm";
 import AssignIssue from "./components/issues/AssignIssue";
 import AppLayout from "./components/common/AppLayout";
+import LecturerDashboard from "./components/LecturerDashboard";
+import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
+import StudentDashboard from './components/StudentDashboard';
 import Dashboard from "./components/dashboard/Dashboard";``
 import LogoutPage from "./pages/LogoutPage"
 import { useConfig } from "./auth/hooks";
@@ -38,8 +42,8 @@ function createRouter(config) {
           path: "",
           element: <HomePage />,
         },
-       
-       /* {
+        
+        /*{
           path: "/login",
           element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
         },*/ {
