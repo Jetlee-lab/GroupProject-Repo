@@ -2,6 +2,7 @@ import { useMemo, useState } from "react"
 
 export default function useQuery(fn, ...args) {
     const [isFetching, setIsFetching] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState(undefined)
     const [error, setError] = useState(null)
     
@@ -14,7 +15,9 @@ export default function useQuery(fn, ...args) {
             setError(e)
         }
         setIsFetching(false)
+        setIsLoading(false)
     }, [fn, ...args]);
+    
 
-    return { isFetching, error, data }
+    return { isLoading, isFetching, error, data }
 }

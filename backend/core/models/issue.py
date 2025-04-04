@@ -18,13 +18,13 @@ class Issue(models.Model):
         ordering = ('-created_at', )
 
     STATUS_OPEN = 1
-    STATUS_REVIEW = 2
+    STATUS_INREVIEW = 2
     STATUS_ESCALATED = 4
     STATUS_RESOLVED = 8
     STATUS_CLOSED = 16
     STATUS_CHOICES = {
         STATUS_OPEN: 'open',
-        STATUS_REVIEW: 'in_review',
+        STATUS_INREVIEW: 'in_review',
         STATUS_ESCALATED: 'escalated',
         STATUS_RESOLVED: 'resolved',
         STATUS_CLOSED: 'closed',
