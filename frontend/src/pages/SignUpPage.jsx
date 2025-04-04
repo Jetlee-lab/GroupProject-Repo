@@ -13,7 +13,7 @@ const SignUpPage = () => {
     console.log('User signed up successfully!');
 
     // Redirecting to the Landing Page after successful sign-up
-    navigate('/landing');
+    navigate('/dashboard');
   };
 
   return (
@@ -139,8 +139,8 @@ const SignUpPage = () => {
                   Select your role
                 </option>
                 <option value="student">Student</option>
-                <option value="teacher">Teacher</option>
-                <option value="admin">Admin</option>
+                <option value="teacher">Lecturer</option>
+                <option value="admin">Academic Registrar</option>
               </select>
             </div>
 
@@ -155,7 +155,7 @@ const SignUpPage = () => {
 
           {/* Log in Link */}
           <div className="mt-6 text-green-500 text-center">
-            <Link to="/login" className="hover:underline">
+            <Link to="/account/login" className="hover:underline">
               Already have an account? Log In Here
             </Link>
           </div>
