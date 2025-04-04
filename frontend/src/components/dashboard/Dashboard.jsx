@@ -1,5 +1,5 @@
 import React, { useState } from "react"; // Importing React and the useState hook for state management
-import { Link } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
+import { Link, useLocation, Outlet } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
 import { useRole } from "@/auth";
 import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
 import {
@@ -19,9 +19,11 @@ import {
 import LecturerDashboard from "@/components/LecturerDashboard";
 import AcademicRegistrarDashboard from "@/components/AcademicRegistrarDasboard";
 import StudentDashboard from "@/components/StudentDashboard";
+import { Outdent } from "lucide-react";
 
 export default function DashboardLayout() {
   const role = useRole()
+  const { pathname } = useLocation()
   // const role = "student";
   // const role = "lecturer";
   // const role = "registrar"
@@ -55,14 +57,14 @@ export default function DashboardLayout() {
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div> */}
           <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            {role === "student" ? (
+            { pathname.startsWith("/dashboard") && (role === "student" ? (
               <StudentDashboard />
             ) : role === "lecturer" ? (
               <LecturerDashboard />
             ) : (
               role === "registrar" ?
               <AcademicRegistrarDashboard /> : <div className="flex justify-center">Failed to load <strong>{role}</strong>... {":("}</div>
-            )}
+            )) || <Outlet />}
           </div>
         </div>
       </SidebarInset>

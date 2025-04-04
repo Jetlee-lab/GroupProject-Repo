@@ -24,7 +24,7 @@ import LandingPage from "./pages/LandingPage";
 import LecturerDashboard from "./components/LecturerDashboard";
 import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
 import StudentDashboard from './components/StudentDashboard';
-import Dashboard from "./components/dashboard/Dashboard";``
+import Dashboard from "./components/dashboard/Dashboard"; ``
 import LogoutPage from "./pages/LogoutPage"
 import { useConfig } from "./auth/hooks";
 import Login from "@/components/auth/Login"
@@ -43,18 +43,36 @@ function createRouter(config) {
           path: "",
           element: <HomePage />,
         },
+        // {
+        //   path: "/landing",
+        //   element: <LandingPage />,
+        // },
+        // {
+        //   path: "/login",
+        //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
+        // },
+      ],
+    },
+    {
+      path: "/account/*",
+      element: <AnonymousRoute />,
+      children: [
         {
-          path: "/landing",
-          element: <LandingPage />,
+          path: "signup",
+          element: <SignUpPage />,
         },
         {
-          path: "/login",
-          element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
+          path: "login",
+          element: <Login />
+        },
+      ]
+    },
+    {
+      element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>,
+      children: [
+        {
+          path: "/dashboard",
         }, {
-          path: "/logout",
-          element: <LogoutPage />,
-        },
-        {
           path: "/notifications",
           element: <NotificationsPage />,
         },
@@ -78,6 +96,7 @@ function createRouter(config) {
           path: "/edit-issue-lecturer",
           element: <LecturerEditIssueForm />,
         },
+
         {
           path: "/add-issue",
           element: <StudentIssueForm />,
@@ -86,41 +105,21 @@ function createRouter(config) {
           path: "/assign-issue",
           element: <AssignIssue />,
         },
-                {
+        {
           path: "/help",
           element: <HelpPage />,
         },
-       
-      ],
-    },
-    {
-      path: "/account/*",
-      element: <AnonymousRoute/>,
-      children: [
         {
-          path: "signup",
-          element: <SignUpPage/>,
+          path: "/account/logout",
+          element: <LogoutPage />,
         },
-        {
-          path: "login",
-          element: <Login/>
-        }
-      ]
-    },
-    {
-      element: <AuthenticatedRoute />,
-      children: [
-    {
-      path: "/dashboard",
-      element: <Dashboard />
-    },
-  ],
-}
+      ],
+    }
 
-// {
-//   path: "/dashboard",
-//   element: <Dashboard />
-// },
+    // {
+    //   path: "/dashboard",
+    //   element: <Dashboard />
+    // },
   ]);
 }
 
@@ -143,3 +142,4 @@ export default function App() {
     </AuthContextProvider>
   );
 }
+
