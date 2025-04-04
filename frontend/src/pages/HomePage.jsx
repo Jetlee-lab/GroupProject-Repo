@@ -51,7 +51,7 @@ const HomePage = () => {
       <div className="mt-10 text-center">
         <h2 className="text-2xl font-semibold">Take Control of Academic Issue Tracking</h2>
         <p className="mt-2 text-gray-700">Sign up today and make academic management seamless and efficient.</p>
-        <Link to="/signup">
+        <Link to="/account/signup">
           <button className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition">Get Started</button>
         </Link>
       </div>
