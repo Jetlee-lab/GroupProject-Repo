@@ -1,14 +1,14 @@
 import React from 'react';
 import { useQuery } from "@/hooks"
 import { fetchIssues } from '@/lib/api';
-import { STATUS_CLOSED, STATUS_OPEN, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_REVIEW } from '@/lib/constants';
+import { STATUS_CLOSED, STATUS_OPEN, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_INREVIEW } from '@/lib/constants';
 
 
 export default function IssueStats({issues}) {
 
   // const pending = issues.filter((issue) => issue.status == STATUS_PENDING)
   const resolved = issues.filter((issue) => issue.status == STATUS_RESOLVED)
-  const inreview = issues.filter((issue) => issue.status == STATUS_REVIEW)
+  const inreview = issues.filter((issue) => issue.status == STATUS_INREVIEW)
   const open = issues.filter((issue) => issue.status == STATUS_OPEN)
   const closed = issues.filter((issue) => issue.status == STATUS_CLOSED)
   const escalated = issues.filter((issue) => issue.status == STATUS_ESCALATED)

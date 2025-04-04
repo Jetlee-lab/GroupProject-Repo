@@ -1,24 +1,27 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { STATUS_CLOSED, STATUS_OPEN, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_REVIEW } from '@/lib/constants';
+import { useQuery } from "@/hooks"
+import { fetchIssues, fetchUsers } from '@/lib/api';
+import { STATUS_CLOSED, STATUS_OPEN, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_INREVIEW } from '@/lib/constants';
 
-const AcademicRegistrarReportsPage = ({ issues, users }) => {
-  /*Initializing the 'issues' state with an array of objects representing different academic issues.  
-Each issue contains information about:
--id: A unique identifier for the issue
--title: A brief description of the issue
--category: The type of issue (that is to say; Course Material, Exams, Technical)
--status: The current status of the issue (that is to say; In Progress, Resolved, Open)
--priority: The priority level of the issue (that is to say; High, Medium, Low)
--reportedBy: The name of the person who reported the issue
--date: The date the issue was reported
- This state will be used to render a list of issues on the page and can be updated as necessary.*/
+const AcademicRegistrarReportsPage = () => {
+const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError, data: issuesData } = useQuery(fetchIssues)
+  const { isLoading: userssLoading, isFetching: usersFetching, error: usersError, data: usersData } = useQuery(fetchUsers)
 
-    const [issues, setIssues] = useState(initIssues);
+  if (issuesFetching || usersFetching) {
+    return <>Fetching issues...</>
+  } else if (issuesLoading || userssLoading) {
+    return <>Loading data...</>
+  } else if (issuesError || usersError) {
+    return <>Ops something happend!</>
+  }
+
+  const issues = issuesData.data
+  const users = usersData.data
 
   const handleSearchInput = (e) => {
     const searchValue = e.target.value;
-    const filteredIssues = initIssues.filter((issue) =>
+    const filteredIssues = issues.filter((issue) =>
       issue.title.toLowerCase().includes(searchValue.toLowerCase())
     );
     setIssues(filteredIssues);
@@ -68,19 +71,17 @@ Each issue contains information about:
                   {/*Display status with different colors */}
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                      issue.status === STATUS_CLOSED
+                      [ STATUS_INREVIEW, STATUS_ESCALATED,  STATUS_OPEN].includes(issue.status)
                         ? "bg-green-100 text-green-600"
-                        : issue.status === STATUS_OPEN
+                        : issue.status === "Pending"
                         ? "bg-yellow-100 text-yellow-600"
-                        : issue.status === STATUS_INREVIEW
-                        ? "bg-gray-100 text-gray-600"
                         : issue.status === "Rejected"
                         ? "bg-red-100 text-red-600"
-                        : issue.status === "Open"
+                        : issue.status === STATUS_OPEN
                         ? "bg-blue-100 text-blue-600"
-                        : issue.status === "In Progress"
+                        : issue.status === STATUS_INREVIEW
                         ? "bg-purple-100 text-purple-600"
-                        : issue.status === "Closed"
+                        : issue.status === STATUS_CLOSED
                         ? "bg-indigo-100 text-indigo-600"
                         : ""
                     }`}
@@ -90,9 +91,9 @@ Each issue contains information about:
                 </td>
                 {/*Displaying priority */}
 
-                <td className="px-6 py-4">{issue.reportedBy}</td>
+                <td className="px-6 py-4">{users.filter(u => issue.owner == u.id)[0]?.email || "annon." }</td>
                 <td className="px-6 py-4">{issue.date}</td>
-                <td className="px-6 py-4">{issue.lecturer}</td>
+                <td className="px-6 py-4">{users.filter(u => issue.assignee == u.id)[0]?.email || "N/A" }</td>
               </tr>
             ))}
           </tbody>

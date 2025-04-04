@@ -167,7 +167,7 @@ const data = {
     },
     {
       name: "Logout",
-      url: "/logout",
+      url: "/account/logout",
       icon: LogOut,
     },
   ],
