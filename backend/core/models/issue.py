@@ -52,7 +52,7 @@ class Issue(models.Model):
 
     owner = models.ForeignKey(Student, related_name='issues', on_delete=models.CASCADE)
     assignee = models.ForeignKey(Staff,
-        related_name='assingned_issues', null=True, on_delete=models.CASCADE)
+        related_name='assigned_issues', null=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=128, blank=False)
     description = models.CharField(max_length=256, null=True, blank=False, default='')
     categories = models.ManyToManyField(Category, blank=False)

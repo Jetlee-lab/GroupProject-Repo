@@ -2,9 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import IssueStats from './issues/IssueStats'; 
 import IssuesTable from './issues/IssueTable';
-import ActivityFeed from './issues/ActivityFeed'; 
+import ActivityFeed from './issues/ActivityFeed';
+import { useQuery } from "@/hooks"
+import { fetchIssues } from '@/lib/api';
 
 export default function RegistrarDashboard() {
+  const {isFetching, error, data: issues} = useQuery(fetchIssues)
+  
   return (
     <div className="p-4">
       <h2 className="text-2xl text-center font-bold mb-4">ACADEMIC REGISTRAR DASHBOARD</h2>

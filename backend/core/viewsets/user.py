@@ -99,13 +99,13 @@ class UsersViewSet(
 
     @action(methods=["GET"], detail=True, url_path="issues", url_name="issues")
     def issues(self, request, *args, pk=None, **kwargs):
+        role = self.request.user.roles.first()
+        # print({"role": role})
         try:
-            role = self.request.user.roles.first()
-            print({"role": role})
             if role.name == Role.ROLE_STUDENT:
                 issues = Student.objects.get(pk=pk).issues.all()
             elif role.name == Role.ROLE_LECTURER:
-                issues = Staff.objects.get(pk=pk).assingned_issues.all()
+                issues = Staff.objects.get(pk=pk).assigned_issues.all()
             else:
                 issues = Issue.objects.all()
         except (Student.DoesNotExist, Staff.DoesNotExist):

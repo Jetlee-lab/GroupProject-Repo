@@ -1,3 +1,6 @@
+from django.http import QueryDict
+from django.db.models import Q
+from core.models.user import Role
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
 from rest_framework import status
@@ -58,6 +61,53 @@ class IssueViewSet(IOMixin, viewsets.ModelViewSet):
         cats = Category.objects.all()
 
         return paginate_response(self, cats, CategorySerializer)
+    
+    @action(detail=True, methods=['GET'])
+    def logs(self, request, pk=None, *args, **kwargs):
+        q_params = request.query_params
+        if isinstance(q_params, QueryDict):
+            queries = QueryDict(mutable=True).update(q_params)
+            # q = extra.pop('q', [None])[-1] or None
+            # ordering = extra.pop('sort', ['DESC'])[-1]
+        else:
+            queries = queries.copy()
+
+        role = self.request.user.roles.first()
+        # try:
+        if role.name == Role.ROLE_STUDENT:
+            issues = Issue.objects.filter(owner=pk)
+        elif role.name == Role.ROLE_LECTURER:
+            issues = Issue.objects.filter(assignee=pk)
+        else:
+            issues = Issue.objects.all()
+        # except (Student.DoesNotExist, Staff.DoesNotExist):
+        #     raise NotFound({'details': 'Issues not found'})
+
+        # kws = {
+        #     k: [ vv for vv in v if vv ]
+        #     for k, v in queries.lists()
+        # }
+        query = None
+        for k, v in q_params.lists():
+            if not (vv := [ x for x in v if x ]):
+                continue
+
+            kw = {'%s__in' % k: vv}
+            if query is None:
+                query = Q(**kw)
+            else:
+                query |= Q(**kw)
+        
+        result =  1
+
+        # for q, v in queries.lists():
+        #     kws.setdefault(q, [])
+        #     for vv in v:
+        #         if vv:
+        #             kws[q].append(vv)
+                
+        #     else:
+        #         keep = Tr
 
     def get_queryset(self):
         user = self.request.user

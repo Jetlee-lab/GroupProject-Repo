@@ -1,6 +1,14 @@
 import React from 'react';
+import { useQuery } from "@/hooks"
+import { fetchIssues } from '@/lib/api';
+import { STATUS_CLOSED, STATUS_OPEN, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_REVIEW } from '@/lib/constants';
+
 
 export default function IssueStats() {
+  const {isFetching, error, data: issues} = useQuery(fetchIssues)
+
+  console.log({issues, error, isFetching})
+
   const stats = {
     pending: 5,
     resolved: 12,

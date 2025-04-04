@@ -22,13 +22,12 @@ class SearchViewSet(IOMixin, viewsets.GenericViewSet):
 
         # return Response(request.query_params)
         return self.search(request.query_params)
-
-        return paginate_response(self, result, IssueSerializer)
+        # return paginate_response(self, result, IssueSerializer)
 
     def create(self, request, *args, **kwargs):
         #return self.list(request, *args, **kwargs)
         return self.search(request.data)
-        return Response({'hello':'World', 'data':request.data})
+        # return Response({'hello':'World', 'data':request.data})
 
     def search(self, query_obj):
         if isinstance(query_obj, QueryDict):
