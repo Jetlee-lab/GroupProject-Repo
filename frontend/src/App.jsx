@@ -6,7 +6,6 @@ import {
   AuthenticatedRoute,
 } from "./auth";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import HelpPage from "./pages/HelpPage";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -15,15 +14,11 @@ import StudentReportsPage from "./pages/StudentReportsPage";
 import AcademicRegistrarReportsPage from "./pages/AcademicRegistrarReportsPage";
 import SettingsPage from "./pages/SettingsPage";
 import SignUpPage from "./pages/SignUpPage";
-import LoginPage from "./pages/LoginPage";
+//import LoginPage from "./pages/LoginPage";
 import StudentIssueForm from "./components/issues/StudentIssueForm";
 import LecturerEditIssueForm from "./components/issues/LecturerEditIssueForm";
 import AssignIssue from "./components/issues/AssignIssue";
 import AppLayout from "./components/common/AppLayout";
-import LandingPage from "./pages/LandingPage";
-import LecturerDashboard from "./components/LecturerDashboard";
-import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
-import StudentDashboard from './components/StudentDashboard';
 import Dashboard from "./components/dashboard/Dashboard";``
 import LogoutPage from "./pages/LogoutPage"
 import { useConfig } from "./auth/hooks";
@@ -43,14 +38,11 @@ function createRouter(config) {
           path: "",
           element: <HomePage />,
         },
-        {
-          path: "/landing",
-          element: <LandingPage />,
-        },
-        {
+       
+       /* {
           path: "/login",
           element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
-        }, {
+        },*/ {
           path: "/logout",
           element: <LogoutPage />,
         },
