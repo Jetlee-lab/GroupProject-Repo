@@ -24,7 +24,7 @@ import LandingPage from "./pages/LandingPage";
 import LecturerDashboard from "./components/LecturerDashboard";
 import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
 import StudentDashboard from './components/StudentDashboard';
-import Dashboard from "./components/dashboard/Dashboard"; ``
+import Dashboard from "./components/dashboard/Dashboard";``
 import LogoutPage from "./pages/LogoutPage"
 import { useConfig } from "./auth/hooks";
 import Login from "@/components/auth/Login"
@@ -43,60 +43,18 @@ function createRouter(config) {
           path: "",
           element: <HomePage />,
         },
-        // {
-        //   path: "/landing",
-        //   element: <LandingPage />,
-        // },
-        // {
-        //   path: "/login",
-        //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
-        // },
-      ],
-    },
-    {
-      path: "/account/*",
-      element: <AnonymousRoute />,
-      children: [
         {
-          path: "signup",
-          element: <SignUpPage />,
+          path: "/landing",
+          element: <LandingPage />,
         },
         {
-          path: "login",
-          element: <Login />
-        },
-      ]
-    },
-    {
-      element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>,
-      children: [
-        {
-          path: "/dashboard",
+          path: "/login",
+          element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
         }, {
-          path: "/notifications",
-          element: <NotificationsPage />,
+          path: "/logout",
+          element: <LogoutPage />,
         },
-        {
-          path: "/settings",
-          element: <SettingsPage />,
-        },
-        {
-          path: "/lecturer-reports",
-          element: <LecturerReportsPage />,
-        },
-        {
-          path: "/student-reports",
-          element: <StudentReportsPage />,
-        },
-        {
-          path: "/registrar-reports",
-          element: <AcademicRegistrarReportsPage />,
-        },
-        {
-          path: "/edit-issue-lecturer",
-          element: <LecturerEditIssueForm />,
-        },
-
+        
         {
           path: "/add-issue",
           element: <StudentIssueForm />,
@@ -105,21 +63,63 @@ function createRouter(config) {
           path: "/assign-issue",
           element: <AssignIssue />,
         },
-        {
+                {
           path: "/help",
           element: <HelpPage />,
         },
-        {
-          path: "/account/logout",
-          element: <LogoutPage />,
-        },
+       
       ],
-    }
+    },
+    {
+      path: "/account/*",
+      element: <AnonymousRoute/>,
+      children: [
+        {
+          path: "signup",
+          element: <SignUpPage/>,
+        },
+        {
+          path: "login",
+          element: <Login/>
+        }
+      ]
+    },
+    {
+      element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>,
+      children: [
+    {
+      path: "/dashboard",
+    },{
+      path: "/notifications",
+      element: <NotificationsPage />,
+    },
+    {
+      path: "/settings",
+      element: <SettingsPage />,
+    },
+    {
+      path: "/lecturer-reports",
+      element: <LecturerReportsPage />,
+    },
+    {
+      path: "/student-reports",
+      element: <StudentReportsPage />,
+    },
+    {
+      path: "/registrar-reports",
+      element: <AcademicRegistrarReportsPage />,
+    },
+    {
+      path: "/edit-issue-lecturer",
+      element: <LecturerEditIssueForm />,
+    },
+  ],
+}
 
-    // {
-    //   path: "/dashboard",
-    //   element: <Dashboard />
-    // },
+// {
+//   path: "/dashboard",
+//   element: <Dashboard />
+// },
   ]);
 }
 
