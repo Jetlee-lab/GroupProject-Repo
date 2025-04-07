@@ -21,7 +21,20 @@ RUN pip install --upgrade pip
 
 # run this command to install all dependencies 
 RUN pip install --no-cache-dir -r backend/requirements.txt
- 
+
+RUN echo RUNNING MIGRATIONS...; \
+    python manage.py makemigrations && \
+    python manage.py migrate
+
+RUN echo POPULATING DATABASE...; \
+    python manage.py loaddata data
+
+# Collect static files
+# RUN echo COLLECTING STATIC FILES...; \
+#     python manage.py collectstatic --noinput; \
+#     mkdir -p /app/backend/staticfiles \
+#     mv /app/frontend/dist /app/backend/staticfiles/frontend
+
 # Expose the Django port
 EXPOSE 8000
 
