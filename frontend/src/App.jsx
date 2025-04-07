@@ -56,7 +56,7 @@ function createRouter(config) {
     },
     {
       path: "/account/*",
-      element: <AnonymousRoute />,
+      // element: <AnonymousRoute />,
       children: [
         {
           path: "signup",
