@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  AuthContextProvider,
+  // AuthContextProvider,
   AuthChangeRedirector,
   AnonymousRoute,
   AuthenticatedRoute,
@@ -15,18 +15,20 @@ import StudentReportsPage from "./pages/StudentReportsPage";
 import AcademicRegistrarReportsPage from "./pages/AcademicRegistrarReportsPage";
 import SettingsPage from "./pages/SettingsPage";
 import SignUpPage from "./pages/SignUpPage";
-//import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage";
 import StudentIssueForm from "./components/issues/StudentIssueForm";
 import LecturerEditIssueForm from "./components/issues/LecturerEditIssueForm";
 import AssignIssue from "./components/issues/AssignIssue";
 import AppLayout from "./components/common/AppLayout";
+import LandingPage from "./pages/LandingPage";
 import LecturerDashboard from "./components/LecturerDashboard";
 import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
-import StudentDashboard from './components/StudentDashboard';
-import Dashboard from "./components/dashboard/Dashboard";``
-import LogoutPage from "./pages/LogoutPage"
+import StudentDashboard from "./components/StudentDashboard";
+import Dashboard from "./components/dashboard/Dashboard";
+import LogoutPage from "./pages/LogoutPage";
 import { useConfig } from "./auth/hooks";
-import Login from "@/components/auth/Login"
+import Login from "@/components/auth/Login";
+import Provider from "./provider";
 
 function createRouter(config) {
   return createBrowserRouter([
@@ -42,15 +44,65 @@ function createRouter(config) {
           path: "",
           element: <HomePage />,
         },
-        
-        /*{
-          path: "/login",
-          element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
-        },*/ {
-          path: "/logout",
-          element: <LogoutPage />,
+        // {
+        //   path: "/landing",
+        //   element: <LandingPage />,
+        // },
+        // {
+        //   path: "/login",
+        //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
+        // },
+      ],
+    },
+    {
+      path: "/account/*",
+      element: <AnonymousRoute />,
+      children: [
+        {
+          path: "signup",
+          element: <SignUpPage />,
         },
-        
+        {
+          path: "login",
+          element: <Login />,
+        },
+      ],
+    },
+    {
+      element: (
+        <AuthenticatedRoute>
+          <Dashboard />
+        </AuthenticatedRoute>
+      ),
+      children: [
+        {
+          path: "/dashboard",
+        },
+        {
+          path: "/notifications",
+          element: <NotificationsPage />,
+        },
+        {
+          path: "/settings",
+          element: <SettingsPage />,
+        },
+        {
+          path: "/lecturer-reports",
+          element: <LecturerReportsPage />,
+        },
+        {
+          path: "/student-reports",
+          element: <StudentReportsPage />,
+        },
+        {
+          path: "/registrar-reports",
+          element: <AcademicRegistrarReportsPage />,
+        },
+        {
+          path: "/edit-issue-lecturer",
+          element: <LecturerEditIssueForm />,
+        },
+
         {
           path: "/add-issue",
           element: <StudentIssueForm />,
@@ -59,63 +111,21 @@ function createRouter(config) {
           path: "/assign-issue",
           element: <AssignIssue />,
         },
-                {
+        {
           path: "/help",
           element: <HelpPage />,
         },
-       
+        {
+          path: "/account/logout",
+          element: <LogoutPage />,
+        },
       ],
     },
-    {
-      path: "/account/*",
-      element: <AnonymousRoute/>,
-      children: [
-        {
-          path: "signup",
-          element: <SignUpPage/>,
-        },
-        {
-          path: "login",
-          element: <Login/>
-        }
-      ]
-    },
-    {
-      element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>,
-      children: [
-    {
-      path: "/dashboard",
-    },{
-      path: "/notifications",
-      element: <NotificationsPage />,
-    },
-    {
-      path: "/settings",
-      element: <SettingsPage />,
-    },
-    {
-      path: "/lecturer-reports",
-      element: <LecturerReportsPage />,
-    },
-    {
-      path: "/student-reports",
-      element: <StudentReportsPage />,
-    },
-    {
-      path: "/registrar-reports",
-      element: <AcademicRegistrarReportsPage />,
-    },
-    {
-      path: "/edit-issue-lecturer",
-      element: <LecturerEditIssueForm />,
-    },
-  ],
-}
 
-// {
-//   path: "/dashboard",
-//   element: <Dashboard />
-// },
+    // {
+    //   path: "/dashboard",
+    //   element: <Dashboard />
+    // },
   ]);
 }
 
@@ -133,9 +143,10 @@ export function Router() {
 
 export default function App() {
   return (
-    <AuthContextProvider>
+    // <AuthContextProvider>
+    <Provider>
       <Router />
-    </AuthContextProvider>
+    </Provider>
+    // </AuthContextProvider>
   );
 }
-
