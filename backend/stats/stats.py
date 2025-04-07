@@ -8,7 +8,10 @@ from .serializers import IssueQuerySerializer
 class IssueStat(): 
     fields = ['priority', 'status', 'escalation_level', 'assignee', 'owner', 'categories', 'attachments', 'logs']
     fields_keys = {
-        # 'attachments': 'attachments__file',
+        'attachments': ('attachments__file', str),
+        'priority': (None, lambda x: Issue.PRIORITY_CHOICES[x]),
+        'escalation_level': (None, lambda x: Issue.ESCALATION_CHOICES[x]),
+        'status': (None, lambda x: Issue.STATUS_CHOICES[x]),
     }
 
     def stats(self, **kwargs):
@@ -49,11 +52,15 @@ class IssueStat():
                 'count': Count('id'),
                 'issues': ArrayAgg('id'),
             }
-            key = self.fields_keys.get(k, k)
+            key, key_getter = self.fields_keys.get(k, (k, str))
+
+            if key is None:
+                key = k
 
             query = Issue.objects.filter(**filter_kw).values(key).annotate(**annotations)
-            result[k] = {
-                q[key]: {
+            
+            result[key] = {
+                key_getter(q[key]): {
                     a: q[a]
                     for a in annotations
                 }
