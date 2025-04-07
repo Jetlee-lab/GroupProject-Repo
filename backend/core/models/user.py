@@ -83,10 +83,10 @@ class Role(models.Model):
 
     #     return permissions
 
-    def save(self, *args, **kwargs):
-        if self.base_role and self.derived_roles.filter(pk=self.base_role.pk).exists():
-            raise ValidationError("Can not create a backward relationship if a forward relationship exists")
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.base_role and self.derived_roles.filter(pk=self.base_role.pk).exists():
+    #         raise ValidationError("Can not create a backward relationship if a forward relationship exists")
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return "%s" % (self.name)

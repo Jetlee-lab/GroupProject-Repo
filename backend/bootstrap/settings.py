@@ -59,20 +59,21 @@ INSTALLED_APPS = [
 
     # 'dj_rest_auth',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
-    "allauth.mfa",
-    "allauth.headless",
-    "allauth.usersessions",
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.github',
+    # "allauth.mfa",
+    # "allauth.headless",
+    # "allauth.usersessions",
 
     'api',
     'authentication',
     'bootstrap',
     'core',
     'search',
+    'stats',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +85,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
+    # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'bootstrap.urls'
@@ -238,7 +239,7 @@ CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=ALLOWED_HOSTS)
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'authentication.backends.ActiveSessionAuthentication',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
     # 'allauth.socialaccount.auth_backends.AuthenticationBackend',
 ]
 

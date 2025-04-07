@@ -2,21 +2,22 @@ from uuid import uuid4
 from rest_framework import serializers
 from ..models import User, Role
 
-from ..models import RefrenceToken
+from ..models import ReferenceToken
 
 
-class RefrenceTokenSerializer(serializers.ModelSerializer):
+class ReferenceTokenSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = RefrenceToken
+        model = ReferenceToken
         # fields = ["token", "email", "role", "active"]
         exclude = ["id"] #, "active", "is_used"]
         read_only_field = ["id", "token",  "is_used", "active"]
 
     def create(self, validated_data):
         """
-        Create a new RefrenceToken instance.
+        Create a new ReferenceToken instance.
         """
+        print({'validated_data':validated_data})
         # email = validated_data.get("email")
         # role = validated_data.get("role")
 
@@ -24,8 +25,8 @@ class RefrenceTokenSerializer(serializers.ModelSerializer):
         validated_data["token"] = uuid4()
         # validated_data["active"] = True
 
-        # Create a new RefrenceToken instance
-        refrence_token = RefrenceToken.objects.create(**validated_data)
+        # Create a new ReferenceToken instance
+        refrence_token = ReferenceToken.objects.create(**validated_data)
         return refrence_token
 
     def validate_role(self, value):
@@ -34,7 +35,7 @@ class RefrenceTokenSerializer(serializers.ModelSerializer):
         return value
     
     def validate_email(self, value):
-        if not value or RefrenceToken.objects.filter(email=value).exists() or User.objects.filter(email=value).exists():
+        if not value or ReferenceToken.objects.filter(email=value).exists() or User.objects.filter(email=value).exists():
             raise serializers.ValidationError({"message": "Invalid email or email already used"})
         return value
     

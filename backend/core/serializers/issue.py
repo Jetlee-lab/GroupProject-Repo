@@ -1,7 +1,7 @@
-from ..models import Issue, Role
+from django.db import transaction
+from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
-
-from ..models import Issue, IssueLog, Category, Attachment
+from ..models import Issue, IssueLog, Category, Attachment, Issue, Role
 
 # class CategoriesListingField(serializers.RelatedField):
 #     # def get_queryset(self, *args, **kwargs):
@@ -21,6 +21,7 @@ class IssueSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", 'updated_at', 'created_at']
         # extra_fields = {'rank':{'write_only':True}}
     
+    @transaction.atomic
     def create(self, validated_data):
         attachments = validated_data.pop('attachments', None)
         categories = validated_data.pop('categories', None)
@@ -67,7 +68,7 @@ class IssueSerializer(serializers.ModelSerializer):
 
     def validate_owner(self, value):
         if value and not value.roles.filter(name=Role.ROLE_STUDENT).exists():
-            raise serializers.validationError(
+            raise serializers.ValidationError(
                 "Only students can create issues"
             )
         return value
@@ -127,3 +128,4 @@ class CategorySerializer(serializers.ModelSerializer):
     
     # def to_representation(self, instance, *args, **kwargs):
     #     return instance.name
+

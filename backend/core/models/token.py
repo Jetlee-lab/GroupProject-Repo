@@ -14,7 +14,7 @@ from django.core.exceptions import ValidationError
 
 from .user import Role
 
-class RefrenceToken(models.Model):
+class ReferenceToken(models.Model):
     email = models.EmailField(_("email address"), db_index=True, unique=True)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
     token = models.UUIDField(unique=True, editable=False)

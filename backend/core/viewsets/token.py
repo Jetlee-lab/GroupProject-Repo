@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
@@ -6,18 +6,19 @@ from rest_framework import mixins
 from rest_framework.decorators import action
 from django.db.models import Count
 
-from ..serializers import  RefrenceTokenSerializer
-from ..models import RefrenceToken
+from ..serializers import  ReferenceTokenSerializer
+from ..models import ReferenceToken
 from ..utils.io import IOMixin
 
 
 class ReferenceTokenViewSet(
     IOMixin,
-    mixins.CreateModelMixin,
+    generics.ListCreateAPIView,
+    # mixins.CreateModelMixin,
     # mixins.UpdateModelMixin,
-    mixins.RetrieveModelMixin,
+    # mixins.RetrieveModelMixin,
 ):
-    serializer_class = RefrenceTokenSerializer
+    serializer_class = ReferenceTokenSerializer
     permission_classes = (IsAuthenticated, IsAdminUser)
 
     # error_message = "Error updating user"
@@ -37,7 +38,7 @@ class ReferenceTokenViewSet(
 
     def retrieve(self, request, *args, pk=None, **kwargs):
         # print("pk", pk, "kwargs", kwargs, "args", args)
-        refrence_token = RefrenceToken.objects.filter(
+        refrence_token = ReferenceToken.objects.filter(
             # email=kwargs.get("email")
             pk=pk,
         ).first()
@@ -48,3 +49,5 @@ class ReferenceTokenViewSet(
         serializer = self.get_serializer(refrence_token)
         return Response(serializer.data, status.HTTP_200_OK)
    
+    def get_queryset(self):
+        return ReferenceToken.objects.all()

@@ -42,8 +42,8 @@ urlpatterns = core_urls + [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    path('accounts/', include('allauth.urls')),
-    path('auth/', include('allauth.headless.urls')),
+    # path('accounts/', include('allauth.urls')),
+    # path('auth/', include('allauth.headless.urls')),
 
     re_path(f"^(?!{FRONTEND_EXCULDES}).*", TemplateView.as_view(template_name='index.html'), name='react_app'),
     # path('', TemplateView.as_view(template_name='index.html'), name='react_app'),
