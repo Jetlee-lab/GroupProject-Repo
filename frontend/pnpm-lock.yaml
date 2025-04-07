@@ -92,6 +92,9 @@ importers:
       react-router-dom:
         specifier: ^6.26.2
         version: 6.30.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      root:
+        specifier: github:tanstack/query
+        version: https://codeload.github.com/tanstack/query/tar.gz/667650a0e2c5e54584cf10d258c12a2868b39ef4
       tailwind-merge:
         specifier: ^3.1.0
         version: 3.1.0
@@ -2299,6 +2302,10 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
+  root@https://codeload.github.com/tanstack/query/tar.gz/667650a0e2c5e54584cf10d258c12a2868b39ef4:
+    resolution: {tarball: https://codeload.github.com/tanstack/query/tar.gz/667650a0e2c5e54584cf10d258c12a2868b39ef4}
+    version: 0.0.0
+
   safe-regex-test@1.1.0:
     resolution: {integrity: sha512-x/+Cz4YrimQxQccJf5mKEbIa1NzeCRNI5Ecl/ekmlYaampdNLPalVyIcCZNNH3MvmqBugV5TMYZXv0ljslUlaw==}
     engines: {node: '>= 0.4'}
@@ -4367,6 +4374,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-responsive-carousel: 3.2.23
       react-router-dom: 6.30.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      root: https://codeload.github.com/tanstack/query/tar.gz/667650a0e2c5e54584cf10d258c12a2868b39ef4
       tailwind-merge: 3.1.0
       tailwindcss: 4.0.16
       tw-animate-css: 1.2.5
@@ -4627,6 +4635,8 @@ snapshots:
       '@rollup/rollup-win32-ia32-msvc': 4.37.0
       '@rollup/rollup-win32-x64-msvc': 4.37.0
       fsevents: 2.3.3
+
+  root@https://codeload.github.com/tanstack/query/tar.gz/667650a0e2c5e54584cf10d258c12a2868b39ef4: {}
 
   safe-regex-test@1.1.0:
     dependencies:
