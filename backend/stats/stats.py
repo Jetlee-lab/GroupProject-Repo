@@ -8,7 +8,7 @@ from .serializers import IssueQuerySerializer
 class IssueStat(): 
     fields = ['priority', 'status', 'escalation_level', 'assignee', 'owner', 'categories', 'attachments', 'logs']
     fields_keys = {
-        'attachments': 'attachments__file',
+        # 'attachments': 'attachments__file',
     }
 
     def stats(self, **kwargs):

@@ -12,6 +12,14 @@ from ..serializers import IssueSerializer, IssueLogSerializer, AttachmentSeriali
 from ..models.issue import Issue, IssueLog, Category
 from ..utils.io import IOMixin, paginate_response
 
+
+class CategoriesViewSet(IOMixin, viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    # permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Category.objects.all()
+
 class IssueViewSet(
     IOMixin,
     viewsets.ModelViewSet,
@@ -63,9 +71,12 @@ class IssueViewSet(
 
         return paginate_response(self, logs, IssueLogSerializer)
 
-    @action(detail=False, methods=['GET'])
-    def categories(self, request, *args, **kwargs):
-        cats = Category.objects.all()
+    @action(detail=True, methods=['GET'])
+    def categories(self, request, *args, pk=None, **kwargs):
+        try:
+            cats = Issue.objects.get(pk=pk).categories.all()
+        except Issue.DoesNotExist:
+            raise ValidationError({'message': 'Categories not found'})
 
         return paginate_response(self, cats, CategorySerializer)
     
