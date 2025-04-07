@@ -216,6 +216,11 @@ CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
 # Leaded from Environment
 CORS_ALLOWED_ORIGINS_ENV = env("CORS_ALLOWED_ORIGINS", default=None)
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"http://localhost:\d+s",
+    r"http://127\.0\.0\.1\d+s",
+    
+]
 
 if CORS_ALLOWED_ORIGINS_ENV:
     CORS_ALLOWED_ORIGINS += CORS_ALLOWED_ORIGINS_ENV.split(' ')
