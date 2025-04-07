@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  AuthContextProvider,
+  // AuthContextProvider,
   AuthChangeRedirector,
   AnonymousRoute,
   AuthenticatedRoute,
@@ -23,11 +23,12 @@ import AppLayout from "./components/common/AppLayout";
 import LandingPage from "./pages/LandingPage";
 import LecturerDashboard from "./components/LecturerDashboard";
 import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
-import StudentDashboard from './components/StudentDashboard';
-import Dashboard from "./components/dashboard/Dashboard"; ``
-import LogoutPage from "./pages/LogoutPage"
+import StudentDashboard from "./components/StudentDashboard";
+import Dashboard from "./components/dashboard/Dashboard";
+import LogoutPage from "./pages/LogoutPage";
 import { useConfig } from "./auth/hooks";
-import Login from "@/components/auth/Login"
+import Login from "@/components/auth/Login";
+import Provider from "./provider";
 
 function createRouter(config) {
   return createBrowserRouter([
@@ -63,16 +64,21 @@ function createRouter(config) {
         },
         {
           path: "login",
-          element: <Login />
+          element: <Login />,
         },
-      ]
+      ],
     },
     {
-      element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>,
+      element: (
+        <AuthenticatedRoute>
+          <Dashboard />
+        </AuthenticatedRoute>
+      ),
       children: [
         {
           path: "/dashboard",
-        }, {
+        },
+        {
           path: "/notifications",
           element: <NotificationsPage />,
         },
@@ -114,7 +120,7 @@ function createRouter(config) {
           element: <LogoutPage />,
         },
       ],
-    }
+    },
 
     // {
     //   path: "/dashboard",
@@ -137,9 +143,10 @@ export function Router() {
 
 export default function App() {
   return (
-    <AuthContextProvider>
+    // <AuthContextProvider>
+    <Provider>
       <Router />
-    </AuthContextProvider>
+    </Provider>
+    // </AuthContextProvider>
   );
 }
-
