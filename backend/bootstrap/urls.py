@@ -19,6 +19,7 @@ from django.urls import include, path, re_path
 from django.conf import settings
 from django.views.generic import TemplateView
 from core.routers import urlpatterns as core_urls
+from core.viewsets.user import send_sms, send_email
 
 from rest_framework import routers
 
@@ -44,6 +45,10 @@ urlpatterns = core_urls + [
     # path('dj-rest-auth/', include('dj_rest_auth.urls')),
     path('accounts/', include('allauth.urls')),
     path('auth/', include('allauth.headless.urls')),
+
+    path('send-sms', send_sms, name='send_sms'),
+    path('send-email', send_email, name='send_email'),
+
 
     re_path(f"^(?!{FRONTEND_EXCULDES}).*", TemplateView.as_view(template_name='index.html'), name='react_app'),
     # path('', TemplateView.as_view(template_name='index.html'), name='react_app'),

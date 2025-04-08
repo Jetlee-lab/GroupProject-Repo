@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework import mixins
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from django.db.models import Count
 
 from ..serializers import (
@@ -148,3 +148,52 @@ class UsersViewSet(
     #     obj = get_object_or_404(queryset, **filter)  # Lookup the object
     #     self.check_object_permissions(self.request, obj)
     #     return obj
+
+
+@api_view(['POST'])
+def send_sms(request):
+    from twilio.rest import Client
+
+    data = request.data
+    
+    to = data.get('to', None)
+    if to is None:
+        raise ValidationError({'message': 'Recipient phone number is required'})
+
+    account_sid = settings.TWILIO_ACCOUNT_SID
+    auth_token = settings.TWILIO_AUTH_TOKEN
+
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        from_=settings.TWILIO_PHONE_NUMBER,
+        to=to,
+        body='Hello there! This is a test message from the Django backend. to paul'
+    )
+
+    # print(message.sid)
+    return Response({'message': f'SMS sent, (sid:{message.sid})'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def send_email(request):
+    from django.core.mail import send_mail
+
+    data = request.data
+
+    to = data.get('to', None)
+    if to is None:
+        raise ValidationError({'message': 'Recipient email is required'})
+
+    from_email=data.get('from', 'kato.keithpaul@students.mak.ac.ug')
+    subject=data.get('subject', 'Subject here')
+    message=data.get('message', 'Here is the message.')
+
+    # print(request.data, from_email, subject, message)
+
+    send_mail(
+        subject=subject,
+        message=message, 
+        from_email=from_email,
+        recipient_list=[to],
+        fail_silently=False
+    )
+    return Response({'message': 'Email sent'}, status=status.HTTP_200_OK)
