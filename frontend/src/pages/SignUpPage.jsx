@@ -64,21 +64,6 @@ const SignUpPage = () => {
               />
             </div>
 
-            {/* Phone Number */}
-            <div className="mb-4">
-              <label htmlFor="phone" className="block text-gray-600">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                required
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-                autoComplete="off"
-              />
-            </div>
-
             {/* Password Input */}
             <div className="mb-4">
               <label htmlFor="password" className="block text-gray-800">
@@ -89,21 +74,6 @@ const SignUpPage = () => {
                 id="password"
                 required
                 name="password"
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-                autoComplete="off"
-              />
-            </div>
-
-            {/* Confirm Password Input */}
-            <div className="mb-4">
-              <label htmlFor="confirmPassword" className="block text-gray-800">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                required
-                name="confirmPassword"
                 className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
                 autoComplete="off"
               />
@@ -151,14 +121,14 @@ const SignUpPage = () => {
             >
               Sign Up
             </button>
-          </form>
 
-          {/* Log in Link */}
-          <div className="mt-6 text-green-500 text-center">
-            <Link to="/account/login" className="hover:underline">
-              Already have an account? Log In Here
-            </Link>
-          </div>
+            {/* Log in Link - now inside the form */}
+            <div className="mt-6 text-green-500 text-center">
+              <Link to="/account/login" className="hover:underline">
+                Already have an account? Log In Here
+              </Link>
+            </div>
+          </form>
         </div>
       </div>
     </div>
