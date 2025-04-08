@@ -8,7 +8,7 @@ const AssignIssue = () => {
   const [formData, setFormData] = useState({
     studentName: "",
     studentEmail: "",
-    studentAcademic_year: "";
+    studentAcademic_year: "",
     title: "",
     description: "",
     priority: "Medium",
