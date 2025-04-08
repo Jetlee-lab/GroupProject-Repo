@@ -148,10 +148,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS':{
+            'min_length': 1,
+        }
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -177,7 +180,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom user Model
 AUTH_USER_MODEL = "core.User"
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 FIXTURE_DIRS = (
     os.path.join(BASE_DIR, 'fixtures'),
@@ -261,7 +265,11 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+ACCOUNT_ADAPTER = "core.adapters.CustomAccountAdapter"
 HEADLESS_ADAPTER = "core.adapters.CustomHeadlessAdapter"
 
 SOCIALACCOUNT_QUERY_EMAIL = True
 # HEADLESS_ONLY = True
+
+# ACCOUNT_FORMS = {'signup': 'core.forms.CustomSignupForm'}
+# ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'

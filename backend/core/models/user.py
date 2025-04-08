@@ -22,6 +22,8 @@ class UserManager(UserManager):
             raise TypeError("Users must have a username.")
         if email is None:
             raise TypeError("Users must have an email.")
+        
+        print({'username': username, 'email': email, 'password': password, 'kwargs': kwargs})
 
         user = self.model(username=username, email=self.normalize_email(email))
         user.set_password(password)
@@ -124,6 +126,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return "@%s" % self.username or self.email
+    
+    def save(self, *args, **kwargs):
+        print("--User.save()",{'args':args, 'kwargs': kwargs})
+        super().save(*args, **kwargs)
 
 
 class Student(User):

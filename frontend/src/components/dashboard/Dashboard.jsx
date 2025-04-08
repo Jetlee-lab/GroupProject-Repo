@@ -1,5 +1,5 @@
-import React, { useState } from "react"; // Importing React and the useState hook for state management
-import { Link, useLocation, Outlet } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
+import React, { Children, useState, lazy } from "react"; // Importing React and the useState hook for state management
+import { Link, useLocation, Outlet, useRoutes } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
 import { useRole } from "@/auth";
 import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
 import {
@@ -16,14 +16,87 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import LecturerDashboard from "@/components/LecturerDashboard";
-import AcademicRegistrarDashboard from "@/components/AcademicRegistrarDasboard";
-import StudentDashboard from "@/components/StudentDashboard";
+
 import { Outdent } from "lucide-react";
 
-export default function DashboardLayout() {
-  const role = useRole()
-  const { pathname } = useLocation()
+const NotificationsPage = lazy(() => import("@/pages/NotificationsPage"));
+const LecturerReportsPage = lazy(() => import("@/pages/LecturerReportsPage"));
+const StudentReportsPage = lazy(() => import("@/pages/StudentReportsPage"));
+const AcademicRegistrarReportsPage = lazy(() =>
+  import("@/pages/AcademicRegistrarReportsPage")
+);
+const LandingPage = lazy(() => import("@/pages/LandingPage"));
+const LecturerDashboard = lazy(() => import("@/components/LecturerDashboard"));
+const AcademicRegistrarDashboard = lazy(() =>
+  import("@/components/AcademicRegistrarDasboard")
+);
+const StudentDashboard = lazy(() => import("@/components/StudentDashboard"));
+const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
+const StudentIssueForm = lazy(() =>
+  import("@/components/issues/StudentIssueForm")
+);
+const LecturerEditIssueForm = lazy(() =>
+  import("@/components/issues/LecturerEditIssueForm")
+);
+const AssignIssue = lazy(() => import("@/components/issues/AssignIssue"));
+// const LogoutPage = lazy(() => import("@/pages/LogoutPage"));
+
+
+const dashboardRoutes = [
+  {
+    // index: true
+    path: "",
+    Component: DashboardLayout,
+    children: [
+      {
+        path: "/notifications",
+        Component: NotificationsPage,
+      },
+      {
+        path: "/settings",
+        Component: SettingsPage,
+      },
+      {
+        path: "/lecturer-reports",
+        Component: LecturerReportsPage,
+      },
+      {
+        path: "/student-reports",
+        Component: StudentReportsPage,
+      },
+      {
+        path: "/registrar-reports",
+        Component: AcademicRegistrarReportsPage,
+      },
+      {
+        path: "/edit-issue-lecturer",
+        Component: LecturerEditIssueForm,
+      },
+
+      {
+        path: "/add-issue",
+        Component: StudentIssueForm,
+      },
+      {
+        path: "/assign-issue",
+        Component: AssignIssue,
+      },
+      // {
+      //   path: "/account/logout",
+      //   Component: LogoutPage,
+      // },
+    ],
+  },
+];
+
+export default function Dashboard() {
+  const routes = useRoutes(dashboardRoutes);
+  return routes
+}
+
+export function DashboardLayout() {
+  const role = useRole();
+  const { pathname } = useLocation();
   // const role = "student";
   // const role = "lecturer";
   // const role = "registrar"
@@ -38,13 +111,13 @@ export default function DashboardLayout() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Dashboard
-                  </BreadcrumbLink>
+                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{`${role.charAt(0).toUpperCase()}${role.slice(1)}`}</BreadcrumbPage>
+                  <BreadcrumbPage>{`${role?.charAt(0).toUpperCase()}${role?.slice(
+                    1
+                  )}`}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -57,14 +130,18 @@ export default function DashboardLayout() {
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div> */}
           <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            { pathname.startsWith("/dashboard") && (role === "student" ? (
-              <StudentDashboard />
-            ) : role === "lecturer" ? (
-              <LecturerDashboard />
-            ) : (
-              role === "registrar" ?
-              <AcademicRegistrarDashboard /> : <div className="flex justify-center">Failed to load <strong>{role}</strong>... {":("}</div>
-            )) || <Outlet />}
+            {(pathname.startsWith("/dashboard") &&
+              (role === "student" ? (
+                <StudentDashboard />
+              ) : role === "lecturer" ? (
+                <LecturerDashboard />
+              ) : role === "registrar" ? (
+                <AcademicRegistrarDashboard />
+              ) : (
+                <div className="flex justify-center">
+                  Failed to load <strong>{role}</strong>... {":("}
+                </div>
+              ))) || <Outlet />}
           </div>
         </div>
       </SidebarInset>

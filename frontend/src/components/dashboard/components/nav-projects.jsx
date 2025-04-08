@@ -42,7 +42,7 @@ export function NavProjects({ projects }) {
       <SidebarGroupLabel>Extra</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
-          <SidebarMenuItem key={item.name}>
+          <SidebarMenuItem key={item.name} onClick={item.onClick}>
             <SidebarMenuButton asChild>
               <a href={item.url}>
                 <item.icon />
