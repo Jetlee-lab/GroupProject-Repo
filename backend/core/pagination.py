@@ -10,19 +10,21 @@ class LimitOffsetPagination(pagination.LimitOffsetPagination):
         next_link = self.get_next_link()
         prev_link = self.get_previous_link()
 
-        def get_params(qd):
+        def get_params(qd, link):
+            if not link:
+                return None
             params = [self.limit_query_param, self.offset_query_param]
-            return {k: int(v) for k, v in qd.items() if k in params}
-
-        next_params = get_params(QueryDict( urlparse(next_link).query ))
-        prev_params = get_params(QueryDict( urlparse(prev_link).query ))
+            return {
+                k: int(v)
+                for k, v in qd.items() if k in params
+            } | { 'link': link}
 
         response = Response(data)
         setattr(response, META_ATTR, {
             'pagination': {
                 'count': self.count,
-                'next': next_params | {'link': next_link},
-                'prev': prev_params | {'link': prev_link},
+                'next': get_params(QueryDict( urlparse(next_link).query ), next_link),
+                'prev': get_params(QueryDict( urlparse(prev_link).query ), prev_link),
             }
         })
 
