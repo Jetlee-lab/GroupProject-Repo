@@ -15,7 +15,7 @@ export default function RegistrarDashboard() {
   } else if (issuesLoading || userssLoading) {
     return <>Loading data...</>
   } else if (issuesError || usersError) {
-    return <>Ops something happend!</>
+    return <>Oops something happend!</>
   }
 
   const issues = issuesData.data
