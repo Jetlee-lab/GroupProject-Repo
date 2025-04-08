@@ -8,6 +8,7 @@ const AssignIssue = () => {
   const [formData, setFormData] = useState({
     studentName: "",
     studentEmail: "",
+    studentAcademic_year: "";
     title: "",
     description: "",
     priority: "Medium",
@@ -48,6 +49,13 @@ const AssignIssue = () => {
           onChange={handleChange}
           required
         />
+        <TextInput
+          label="Student Academic_year"
+          name="studentAcademic_year"
+          value={formData.studentAcademic_yeaar}
+          onchange={handleChange}
+          required
+          />
 
         <TextInput
           label="Student Email"

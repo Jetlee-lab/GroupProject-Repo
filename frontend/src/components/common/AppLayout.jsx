@@ -19,7 +19,7 @@ function AppLayout() {
     <div
       className={`grid ${
         shouldShowSidebar
-          ? 'grid-cols-[210px_auto] grid-rows-[1fr_auto]'
+          ? 'grid-cols-[238px_auto] grid-rows-[1fr_auto]'
           : 'grid-rows-[1fr_auto]'
       } h-dvh overflow-hidden`}
     >
