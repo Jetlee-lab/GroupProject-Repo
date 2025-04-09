@@ -1,5 +1,6 @@
-// export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
-export const BACKEND_URL = 'https://groupproject-repo.onrender.com'
+export const BACKEND_URL =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
+// export const BACKEND_URL = 'https://groupproject-repo.onrender.com'
 export const API_URL = `${BACKEND_URL}/api/v1`;
 
 const STATUS_OPEN = "open";

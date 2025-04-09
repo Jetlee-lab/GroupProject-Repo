@@ -13,7 +13,7 @@ const SignUpPage = () => {
     console.log('User signed up successfully!');
 
     // Redirecting to the Landing Page after successful sign-up
-    navigate('/dashboard');
+    navigate('/landing');
   };
 
   return (
@@ -30,7 +30,7 @@ const SignUpPage = () => {
       {/* Right: Sign Up Form */}
       <div className="p-5 w-full lg:w-1/2 flex items-center justify-center">
         <div className="w-full max-w-md">
-          <h1 className="text-2xl font-semibold mt-10 mb-6 text-center">Sign Up</h1>
+          <h1 className="text-2xl font-semibold mt-20 mb-6 text-center">Sign Up</h1>
           <form onSubmit={handleSignUp}>
             {/* Full Name */}
             <div className="mb-4">
@@ -64,7 +64,6 @@ const SignUpPage = () => {
               />
             </div>
 
-
             {/* Password Input */}
             <div className="mb-4">
               <label htmlFor="password" className="block text-gray-800">
@@ -79,8 +78,6 @@ const SignUpPage = () => {
                 autoComplete="off"
               />
             </div>
-
-         
 
             {/* Reference Number Input */}
             <div className="mb-4">
@@ -113,7 +110,7 @@ const SignUpPage = () => {
                 </option>
                 <option value="student">Student</option>
                 <option value="teacher">Lecturer</option>
-                <option value="admin">Academic Registrar</option>
+                <option value="admin">Registra</option>
               </select>
             </div>
 
@@ -124,14 +121,14 @@ const SignUpPage = () => {
             >
               Sign Up
             </button>
-          </form>
 
-          {/* Log in Link */}
-          <div className="mt-6 text-green-500 text-center">
-            <Link to="/account/login" className="hover:underline">
-              Already have an account? Log In Here
-            </Link>
-          </div>
+            {/* Log in Link - now inside the form */}
+            <div className="mt-6 text-green-500 text-center">
+              <Link to="/account/login" className="hover:underline">
+                Already have an account? Log In Here
+              </Link>
+            </div>
+          </form>
         </div>
       </div>
     </div>

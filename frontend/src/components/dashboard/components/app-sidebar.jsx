@@ -82,7 +82,7 @@ const data = {
         // },
       ],
     },
-    {
+    /*{
       title: "Reports",
       url: "/student-reports",
       icon: NotebookPen,
@@ -101,7 +101,7 @@ const data = {
         //   url: "#",
         // },
       ],
-    },
+    },*/
     {
       title: "Notifications",
       url: "/notifications",
@@ -176,7 +176,7 @@ const data = {
     },
     {
       name: "Logout",
-      url: "/logout",
+      url: "/account/logout",
       icon: LogOut,
     },
   ],

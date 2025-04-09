@@ -16,7 +16,7 @@ const SideBar = ({ userRole }) => {
         return (
           <>
             <Link to="/"><SideBarItem Icon={HomeIcon} text={'Home'} /></Link>
-            <Link to="/student-reports"><SideBarItem Icon={AssignmentIcon} text={'Reports'} /></Link>
+           {/* <Link to="/student-reports"><SideBarItem Icon={AssignmentIcon} text={'Reports'} /></Link>*/}
             <Link to="/notifications"><SideBarItem Icon={NotificationsIcon} text={'Notifications'} /></Link>
             <Link to="/settings"><SideBarItem Icon={SettingsIcon} text={'Settings'} /></Link>
             <Link to="/help"><SideBarItem Icon={HelpIcon} text={'Help & Support'} /></Link>
@@ -27,7 +27,7 @@ const SideBar = ({ userRole }) => {
         return (
           <>
             <Link to="/"><SideBarItem Icon={HomeIcon} text={'Home'} /></Link>
-            <Link to="/lecturer-reports"><SideBarItem Icon={AssignmentIcon} text={'Reports'} /></Link>
+            {/*<Link to="/lecturer-reports"><SideBarItem Icon={AssignmentIcon} text={'Reports'} /></Link>*/}
             <Link to="/notifications"><SideBarItem Icon={NotificationsIcon} text={'Notifications'} /></Link>
             <Link to="/settings"><SideBarItem Icon={SettingsIcon} text={'Settings'} /></Link>
             <Link to="/help"><SideBarItem Icon={HelpIcon} text={'Help & Support'} /></Link>
@@ -38,7 +38,7 @@ const SideBar = ({ userRole }) => {
         return (
           <>
             <Link to="/"><SideBarItem Icon={HomeIcon} text={'Home'} /></Link>
-            <Link to="/registrar-reports"><SideBarItem Icon={AssignmentIcon} text={'Reports'} /></Link>
+           {/* <Link to="/registrar-reports"><SideBarItem Icon={AssignmentIcon} text={'Reports'} /></Link>*/}
             <Link to="/notifications"><SideBarItem Icon={NotificationsIcon} text={'Notifications'} /></Link>
             <Link to="/settings"><SideBarItem Icon={SettingsIcon} text={'Settings'} /></Link>
             <Link to="/help"><SideBarItem Icon={HelpIcon} text={'Help & Support'} /></Link>
@@ -49,7 +49,7 @@ const SideBar = ({ userRole }) => {
         return (
           <>
             <Link to="/"><SideBarItem Icon={HomeIcon} text={'Home'} /></Link>
-            <Link to="/reports"><SideBarItem Icon={AssignmentIcon} text={'Reports'} /></Link>
+            {/*<Link to="/reports"><SideBarItem Icon={AssignmentIcon} text={'Reports'} /></Link>*/}
             <Link to="/notifications"><SideBarItem Icon={NotificationsIcon} text={'Notifications'} /></Link>
             <Link to="/settings"><SideBarItem Icon={SettingsIcon} text={'Settings'} /></Link>
             <Link to="/help"><SideBarItem Icon={HelpIcon} text={'Help & Support'} /></Link>

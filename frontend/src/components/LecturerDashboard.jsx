@@ -147,11 +147,11 @@ const LecturerDashboard = () => {
 
              {/* Button to Lecturer Reports Page */}
          <div className="mt-4 text-left">
-                    <Link to="/lecturer-reports">
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        View and Edit Issues
-                      </button>
-                    </Link>
+              <Link to="/lecturer-reports">
+                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        View reports and Edit Issues
+                  </button>
+              </Link>
           </div>          
 
           {/* Escalated Issues Section */}

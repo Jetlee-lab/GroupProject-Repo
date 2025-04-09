@@ -15,28 +15,20 @@ import StudentReportsPage from "./pages/StudentReportsPage";
 import AcademicRegistrarReportsPage from "./pages/AcademicRegistrarReportsPage";
 import SettingsPage from "./pages/SettingsPage";
 import SignUpPage from "./pages/SignUpPage";
-//import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage";
 import StudentIssueForm from "./components/issues/StudentIssueForm";
 import LecturerEditIssueForm from "./components/issues/LecturerEditIssueForm";
 import AssignIssue from "./components/issues/AssignIssue";
 import AppLayout from "./components/common/AppLayout";
+import LandingPage from "./pages/LandingPage";
 import LecturerDashboard from "./components/LecturerDashboard";
 import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
-import StudentDashboard from './components/StudentDashboard';
-import Dashboard from "./components/dashboard/Dashboard";``
-import LogoutPage from "./pages/LogoutPage"
+import StudentDashboard from "./components/StudentDashboard";
+import Dashboard from "./components/dashboard/Dashboard";
+import LogoutPage from "./pages/LogoutPage";
 import { useConfig } from "./auth/hooks";
+import Login from "@/components/auth/Login";
 import Provider from "./provider";
-import { Toaster } from "@/components/ui/sonner"
-
-const HomePage = lazy(() => import("@/pages/HomePage"));
-const Dashboard = lazy(() => import("@/components/dashboard/Dashboard"));
-const Login = lazy(() => import("@/components/auth/Login"));
-const SignUp = lazy(() => import("@/components/auth/SignUp"));
-const AppLayout = lazy(() => import("@/components/common/AppLayout"));
-const HelpPage = lazy(() => import("@/pages/HelpPage"));
-const LogoutPage = lazy(() => import("./pages/LogoutPage"));
-
 
 function createRouter(config) {
   return createBrowserRouter([
@@ -52,28 +44,14 @@ function createRouter(config) {
           path: "",
           Component: HomePage,
         },
-        
-        /*{
-          path: "/login",
-          element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
-        },*/ {
-          path: "/logout",
-          element: <LogoutPage />,
-        },
-        
-        {
-          path: "/add-issue",
-          element: <StudentIssueForm />,
-        },
-        {
-          path: "/assign-issue",
-          element: <AssignIssue />,
-        },
-                {
-          path: "/help",
-          element: <HelpPage />,
-        },
-       
+        // {
+        //   path: "/landing",
+        //   element: <LandingPage />,
+        // },
+        // {
+        //   path: "/login",
+        //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
+        // },
       ],
     },
     {
@@ -82,54 +60,72 @@ function createRouter(config) {
       children: [
         {
           path: "signup",
-          Component: SignUp,
+          element: <SignUpPage />,
         },
         {
           path: "login",
-          Component: Login,
+          element: <Login />,
         },
       ],
     },
     {
-      element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>,
+      element: (
+        <AuthenticatedRoute>
+          <Dashboard />
+        </AuthenticatedRoute>
+      ),
       children: [
-    {
-      path: "/dashboard",
-    },{
-      path: "/notifications",
-      element: <NotificationsPage />,
+        {
+          path: "/dashboard",
+        },
+        {
+          path: "/notifications",
+          element: <NotificationsPage />,
+        },
+        {
+          path: "/settings",
+          element: <SettingsPage />,
+        },
+        {
+          path: "/lecturer-reports",
+          element: <LecturerReportsPage />,
+        },
+        {
+          path: "/student-reports",
+          element: <StudentReportsPage />,
+        },
+        {
+          path: "/registrar-reports",
+          element: <AcademicRegistrarReportsPage />,
+        },
+        {
+          path: "/edit-issue-lecturer",
+          element: <LecturerEditIssueForm />,
+        },
+
+        {
+          path: "/add-issue",
+          element: <StudentIssueForm />,
+        },
+        {
+          path: "/assign-issue",
+          element: <AssignIssue />,
+        },
+        {
+          path: "/help",
+          element: <HelpPage />,
+        },
+        {
+          path: "/account/logout",
+          element: <LogoutPage />,
+        },
+      ],
     },
-    {
-      path: "/settings",
-      element: <SettingsPage />,
-    },
-    {
-      path: "/lecturer-reports",
-      element: <LecturerReportsPage />,
-    },
-    {
-      path: "/student-reports",
-      element: <StudentReportsPage />,
-    },
-    {
-      path: "/registrar-reports",
-      element: <AcademicRegistrarReportsPage />,
-    },
-    {
-      path: "/edit-issue-lecturer",
-      element: <LecturerEditIssueForm />,
-    },
-  ],
-}
 
     // {
     //   path: "/dashboard",
     //   element: <Dashboard />
     // },
-    {
-      path: "/help",
-      Component: HelpPage,
-    },
   ]);
 }
 
@@ -162,9 +158,7 @@ export default function App() {
     // <AuthContextProvider>
     <Provider>
       <Router />
-      <Toaster />
     </Provider>
     // </AuthContextProvider>
   );
 }
-
