@@ -17,7 +17,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import { Outdent } from "lucide-react";
+import { Component, Outdent } from "lucide-react";
 
 // const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const LecturerDashboard = lazy(() => import("@/components/LecturerDashboard"));
@@ -40,6 +40,7 @@ const StudentIssueForm = lazy(() =>
 const NotificationsPage = lazy(() => import("@/pages/NotificationsPage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 // const LogoutPage = lazy(() => import("@/pages/LogoutPage"));
+const NotFound = lazy(() => import("@/pages/404"));
 
 
 const dashboardRoutes = [
@@ -85,6 +86,10 @@ const dashboardRoutes = [
       //   path: "/account/logout",
       //   Component: LogoutPage,
       // },
+      {
+        path: "*",
+        Component: NotFound,
+      }
     ],
   },
 ];
