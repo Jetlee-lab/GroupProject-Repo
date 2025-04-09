@@ -169,7 +169,7 @@ const LecturerEditIssueForm = ({ initialData, onSubmit }) => {
           className="h-5 w-5 text-blue-600 border-gray-300 rounded"
         />
         <label htmlFor="resolved" className="text-sm text-gray-700">
-          Mark as Resolved
+          Mark as Resolved Now
         </label>
       </div>
 
