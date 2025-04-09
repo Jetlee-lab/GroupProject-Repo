@@ -43,145 +43,145 @@ import {
 import { useUser } from "@/auth";
 
 function getData(role) {
-// This is sample data.
-const data = {
-   teams: [
-    {
-      name: "AITS",
-      logo: GalleryVerticalEnd,
-      plan: "system",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: LayoutGrid,
-      items: [
-        // {
-        //   title: "Genesis",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Explorer",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Quantum",
-        //   url: "#",
-        // },
-      ],
-    },
-    /*{
-      title: "Reports",
-      url: "/student-reports",
-      icon: NotebookPen,
-      isActive: true,
-      items: [
-        // {
-        //   title: "History",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Starred",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Settings",
-        //   url: "#",
-        // },
-      ],
-    },*/
-    {
-      title: "Notifications",
-      url: "/notifications",
-      icon: BellDot,
-      items: [
-        // {
-        //   title: "Introduction",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Get Started",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Tutorials",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Changelog",
-        //   url: "#",
-        // },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings,
-      items: [
-        // {
-        //   title: "General",
-        //   url: "/",
-        // },
-        // {
-        //   title: "Team",
-        //   url: "vv",
-        // },
-        // {
-        //   title: "Billing",
-        //   url: "#",
-        // },
-        // {
-        //   title: "Limits",
-        //   url: "#",
-        // },
-      ],
-    },
-  ],
-  projects: [
-    // {
-    //   name: "Dashboard",
-    //   url: "/dashboard",
-    //   icon: Frame,
-    // },
-    // {
-    //   name: "Reports",
-    //   url: `/${role}-reports`,
-    //   icon: PieChart,
-    // },
-    // {
-    //   name: "Notifications",
-    //   url: "/notifications",
-    //   icon: Map,
-    // },{
-    //   name: "Settings",
-    //   url: "/notifications",
-    //   icon: Settings2,
-    // },
-    {
-      name: "Help & Support",
-      url: "/help",
-      icon: Settings2,
-    },
-    {
-      name: "Logout",
-      url: "/account/logout",
-      icon: LogOut,
-    },
-  ],
-}
-return data
+  // This is sample data.
+  const data = {
+    teams: [
+      {
+        name: "AITS",
+        logo: GalleryVerticalEnd,
+        plan: "system",
+      },
+      {
+        name: "Acme Corp.",
+        logo: AudioWaveform,
+        plan: "Startup",
+      },
+      {
+        name: "Evil Corp.",
+        logo: Command,
+        plan: "Free",
+      },
+    ],
+    navMain: [
+      {
+        title: "Dashboard",
+        url: "/dashboard",
+        icon: LayoutGrid,
+        items: [
+          // {
+          //   title: "Genesis",
+          //   url: "#",
+          // },
+          // {
+          //   title: "Explorer",
+          //   url: "#",
+          // },
+          // {
+          //   title: "Quantum",
+          //   url: "#",
+          // },
+        ],
+      },
+      {
+        title: "Reports",
+        url: "/student-reports",
+        icon: NotebookPen,
+        isActive: true,
+        items: [
+          // {
+          //   title: "History",
+          //   url: "#",
+          // },
+          // {
+          //   title: "Starred",
+          //   url: "#",
+          // },
+          // {
+          //   title: "Settings",
+          //   url: "#",
+          // },
+        ],
+      },
+      {
+        title: "Notifications",
+        url: "/notifications",
+        icon: BellDot,
+        items: [
+          // {
+          //   title: "Introduction",
+          //   url: "#",
+          // },
+          // {
+          //   title: "Get Started",
+          //   url: "#",
+          // },
+          // {
+          //   title: "Tutorials",
+          //   url: "#",
+          // },
+          // {
+          //   title: "Changelog",
+          //   url: "#",
+          // },
+        ],
+      },
+      {
+        title: "Settings",
+        url: "/settings",
+        icon: Settings,
+        items: [
+          // {
+          //   title: "General",
+          //   url: "/",
+          // },
+          // {
+          //   title: "Team",
+          //   url: "vv",
+          // },
+          // {
+          //   title: "Billing",
+          //   url: "#",
+          // },
+          // {
+          //   title: "Limits",
+          //   url: "#",
+          // },
+        ],
+      },
+    ],
+    projects: [
+      // {
+      //   name: "Dashboard",
+      //   url: "/dashboard",
+      //   icon: Frame,
+      // },
+      // {
+      //   name: "Reports",
+      //   url: `/${role}-reports`,
+      //   icon: PieChart,
+      // },
+      // {
+      //   name: "Notifications",
+      //   url: "/notifications",
+      //   icon: Map,
+      // },{
+      //   name: "Settings",
+      //   url: "/notifications",
+      //   icon: Settings2,
+      // },
+      {
+        name: "Help & Support",
+        url: "/help",
+        icon: Settings2,
+      },
+      {
+        name: "Logout",
+        url: "/account/logout",
+        icon: LogOut,
+      },
+    ],
+  };
+  return data;
 }
 
 // export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

@@ -70,7 +70,7 @@ export default function RegistrarDashboard() {
         <div className="mt-4 text-left">
           <Link to="/registrar-reports">
             <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              View reports and Assign Issues
+              View and Assign Issues
             </button>
           </Link>
         </div>
