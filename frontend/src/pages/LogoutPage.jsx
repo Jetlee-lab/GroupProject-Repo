@@ -49,12 +49,8 @@ const LogoutPage = () => {
           >
             {response.fetching ? 'Logging out...' : 'Logout'}
           </button>
-          <p className="text-lg text-black-100 font-bold mt-4">See You Later</p>
-          <Link to="/account/login">
-            <button className="bg-blue-500 hover:bg-white-100 text-white px-6 py-2 rounded shadow transition-all">
-              Log in Again
-            </button>
-          </Link>
+          <p className="text-lg text-black-100 font-bold ">See You Later</p>
+          
         </div>
       </div>
     </div>
