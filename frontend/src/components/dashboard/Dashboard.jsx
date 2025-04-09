@@ -19,26 +19,26 @@ import {
 
 import { Outdent } from "lucide-react";
 
-const NotificationsPage = lazy(() => import("@/pages/NotificationsPage"));
-const LecturerReportsPage = lazy(() => import("@/pages/LecturerReportsPage"));
-const StudentReportsPage = lazy(() => import("@/pages/StudentReportsPage"));
-const AcademicRegistrarReportsPage = lazy(() =>
-  import("@/pages/AcademicRegistrarReportsPage")
-);
-const LandingPage = lazy(() => import("@/pages/LandingPage"));
+// const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const LecturerDashboard = lazy(() => import("@/components/LecturerDashboard"));
-const AcademicRegistrarDashboard = lazy(() =>
-  import("@/components/AcademicRegistrarDasboard")
-);
-const StudentDashboard = lazy(() => import("@/components/StudentDashboard"));
-const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
-const StudentIssueForm = lazy(() =>
-  import("@/components/issues/StudentIssueForm")
-);
+const LecturerReportsPage = lazy(() => import("@/pages/LecturerReportsPage"));
 const LecturerEditIssueForm = lazy(() =>
   import("@/components/issues/LecturerEditIssueForm")
 );
+const AcademicRegistrarDashboard = lazy(() =>
+  import("@/components/AcademicRegistrarDasboard")
+);
+const AcademicRegistrarReportsPage = lazy(() =>
+  import("@/pages/AcademicRegistrarReportsPage")
+);
 const AssignIssue = lazy(() => import("@/components/issues/AssignIssue"));
+const StudentDashboard = lazy(() => import("@/components/StudentDashboard"));
+const StudentReportsPage = lazy(() => import("@/pages/StudentReportsPage"));
+const StudentIssueForm = lazy(() =>
+  import("@/components/issues/StudentIssueForm")
+);
+const NotificationsPage = lazy(() => import("@/pages/NotificationsPage"));
+const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 // const LogoutPage = lazy(() => import("@/pages/LogoutPage"));
 
 
@@ -130,7 +130,7 @@ export function DashboardLayout() {
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div> */}
           <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            {(pathname.startsWith("/dashboard") &&
+            {(pathname == "/dashboard" &&
               (role === "student" ? (
                 <StudentDashboard />
               ) : role === "lecturer" ? (

@@ -18,6 +18,7 @@ const SignUp = lazy(() => import("@/components/auth/SignUp"));
 const AppLayout = lazy(() => import("@/components/common/AppLayout"));
 const HelpPage = lazy(() => import("@/pages/HelpPage"));
 const LogoutPage = lazy(() => import("./pages/LogoutPage"));
+const NotFound = lazy(() => import("@/pages/404"));
 
 
 function createRouter(config) {
@@ -79,6 +80,10 @@ function createRouter(config) {
       path: "/help",
       Component: HelpPage,
     },
+    {
+      path: "*",
+      Component: NotFound,
+    }
   ]);
 }
 

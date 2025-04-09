@@ -159,7 +159,7 @@ const LecturerReportsPage = () => {
       </h1>
       <div className="flex justify-between mb-4">
         {/*Button for editing an issue */}
-        <Link to="/edit-issue-lecturer">
+        <Link to="/dashboard/edit-issue-lecturer">
           <button className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300">
             Edit an Issue
           </button>
