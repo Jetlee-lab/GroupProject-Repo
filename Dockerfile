@@ -60,7 +60,7 @@ EXPOSE 8000
 RUN chmod +x build.sh
 # Run Django’s development server
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-ENTRYPOINT ["bash", "build.sh"]
+ENTRYPOINT ["bash", "/app/build.sh"]
 
 
 
