@@ -17,7 +17,7 @@ const ContactSupport = () => {
         <input type="text" placeholder="Your Name" value={name} onChange={(e) => setName(e.target.value)} required className="w-full p-2 border rounded" />
         <input type="email" placeholder="Your Email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full p-2 border rounded" />
         <textarea placeholder="Your Message" value={message} onChange={(e) => setMessage(e.target.value)} required className="w-full p-2 border rounded"></textarea>
-        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Send</button>
+        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Send</button>
       </form>
     </section>
   );

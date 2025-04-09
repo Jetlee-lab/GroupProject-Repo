@@ -116,7 +116,7 @@ const ProfilePictureSetup = () => {
               <h3 className="text-lg font-medium text-gray-700 mb-2">New Picture</h3>
               <div
                 className={`border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer ${
-                  isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                  isDragging ? 'border-blue-500 bg-blue-50' : 'border-blue-300'
                 }`}
                 onClick={handleUploadClick}
                 onDragOver={handleDragOver}

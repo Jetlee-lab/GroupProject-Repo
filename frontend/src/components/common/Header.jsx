@@ -6,7 +6,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 export default function Header() {
   return (
-    <div className="col-span-full rounded-lg shadow-2xl bg-white"> 
+    <div className="col-span-full rounded-lg shadow-2xl bg-green"> 
       <div className='flex items-center justify-between p-4 bg-blue-600 text-white shadow-2xl'>
         {/*Logo*/}
         <div className='flex items-center bg-blue-600'>
