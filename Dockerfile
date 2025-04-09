@@ -1,20 +1,24 @@
 # Use the official Python runtime image
-FROM python:3.13  
+# FROM python:3.13
+FROM nikolaik/python-nodejs:python3.13-nodejs23
  
 # Create the app directory
 RUN mkdir /app
- 
-# Set the working directory inside the container
-WORKDIR /app
 
 # Copy the Django project to the container
 COPY . /app/
+ 
+# Set the working directory inside the container
+WORKDIR /app/frontend
+
+RUN pnpm install && pnpm build
  
 # Set environment variables 
 # Prevents Python from writing pyc files to disk
 ENV PYTHONDONTWRITEBYTECODE=1
 #Prevents Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED=1 
+ENV PIP_NO_CACHE_DIR=1 
  
 # Upgrade pip
 RUN pip install --upgrade pip 

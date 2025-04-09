@@ -16,8 +16,8 @@ class ActiveSessionAuthentication(authentication.BaseAuthentication):
 
         auth_header = authentication.get_authorization_header(request)
 
-        print('Cookies:', request.COOKIES)
-        print('App TokenAuth, auth_header:', auth_header)
+        # print('Cookies:', request.COOKIES)
+        # print('App TokenAuth, auth_header:', auth_header)
         if not auth_header:
             return None
 
