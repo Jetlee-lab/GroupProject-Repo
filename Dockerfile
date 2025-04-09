@@ -29,7 +29,7 @@ ENV PIP_NO_CACHE_DIR=1
 RUN pip install --upgrade pip 
 
 # run this command to install all dependencies 
-RUN pip install --no-cache-dir -r backend/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # WORKDIR /app/backend
 
