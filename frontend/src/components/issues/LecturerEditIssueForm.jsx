@@ -101,7 +101,7 @@ const LecturerEditIssueForm = ({ initialData, onSubmit }) => {
           options={["Assignment", "Exam Results", "Course Materials", "Technical Issue"]}
         />
         <TextInput
-          label="Lecturer/Professor Name"
+          label="Lecturer"
           name="instructor"
           value={formData.instructor}
           onChange={handleChange}
