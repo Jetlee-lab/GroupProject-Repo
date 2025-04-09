@@ -11,8 +11,13 @@ COPY . /app/
 # Set the working directory inside the container
 WORKDIR /app/frontend
 
-RUN pnpm install && pnpm build
- 
+# RUN npm install --global corepack@latest && corepack enable && \
+#     corepack prepare pnpm@latest-10 --activate && pnpm config set store-dir ~/.pnpm-store \
+RUN npm install -g pnpm && \
+    pnpm install && pnpm build
+
+# Change to a specific folder, within /app
+WORKDIR /app/backend
 # Set environment variables 
 # Prevents Python from writing pyc files to disk
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -41,11 +46,16 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 #     mkdir -p /app/backend/staticfiles \
 #     mv /app/frontend/dist /app/backend/staticfiles/frontend
 
+
+# RUN echo RUNNING MIGRATIONS... && python manage.py makemigrations &&  python manage.py migrate && \
+#     echo POPULATING DATABASE... && python manage.py loaddata data && \
+#     echo COLLECTING STATIC FILES... && python manage.py collectstatic --noinput
+
+# # Move the built frontend
+# RUN mv /app/frontend/dist /app/backend/staticfiles/frontend
+
 # Expose the Django port
 EXPOSE 8000
-
-# Change to a specific folder, within /app
-WORKDIR /app/backend
 
 RUN chmod +x build.sh
 # Run Django’s development server
