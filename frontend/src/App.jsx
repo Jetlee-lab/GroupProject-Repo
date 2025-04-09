@@ -7,6 +7,24 @@ import {
 } from "./auth";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import HelpPage from "./pages/HelpPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import LecturerReportsPage from "./pages/LecturerReportsPage";
+import StudentReportsPage from "./pages/StudentReportsPage";
+import AcademicRegistrarReportsPage from "./pages/AcademicRegistrarReportsPage";
+import SettingsPage from "./pages/SettingsPage";
+import SignUpPage from "./pages/SignUpPage";
+//import LoginPage from "./pages/LoginPage";
+import StudentIssueForm from "./components/issues/StudentIssueForm";
+import LecturerEditIssueForm from "./components/issues/LecturerEditIssueForm";
+import AssignIssue from "./components/issues/AssignIssue";
+import AppLayout from "./components/common/AppLayout";
+import LecturerDashboard from "./components/LecturerDashboard";
+import AcademicRegistrarDashboard from "./components/AcademicRegistrarDasboard";
+import StudentDashboard from './components/StudentDashboard';
+import Dashboard from "./components/dashboard/Dashboard";``
+import LogoutPage from "./pages/LogoutPage"
 import { useConfig } from "./auth/hooks";
 import Provider from "./provider";
 import { Toaster } from "@/components/ui/sonner"
@@ -34,19 +52,29 @@ function createRouter(config) {
           path: "",
           Component: HomePage,
         },
-        // {
-        //   path: "/landing",
-        //   element: <LandingPage />,
-        // },
-        // {
-        //   path: "/login",
-        //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
-        // },
+        
+        /*{
+          path: "/login",
+          element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
+        },*/ {
+          path: "/logout",
+          element: <LogoutPage />,
+        },
+        
+        {
+          path: "/add-issue",
+          element: <StudentIssueForm />,
+        },
+        {
+          path: "/assign-issue",
+          element: <AssignIssue />,
+        },
+                {
+          path: "/help",
+          element: <HelpPage />,
+        },
+       
       ],
-    },
-    {
-      path: "/account/logout",
-      Component: LogoutPage,
     },
     {
       path: "/account/*",
@@ -63,13 +91,36 @@ function createRouter(config) {
       ],
     },
     {
-      path: "/dashboard/*",
-      element: (
-        <AuthenticatedRoute>
-          <Dashboard />
-        </AuthenticatedRoute>
-      ),
+      element: <AuthenticatedRoute><Dashboard /></AuthenticatedRoute>,
+      children: [
+    {
+      path: "/dashboard",
+    },{
+      path: "/notifications",
+      element: <NotificationsPage />,
     },
+    {
+      path: "/settings",
+      element: <SettingsPage />,
+    },
+    {
+      path: "/lecturer-reports",
+      element: <LecturerReportsPage />,
+    },
+    {
+      path: "/student-reports",
+      element: <StudentReportsPage />,
+    },
+    {
+      path: "/registrar-reports",
+      element: <AcademicRegistrarReportsPage />,
+    },
+    {
+      path: "/edit-issue-lecturer",
+      element: <LecturerEditIssueForm />,
+    },
+  ],
+}
 
     // {
     //   path: "/dashboard",
@@ -116,3 +167,4 @@ export default function App() {
     // </AuthContextProvider>
   );
 }
+

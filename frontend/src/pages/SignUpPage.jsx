@@ -13,7 +13,7 @@ const SignUpPage = () => {
     console.log('User signed up successfully!');
 
     // Redirecting to the Landing Page after successful sign-up
-    navigate('/landing');
+    navigate('/dashboard');
   };
 
   return (
@@ -30,7 +30,7 @@ const SignUpPage = () => {
       {/* Right: Sign Up Form */}
       <div className="p-5 w-full lg:w-1/2 flex items-center justify-center">
         <div className="w-full max-w-md">
-          <h1 className="text-2xl font-semibold mt-20 mb-6 text-center">Sign Up</h1>
+          <h1 className="text-2xl font-semibold mt-10 mb-6 text-center">Sign Up</h1>
           <form onSubmit={handleSignUp}>
             {/* Full Name */}
             <div className="mb-4">
@@ -64,20 +64,6 @@ const SignUpPage = () => {
               />
             </div>
 
-            {/* Phone Number */}
-            <div className="mb-4">
-              <label htmlFor="phone" className="block text-gray-600">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                required
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-                autoComplete="off"
-              />
-            </div>
 
             {/* Password Input */}
             <div className="mb-4">
@@ -94,20 +80,7 @@ const SignUpPage = () => {
               />
             </div>
 
-            {/* Confirm Password Input */}
-            <div className="mb-4">
-              <label htmlFor="confirmPassword" className="block text-gray-800">
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                required
-                name="confirmPassword"
-                className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-                autoComplete="off"
-              />
-            </div>
+         
 
             {/* Reference Number Input */}
             <div className="mb-4">
@@ -139,8 +112,8 @@ const SignUpPage = () => {
                   Select your role
                 </option>
                 <option value="student">Student</option>
-                <option value="teacher">Teacher</option>
-                <option value="admin">Admin</option>
+                <option value="teacher">Lecturer</option>
+                <option value="admin">Academic Registrar</option>
               </select>
             </div>
 
@@ -155,7 +128,7 @@ const SignUpPage = () => {
 
           {/* Log in Link */}
           <div className="mt-6 text-green-500 text-center">
-            <Link to="/login" className="hover:underline">
+            <Link to="/account/login" className="hover:underline">
               Already have an account? Log In Here
             </Link>
           </div>
