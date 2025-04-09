@@ -6,7 +6,7 @@ const FAQ = () => (
     <dl className="space-y-4">
       <div>
         <dt className="font-bold">How do I create a new issue?</dt>
-        <dd className="text-gray-700">Click "Create New Issue" or "+" icon in the main navigation.</dd>
+        <dd className="text--700green">Click "Create New Issue" or "+" icon in the main navigation.</dd>
       </div>
       <div>
         <dt className="font-bold">Can I track multiple issues?</dt>
