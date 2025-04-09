@@ -3,4 +3,4 @@ from rest_framework.response import Response
 
 class ExampleView(APIView):
     def get(self, request):
-        return Response({"message": "Hello, world!"})
+        return Response({"message": "Welcome ,kindly enjoy the usage!"})
