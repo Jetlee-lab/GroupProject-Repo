@@ -18,7 +18,7 @@ function MyLogin(){
   }
   return (
     <form onSubmit={handleSubmit}>
-      <label>Enter your name
+      <label>Enter your name here
       <input type="text"
       name="username"
       value={inputs.username}
