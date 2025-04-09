@@ -1,20 +1,29 @@
 # Use the official Python runtime image
-FROM python:3.13  
+# FROM python:3.13
+FROM nikolaik/python-nodejs:python3.13-nodejs23
  
 # Create the app directory
 RUN mkdir /app
- 
-# Set the working directory inside the container
-WORKDIR /app
 
 # Copy the Django project to the container
 COPY . /app/
  
+# Set the working directory inside the container
+WORKDIR /app/frontend
+
+# RUN npm install --global corepack@latest && corepack enable && \
+#     corepack prepare pnpm@latest-10 --activate && pnpm config set store-dir ~/.pnpm-store \
+RUN npm install -g pnpm && \
+    pnpm install && pnpm build
+
+# Change to a specific folder, within /app
+WORKDIR /app/backend
 # Set environment variables 
 # Prevents Python from writing pyc files to disk
 ENV PYTHONDONTWRITEBYTECODE=1
 #Prevents Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED=1 
+ENV PIP_NO_CACHE_DIR=1 
  
 # Upgrade pip
 RUN pip install --upgrade pip 
@@ -37,11 +46,16 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 #     mkdir -p /app/backend/staticfiles \
 #     mv /app/frontend/dist /app/backend/staticfiles/frontend
 
+
+# RUN echo RUNNING MIGRATIONS... && python manage.py makemigrations &&  python manage.py migrate && \
+#     echo POPULATING DATABASE... && python manage.py loaddata data && \
+#     echo COLLECTING STATIC FILES... && python manage.py collectstatic --noinput
+
+# # Move the built frontend
+# RUN mv /app/frontend/dist /app/backend/staticfiles/frontend
+
 # Expose the Django port
 EXPOSE 8000
-
-# Change to a specific folder, within /app
-WORKDIR /app/backend
 
 RUN chmod +x build.sh
 # Run Django’s development server

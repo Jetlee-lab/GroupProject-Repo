@@ -13,6 +13,12 @@ const apiClient = axios.create({
   },
 });
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 export { apiClient, queryClient };

@@ -190,7 +190,7 @@ export function AppSidebar({ userRole, ...props }) {
   const user = useUser();
 
   useEffect(() => setData(getData(userRole)), [userRole]);
-  console.log({ userRole });
+  // console.log({ userRole });
   // const data = getData(userRole)
   return (
     (data && (

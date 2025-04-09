@@ -17,7 +17,7 @@ class ReferenceTokenSerializer(serializers.ModelSerializer):
         """
         Create a new ReferenceToken instance.
         """
-        print({'validated_data':validated_data})
+        # print({'validated_data':validated_data})
         # email = validated_data.get("email")
         # role = validated_data.get("role")
 

@@ -128,7 +128,6 @@ class User(AbstractUser):
         return "@%s" % self.username or self.email
     
     def save(self, *args, **kwargs):
-        print("--User.save()",{'args':args, 'kwargs': kwargs})
         super().save(*args, **kwargs)
 
 
