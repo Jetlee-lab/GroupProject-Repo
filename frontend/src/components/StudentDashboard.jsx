@@ -50,7 +50,7 @@ const enrolledCourses = [
 
 const StudentDashboard = () => {
   return (
-    <div className="space-y-6 px-4 py-6  bg-blue-200">
+    <div className="space-y-6 px-4 py-6  bg-blue-200 rounded-lg">
       <p className= "font-bold text-center text-3xl">Student Dashboard</p>
 
       {/* Quick Stats */}
@@ -69,7 +69,7 @@ const StudentDashboard = () => {
 
        {/* Button to Student Reports Page */}
        <div className="mt-4 text-left ">
-          <Link to="/student-reports">
+          <Link to="/dashboard/student-reports">
             <button className="bg-blue-500 text-white px-4 py-2 cursor-pointer rounded hover:bg-blue-600">
               View reports and Add New Issues
             </button>

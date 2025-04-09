@@ -43,9 +43,6 @@ const Login = () => {
           <input
             type="email"
             className="w-full p-2 border rounded"
-            autoComplete="off"
-            autoCapitalize="off"
-            autoCorrect="off"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />

@@ -1,13 +1,16 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AitsLogo from "@/components/images/logo2.jpg";
 import { useState } from "react";
-import { useConfig } from "@/auth"
-import { login } from "@/auth/lib/allauth"
-import { Link } from "react-router-dom"
+import { useConfig } from "@/auth";
+import { login } from "@/auth/lib/allauth";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { LoaderIcon } from "lucide-react";
 
 // export function LoginForm({
 //     className,
@@ -15,23 +18,42 @@ import { Link } from "react-router-dom"
 //   }: React.ComponentProps<"div">) {
 
 export function LoginForm({ className, ...props }) {
-const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [response, setResponse] = useState({ fetching: false, content: null })
-  const config = useConfig()
-  const hasProviders = config.data.socialaccount?.providers?.length > 0
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [response, setResponse] = useState({ fetching: false, content: null });
+  const config = useConfig();
+  const hasProviders = config.data.socialaccount?.providers?.length > 0;
 
-  function submit (e) {
-    e.preventDefault()
-    setResponse({ ...response, fetching: true })
-    login({ email, password }).then((content) => {
-      setResponse((r) => { return { ...r, content } })
-    }).catch((e) => {
-      console.error(e)
-    //   window.alert(e)
-    }).then(() => {
-      setResponse((r) => { return { ...r, fetching: false } })
-    })
+  function submit(e) {
+    e.preventDefault();
+    setResponse({ ...response, fetching: true });
+    login({ email, password })
+      .then((content) => {
+        setResponse((r) => {
+          return { ...r, content };
+        });
+        console.log({ content });
+        if (content.status !== 200) {
+          toast(<span className="font-bold text-white">Error Logging In</span>, {
+            description: content.errors?.map((e, i) => <span key={i}>{e.message}</span>),
+            action: {
+              label: "OK",
+            },
+            style: {
+              background: "red",
+            },
+          });
+        }
+      })
+      .catch((e) => {
+        // alert(e)
+        console.error("LoginError", { e });
+      })
+      .then(() => {
+        setResponse((r) => {
+          return { ...r, fetching: false };
+        });
+      });
   }
 
   return (
@@ -73,10 +95,15 @@ const [email, setEmail] = useState('')
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required onChange={(e) => setPassword(e.target.value)}/>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full" disabled={response.fetching}>
+              { response.fetching && <LoaderIcon className="animate-spin" /> || "Login" }
               </Button>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
@@ -114,7 +141,10 @@ const [email, setEmail] = useState('')
               </div>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <Link to="/account/signup" className="underline underline-offset-4">
+                <Link
+                  to="/account/signup"
+                  className="underline underline-offset-4"
+                >
                   Sign up
                 </Link>
               </div>
@@ -129,3 +159,5 @@ const [email, setEmail] = useState('')
     </div>
   );
 }
+
+export { LoginForm as default }

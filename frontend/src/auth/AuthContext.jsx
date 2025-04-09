@@ -1,10 +1,28 @@
+import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, createContext, useState } from "react";
 import { getAuth, getConfig } from "./lib/allauth";
 
 export const AuthContext = createContext(null);
 
 function Loading() {
-  return <div>Starting...</div>;
+  // export function SkeletonDemo() {
+  return (
+    <div className="flex flex-col gap-y-8 h-screen w-full items-center justify-center">
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+        <div className="flex items-center justify-center">
+          <p className="text-gray-400 text-2xl">Loading...</p>
+        </div>
+    </div>
+  );
+  // }
+
+  // return <div>Starting...</div>;
 }
 
 function LoadingError() {
@@ -45,6 +63,7 @@ export function AuthContextProvider(props) {
     };
   }, []);
   const loading = typeof auth === "undefined" || config?.status !== 200;
+  
   return (
     <AuthContext.Provider value={{ auth, config }}>
       {loading ? (
