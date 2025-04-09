@@ -41,6 +41,7 @@ const NotificationsPage = lazy(() => import("@/pages/NotificationsPage"));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 // const LogoutPage = lazy(() => import("@/pages/LogoutPage"));
 const NotFound = lazy(() => import("@/pages/404"));
+const UnknownError = lazy(() => import("@/pages/unknown-error"));
 
 
 const dashboardRoutes = [
@@ -144,7 +145,7 @@ export function DashboardLayout() {
                 <AcademicRegistrarDashboard />
               ) : (
                 <div className="flex justify-center">
-                  Failed to load <strong>{role}</strong>... {":("}
+                  <UnknownError error={<>Failed to load{" "}<strong>{role}</strong>...</>} />
                 </div>
               ))) || <Outlet />}
           </div>

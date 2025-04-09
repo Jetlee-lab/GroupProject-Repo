@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, lazy } from "react";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import IssueStats from "./issues/IssueStats";
 import IssuesTable from "./issues/IssueTable";
@@ -6,6 +6,7 @@ import ActivityFeed from "./issues/ActivityFeed";
 // import { useQuery } from "@/hooks"
 import { useQuery } from "@tanstack/react-query";
 import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
+const UnknownError = lazy(() => import("@/pages/unknown-error"));
 // import { IssueStats } from "@/components/stats"
 
 export default function RegistrarDashboard() {
@@ -40,7 +41,7 @@ export default function RegistrarDashboard() {
   } else if (statsPending) {
     // return <>Loading data...</>;
   } else if (statsError) {
-    return <>Ops something happend!</>;
+    return <UnknownError error="Failed Loading resource." />;
   }
 
   // return <>Result</>

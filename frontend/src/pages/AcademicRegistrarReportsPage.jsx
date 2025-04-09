@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, lazy } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@/hooks"
 import { fetchIssues, fetchUsers } from '@/lib/api';
 import { STATUS_CLOSED, STATUS_OPEN, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_INREVIEW } from '@/lib/constants';
+const UnknownError = lazy(() => import("@/pages/unknown-error"));
 
 const AcademicRegistrarReportsPage = () => {
 const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError, data: issuesData } = useQuery(fetchIssues)
@@ -13,7 +14,7 @@ const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError
   } else if (issuesLoading || userssLoading) {
     return <>Loading data...</>
   } else if (issuesError || usersError) {
-    return <>Ops something happend!</>
+    return <UnknownError error="Failed Loading resource." />;
   }
 
   const issues = issuesData.data

@@ -84,7 +84,7 @@ function getData(role) {
       },
       {
         title: "Reports",
-        url: "/student-reports",
+        url: `/dashboard/${role}-reports`,
         icon: NotebookPen,
         isActive: true,
         items: [
@@ -104,7 +104,7 @@ function getData(role) {
       },
       {
         title: "Notifications",
-        url: "/notifications",
+        url: "/dashboard/notifications",
         icon: BellDot,
         items: [
           // {
@@ -127,7 +127,7 @@ function getData(role) {
       },
       {
         title: "Settings",
-        url: "/settings",
+        url: "/dashboard/settings",
         icon: Settings,
         items: [
           // {
@@ -157,16 +157,16 @@ function getData(role) {
       // },
       // {
       //   name: "Reports",
-      //   url: `/${role}-reports`,
+      //   url: `/dashboard/${role}-reports`,
       //   icon: PieChart,
       // },
       // {
       //   name: "Notifications",
-      //   url: "/notifications",
+      //   url: "/dashboard/notifications",
       //   icon: Map,
       // },{
       //   name: "Settings",
-      //   url: "/notifications",
+      //   url: "/dashboard/notifications",
       //   icon: Settings2,
       // },
       {
