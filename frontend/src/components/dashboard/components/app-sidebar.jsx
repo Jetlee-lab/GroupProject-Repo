@@ -169,16 +169,16 @@ function getData(role) {
       //   url: "/dashboard/notifications",
       //   icon: Settings2,
       // },
-      {
-        name: "Help & Support",
-        url: "/help",
-        icon: Settings2,
-      },
-      {
-        name: "Logout",
-        url: "/account/logout",
-        icon: LogOut,
-      },
+      // {
+      //   name: "Help & Support",
+      //   url: "/help",
+      //   icon: Settings2,
+      // },
+      // {
+      //   name: "Logout",
+      //   url: "/account/logout",
+      //   icon: LogOut,
+      // },
     ],
   };
   return data;
