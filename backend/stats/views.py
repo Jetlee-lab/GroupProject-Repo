@@ -33,7 +33,7 @@ class StatsView(IOMixin, generics.ListCreateAPIView):
         #     issues = Issue.objects.all()
 
         query = self.get_queryset()
-        print({'query':query})
+        # print({'query':query})
 
         kwargs = parse_query(q)
 
