@@ -61,6 +61,7 @@ export function AuthenticatedRoute ({ children }) {
   const location = useLocation()
   const [, status] = useAuthStatus()
   const next = `next=${encodeURIComponent(location.pathname + location.search)}`
+  console.log("<AuthenticatedRoute/>", { status, next, location })
   if (status.isAuthenticated) {
     return children || <Outlet />
   } else {
@@ -70,6 +71,7 @@ export function AuthenticatedRoute ({ children }) {
 
 export function AnonymousRoute ({ children }) {
   const [, status] = useAuthStatus()
+  console.log("<AnonymousRoute/>", { status })
   if (!status.isAuthenticated) {
     return children || <Outlet />
   } else {
@@ -80,6 +82,7 @@ export function AnonymousRoute ({ children }) {
 export function AuthChangeRedirector ({ children }) {
   const [auth, event] = useAuthChange()
   const location = useLocation()
+  console.log("<AuthChangeRedirector/>", { auth, event, location })
   switch (event) {
     case AuthChangeEvent.LOGGED_OUT:
       return <Navigate to={URLs.LOGOUT_REDIRECT_URL} />
@@ -95,12 +98,13 @@ export function AuthChangeRedirector ({ children }) {
       const path = pathForFlow(auth.data.flows[0])
       return <Navigate to={`${path}?${next}`} state={{ reauth: auth }} />
     }
-    case AuthChangeEvent.FLOW_UPDATED:
+    case AuthChangeEvent.FLOW_UPDATED: {
       const pendingFlow = navigateToPendingFlow(auth)
       if (!pendingFlow) {
         throw new Error()
       }
       return pendingFlow
+    }
     default:
       break
   }

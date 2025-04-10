@@ -11,6 +11,7 @@ export default function Logout () {
     setResponse({ ...response, fetching: true })
     logout().then((content) => {
       setResponse((r) => { return { ...r, content } })
+      console.log("After logout, Navigating to.. navigate(-1)")
       navigate(-1)
     }).catch((e) => {
       console.error(e)
