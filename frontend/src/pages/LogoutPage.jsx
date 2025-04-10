@@ -19,7 +19,7 @@ export default function Logout() {
       })
       .catch((e) => {
         console.error(e);
-        window.alert(e);
+        // window.alert(e);
       })
       .then(() => {
         setResponse((r) => {

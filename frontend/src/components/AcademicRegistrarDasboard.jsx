@@ -123,7 +123,7 @@ export function GenerateToken() {
 
   function handleChange(e) {
     const { name, value } = e.target || {};
-    console.log({ name, value, arguments });
+    // console.log({ name, value, arguments });
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,

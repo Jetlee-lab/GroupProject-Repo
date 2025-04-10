@@ -32,7 +32,7 @@ export function LoginForm({ className, ...props }) {
         setResponse((r) => {
           return { ...r, content };
         });
-        console.log({ content });
+        // console.log({ content });
         if (content.status !== 200) {
           toast(<span className="font-bold text-white">Error Logging In</span>, {
             description: content.errors?.map((e, i) => <span key={i}>{e.message}</span>),

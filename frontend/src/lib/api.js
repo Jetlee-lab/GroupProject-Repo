@@ -24,7 +24,7 @@ export const createIssue = async (issue) => {
 };
 
 export const fetchStats = async ({ stat, params }) => {
-  console.log({params})
+  // console.log({params})
   const url = stat === undefined ? "/stats" : `/stats/${stat}`
   return await apiClient.get(url, { params }).then((response) => {
     return response.data;
@@ -47,7 +47,7 @@ export const fetchRoles = async () => {
 };
 
 export const createToken = async (data) => {
-  console.log({POST: data})
+  // console.log({POST: data})
   return await apiClient.post("/reference-token", data, {
     withCredentials: true,
     headers: {

@@ -34,7 +34,7 @@ export function SignupForm({ className, ...props }) {
       ]);
       return;
     }
-    console.log({ password1, password2 });
+    // console.log({ password1, password2 });
     setPassword2Errors([]);
     setResponse({ ...response, fetching: true });
     signUp({ email, username, token, password: password1 })
@@ -45,7 +45,7 @@ export function SignupForm({ className, ...props }) {
       })
       .catch((e) => {
         console.error(e);
-        window.alert(e);
+        // window.alert(e);
       })
       .then(() => {
         setResponse((r) => {
