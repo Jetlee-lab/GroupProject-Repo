@@ -8,7 +8,7 @@ from authentication.models import ActiveSession
 
 class ActiveSessionAuthentication(authentication.BaseAuthentication):
 
-    auth_error_message = {"success": False, "msg": "User is not logged on retry."}
+    auth_error_message = {"success": False, "msg": "User is not logged on."}
 
     def authenticate(self, request):
 
@@ -22,7 +22,7 @@ class ActiveSessionAuthentication(authentication.BaseAuthentication):
             return None
 
         token = auth_header.decode("utf-8")
-        print('    App Token:', token)
+        # print('App Token:', token)
 
         return self._authenticate_credentials(token)
 
