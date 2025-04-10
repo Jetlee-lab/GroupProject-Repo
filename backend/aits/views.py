@@ -1,6 +1,8 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.http import JsonResponse
 
-class ExampleView(APIView):
-    def get(self, request):
-        return Response({"message": "Welcome ,kindly enjoy the usage!"})
+# Example view
+def sample_view(request):
+    data = {
+        "message": "This is a sample view in aits/views.py"
+    }
+    return JsonResponse(data)
