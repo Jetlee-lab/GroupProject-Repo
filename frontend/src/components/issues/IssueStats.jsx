@@ -80,7 +80,7 @@ function IssueStatusStat({ statuses }) {
     <>
       {Object.entries(config).map(([configStatus, configInfo], index) => {
         const status = statuses[configStatus];
-        console.log({ configStatus, configInfo, status });
+        // console.log({ configStatus, configInfo, status });
         // if (status === undefined)
         //   return
 

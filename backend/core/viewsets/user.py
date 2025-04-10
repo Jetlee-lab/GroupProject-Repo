@@ -8,6 +8,7 @@ from django.db.models import Count
 
 from ..serializers import (
     UserSerializer,
+    RoleSerializer,
     DepartmentSerializer,
     FacultySerializer,
     IssueSerializer
@@ -71,7 +72,14 @@ class UsersViewSet(
 
     #     #return Response(format_response({}), status.HTTP_200_OK)
     #     return Response({}, status.HTTP_200_OK)
-    
+    @action(methods=["GET"], detail=False, url_path="roles", url_name="user-roles")
+    def roles(self, request, *args, **kwargs):
+        roles = Role.objects.all()
+        data = RoleSerializer(roles, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
+        # roles = User.objects.filter(roles__isnull=False).values_list('roles__name', flat=True).distinct()
+        # return paginate_response(self, roles)
+
     @action(methods=["GET"], detail=False, url_path="students", url_name="students")
     def students(self, request, *args, **kwargs):
         students = User.objects.filter(student__isnull=False)
