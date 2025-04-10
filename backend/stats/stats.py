@@ -14,7 +14,7 @@ class IssueStat():
         'status': (None, lambda x: Issue.STATUS_CHOICES[x]),
     }
 
-    def stats(self, **kwargs):
+    def stats(self, query, **kwargs):
         # priority_subquery = Issue.objects.filter(priority=OuterRef('priority')) \
         #     .values('priority').annotate(issues=ArrayAgg('id')).values('issues')
         # ret = Issue.objects.values('priority') \
@@ -57,7 +57,7 @@ class IssueStat():
             if key is None:
                 key = k
 
-            query = Issue.objects.filter(**filter_kw).values(key).annotate(**annotations)
+            query = query.filter(**filter_kw).values(key).annotate(**annotations)
             
             result[key] = {
                 key_getter(q[key]): {

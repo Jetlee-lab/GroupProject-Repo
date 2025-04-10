@@ -4,12 +4,12 @@ import IssueStats from "./issues/IssueStats";
 import IssuesTable from "./issues/IssueTable";
 import ActivityFeed from "./issues/ActivityFeed";
 // import { useQuery } from "@/hooks"
-import { useQuery } from "@tanstack/react-query";
-import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
+// import { useQuery } from "@tanstack/react-query";
+// import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
 // import { IssueStats } from "@/components/stats"
 
-export default function RegistrarDashboard() {
+export default function RegistrarDashboard({ stats, issues, users }) {
   // const {
   //   isLoading: issuesLoading,
   //   isFetching: issuesFetching,
@@ -22,27 +22,6 @@ export default function RegistrarDashboard() {
   //   error: usersError,
   //   data: usersData,
   // } = useQuery(fetchUsers);
-  const [statsParams, setStatParams] = useState({}) // ({ priority: '' });
-  const { isPending: statsPending, error: statsError, data: statsRes, isFetching: statsFetching } = useQuery({
-    queryKey: ["stats", statsParams],
-    queryFn: () => fetchStats({ stat: "issues", params: statsParams }),
-  });
-  const { isPending: issuesPending, error: issuesError, data: issuesRes, isFetching: issuesFetching } = useQuery({
-    queryKey: ["issues"],
-    queryFn: () => fetchIssues(),
-  });
-  const { isPending: usersPending, error: usersError, data: usersRes, isFetching: usersFetching } = useQuery({
-    queryKey: ["issues"],
-    queryFn: () => fetchUsers(),
-  });
-
-  if (statsFetching) {
-    // return <>Fetching issues...</>;
-  } else if (statsPending) {
-    // return <>Loading data...</>;
-  } else if (statsError) {
-    return <UnknownError error="Failed Loading resource." />;
-  }
 
   // return <>Result</>
 
@@ -59,7 +38,7 @@ export default function RegistrarDashboard() {
 
       {/* Overview section */}
       <div className="">
-        {(statsPending || statsFetching) && <IssueStats.Skeleton /> || <IssueStats stats={statsRes.data} /> }
+        <IssueStats stats={ stats } />
       </div>
 
       {/* Issues Table */}

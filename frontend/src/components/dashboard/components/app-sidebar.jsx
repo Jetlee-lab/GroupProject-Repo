@@ -190,23 +190,23 @@ export function AppSidebar({ userRole, ...props }) {
   const user = useUser();
 
   useEffect(() => setData(getData(userRole)), [userRole]);
-  // console.log({ userRole });
+  console.log({ userRole, data });
   // const data = getData(userRole)
   return (
-    (data && (
+    // (data && (
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
-          <TeamSwitcher teams={data.teams} />
+          <TeamSwitcher teams={data?.teams || []} />
         </SidebarHeader>
         <SidebarContent>
-          <NavMain items={data.navMain} />
-          <NavProjects projects={data.projects} />
+          <NavMain items={data?.navMain || []} />
+          <NavProjects projects={data?.projects || []} />
         </SidebarContent>
         <SidebarFooter>
           <NavUser user={user} />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
-    )) || <></>
+    // )) || <></>
   );
 }

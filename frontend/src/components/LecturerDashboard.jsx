@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/table"
 
 
-const LecturerDashboard = () => {
+const LecturerDashboard = ({ stats, issues, users }) => {
   // State hook to store the issues and set them
   const [issues, setIssues] = useState([
     { id: 1, title: "Missing course unit marks", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },

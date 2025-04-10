@@ -32,6 +32,8 @@ class StatsView(IOMixin, generics.ListCreateAPIView):
         # else:
         #     issues = Issue.objects.all()
 
+        query = self.get_queryset()
+        print({'query':query})
 
         kwargs = parse_query(q)
 
@@ -40,10 +42,10 @@ class StatsView(IOMixin, generics.ListCreateAPIView):
         }
 
         if stat:
-            result = stat_map[stat]().stats(**kwargs)
+            result = stat_map[stat]().stats(query, **kwargs)
         else:
             result = {
-                k: v().stats(**kwargs)
+                k: v().stats(query, **kwargs)
                 for k, v in stat_map.items()
             }
 

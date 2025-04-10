@@ -61,11 +61,13 @@ export function LoginForm({ className, ...props }) {
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
           <div className="relative hidden bg-white md:block">
+            <Link to="/">
             <img
               src={AitsLogo}
               alt="Image"
               className="absolute inset-0 h-full w-full object-contain dark:brightness-[0.2] dark:grayscale"
             />
+            </Link>
           </div>
           <form className="p-6 md:p-8" onSubmit={submit}>
             <div className="flex flex-col gap-6">

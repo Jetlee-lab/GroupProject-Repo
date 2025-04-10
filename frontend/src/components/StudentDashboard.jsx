@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import IssueStats from "./issues/IssueStats";
 
 const stats = [
   { title: 'Open Issues', value: 4 },
@@ -48,24 +49,14 @@ const enrolledCourses = [
   },
 ];
 
-const StudentDashboard = () => {
+const StudentDashboard = ({ stats, issues, users }) => {
   return (
     <div className="space-y-6 px-4 py-6  bg-blue-200 rounded-lg">
       <p className= "font-bold text-center text-3xl">Student Dashboard</p>
 
       {/* Quick Stats */}
-      <h2 className="text-xl font-semibold mb-2">Issue Stats</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white hover:bg-blue-100  shadow-md rounded-2xl p-4 text-center"
-          >
-            <div className="text-2xl font-semibold">{stat.value}</div>
-            <div className="text-gray-600 text-sm">{stat.title}</div>
-          </div>
-        ))}
-      </div>
+      <h2 className="text-xl font-semibold mb-2">Issue Statistics</h2>
+      <IssueStats stats={stats} />
 
        {/* Button to Student Reports Page */}
        <div className="mt-4 text-left ">
