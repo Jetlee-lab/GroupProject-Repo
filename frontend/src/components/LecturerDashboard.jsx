@@ -38,8 +38,8 @@ import {
 
 
 const LecturerDashboard = ({ stats, issues, users }) => {
-  // State hook to store the issues and set them
-  const [issues, setIssues] = useState([
+  // State hook to store the mIssues and set them
+  const [mIssues, setIssues] = useState([
     { id: 1, title: "Missing course unit marks", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },
     { id: 2, title: "Technical issue with AITS platform", description: "System crash during exam upload.", status: "Resolved", student: "Mukisa John", comment: "" },
     { id: 3, title: "Conflicting exam schedule", description: "Two exams scheduled at the same time.", status: "On Hold", student: "Nakato Mary", comment: "" },
@@ -107,8 +107,8 @@ const LecturerDashboard = ({ stats, issues, users }) => {
     );
   };
 
-  // Filter the issues that are either "On Hold" or "Pending"
-  const escalatedIssues = issues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
+  // Filter the mIssues that are either "On Hold" or "Pending"
+  const escalatedIssues = mIssues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
 
   return (
     <div>
@@ -119,7 +119,7 @@ const LecturerDashboard = ({ stats, issues, users }) => {
           {/* Manage Student Issues Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
             <h2 className="text-xl font-semibold mb-4">Manage Student Issues</h2> {/* Subheading for this section */}
-            <table className="min-w-full table-auto"> {/* Table to display issues */}
+            <table className="min-w-full table-auto"> {/* Table to display mIssues */}
               <thead className="bg-blue-600 text-white"> {/* Table header with styling */}
                 <tr>
                   <th className="px-4 py-2">ID</th>
@@ -132,7 +132,7 @@ const LecturerDashboard = ({ stats, issues, users }) => {
                 </tr>
               </thead>
               <tbody>
-                {issues.map((issue) => (  // Loops through each issue and display it in a table row
+                {mIssues.map((issue) => (  // Loops through each issue and display it in a table row
                   <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td> {/* Display the issue ID */}
                     <td className="px-4 py-2">
@@ -206,7 +206,7 @@ const LecturerDashboard = ({ stats, issues, users }) => {
                 </tr>
               </thead>
               <tbody>
-                {escalatedIssues.map((issue) => (  // Loop through escalated issues
+                {escalatedIssues.map((issue) => (  // Loop through escalated mIssues
                   <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td>
                     <td className="px-4 py-2">
@@ -604,8 +604,8 @@ export function DataTableDemo() {
 const LecturerDashboardM = DataTableDemo
 
 const LecturerDashboardX = () => {
-  // State hook to store the issues and set them
-  const [issues, setIssues] = useState([
+  // State hook to store the mIssues and set them
+  const [mIssues, setIssues] = useState([
     { id: 1, title: "Missing course unit marks", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },
     { id: 2, title: "Technical issue with AITS platform", description: "System crash during exam upload.", status: "Resolved", student: "Mukisa John", comment: "" },
     { id: 3, title: "Conflicting exam schedule", description: "Two exams scheduled at the same time.", status: "On Hold", student: "Nakato Mary", comment: "" },
@@ -673,8 +673,8 @@ const LecturerDashboardX = () => {
     );
   };
 
-  // Filter the issues that are either "On Hold" or "Pending"
-  const escalatedIssues = issues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
+  // Filter the mIssues that are either "On Hold" or "Pending"
+  const escalatedIssues = mIssues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
 
   return (
     <div>
@@ -685,7 +685,7 @@ const LecturerDashboardX = () => {
           {/* Manage Student Issues Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
             <h2 className="text-xl font-semibold mb-4">Manage Student Issues</h2> {/* Subheading for this section */}
-            <table className="min-w-full table-auto"> {/* Table to display issues */}
+            <table className="min-w-full table-auto"> {/* Table to display mIssues */}
               <thead className="bg-blue-600 text-white"> {/* Table header with styling */}
                 <tr>
                   <th className="px-4 py-2">ID</th>
@@ -698,7 +698,7 @@ const LecturerDashboardX = () => {
                 </tr>
               </thead>
               <tbody>
-                {issues.map((issue) => (  // Loops through each issue and display it in a table row
+                {mIssues.map((issue) => (  // Loops through each issue and display it in a table row
                   <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td> {/* Display the issue ID */}
                     <td className="px-4 py-2">
@@ -772,7 +772,7 @@ const LecturerDashboardX = () => {
                 </tr>
               </thead>
               <tbody>
-                {escalatedIssues.map((issue) => (  // Loop through escalated issues
+                {escalatedIssues.map((issue) => (  // Loop through escalated mIssues
                   <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td>
                     <td className="px-4 py-2">
