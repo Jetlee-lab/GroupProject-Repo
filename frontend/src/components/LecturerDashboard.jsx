@@ -825,7 +825,7 @@ const LecturerDashboardX = () => {
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
             <h2 className="text-xl font-semibold mb-4">Courses You Teach</h2>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
               onClick={handleCourseAdd}
             >
               Add New Course
