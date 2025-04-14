@@ -118,7 +118,7 @@ const LecturerDashboard = ({ stats, issues, users }) => {
 
           {/* Manage Student Issues Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Manage Student Issues</h2> {/* Subheading for this section */}
+            <h2 className="text-xl font-semibold mb-4"> Student Issues</h2> {/* Subheading for this section */}
             <table className="min-w-full table-auto"> {/* Table to display mIssues */}
               <thead className="bg-blue-600 text-white"> {/* Table header with styling */}
                 <tr>
