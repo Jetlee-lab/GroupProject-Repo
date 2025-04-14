@@ -67,14 +67,7 @@ const StudentDashboard = () => {
         ))}
       </div>
 
-       {/* Button to Student Reports Page */}
-       <div className="mt-4 text-left ">
-          <Link to="/dashboard/student-reports">
-            <button className="bg-blue-500 text-white px-4 py-2 cursor-pointer rounded hover:bg-blue-600">
-              View reports and Add New Issues
-            </button>
-          </Link>
-      </div>
+    
       
 
       {/* My Courses */}
