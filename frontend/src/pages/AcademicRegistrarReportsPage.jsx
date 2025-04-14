@@ -35,7 +35,7 @@ const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError
       </h1>
       <div className="flex justify-between mb-4">
         {/*Button for assigning an issue */}
-        <Link to="/assign-issue">
+        <Link to="/dashboard/assign-issue">
           <button className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300">
             Assign Issue
           </button>
