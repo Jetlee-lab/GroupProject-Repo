@@ -67,14 +67,7 @@ export default function RegistrarDashboard() {
         <h3 className="text-xl text-center font-semibold">ISSUE MANAGEMENT</h3>
         {/* <IssuesTable issues={issues} users={users} /> */}
 
-        {/* Button to Registrar Reports Page */}
-        <div className="mt-4 text-left">
-          <Link to="/registrar-reports">
-            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              View and Assign Issues
-            </button>
-          </Link>
-        </div>
+       
       </div>
 
       {/* Activity Feed */}
