@@ -827,48 +827,56 @@ const LecturerDashboardX = () => {
             <button
               className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
               onClick={handleCourseAdd}
+            />
+            <button className="mb-4 bg-blue-600 text-white px-4 py-2 rounded-md">
+  Add New Course
+</button>
+<table className="min-w-full table-auto">
+  <thead className="bg-blue-600 text-white">
+    <tr>
+      <th className="px-4 py-2">Course Name</th>
+      <th className="px-4 py-2">Number of Students</th>
+      <th className="px-4 py-2 text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {courses.map((course) => (
+      <tr key={course.id}>
+        <td className="px-4 py-2">
+          <input
+            type="text"
+            className="border px-2 py-1 rounded-md w-full"
+            value={course.name}
+            onChange={(e) =>
+              handleCourseEdit(course.id, e.target.value, course.students)
+            }
+          />
+        </td>
+        <td className="px-4 py-2">
+          <input
+            type="number"
+            className="border px-2 py-1 rounded-md w-full"
+            value={course.students}
+            onChange={(e) =>
+              handleStudentCountChange(course.id, e.target.value)
+            }
+          />
+        </td>
+        <td className="px-4 py-2">
+          <div className="flex justify-center">
+            <button
+              onClick={() => handleCourseRemove(course.id)}
+              className="text-red-700 hover:text-red-700 transition"
             >
-              Add New Course
+              Remove
             </button>
-            <table className="min-w-full table-auto">
-              <thead className="bg-blue-600 text-white">
-                <tr>
-                  <th className="px-4 py-2">Course Name</th>
-                  <th className="px-4 py-2">Number of Students</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {courses.map((course) => (  // Loop through each course and display it
-                  <tr key={course.id}>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={course.name}
-                        onChange={(e) => handleCourseEdit(course.id, e.target.value, course.students)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="number"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={course.students}
-                        onChange={(e) => handleStudentCountChange(course.id, e.target.value)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button
-                        onClick={() => handleCourseRemove(course.id)}  // Remove course button
-                        className="text-red-700 hover:text-red-700 transition"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          </div>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+          
           </div>
 
           {/* Quick Links Section */}
