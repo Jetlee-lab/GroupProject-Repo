@@ -668,7 +668,7 @@ const LecturerDashboardX = () => {
   const handleStudentCountChange = (id, newCount) => {
     setCourses((prevCourses) =>
       prevCourses.map((course) =>
-        course.id === id ? { ...course, students: newCount } : course  // Updates the student count for the course
+        course.id == id ? { ...course, students: newCount } : course  // Updates the student count for the course
       )
     );
   };
@@ -829,46 +829,51 @@ const LecturerDashboardX = () => {
               onClick={handleCourseAdd}
             />
             <button className="mb-4 bg-blue-600 text-white px-4 py-2 rounded-md">
-            <button className="mb-4 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
   Add New Course
 </button>
-
-<table className="min-w-full table-auto border-collapse">
+<table className="min-w-full table-auto border-collapse shadow-md rounded-lg overflow-hidden">
   <thead className="bg-blue-600 text-white">
     <tr>
-      <th className="px-6 py-3 text-left">Course Name</th>
-      <th className="px-6 py-3 text-left">Number of Students</th>
-      <th className="px-6 py-3 text-center">Actions</th>
+      <th scope="col" className="px-6 py-3 text-left text-sm font-semibold tracking-wide">
+        Course Name
+      </th>
+      <th scope="col" className="px-6 py-3 text-left text-sm font-semibold tracking-wide">
+        Number of Students
+      </th>
+      <th scope="col" className="px-6 py-3 text-center text-sm font-semibold tracking-wide">
+        Actions
+      </th>
     </tr>
   </thead>
-  <tbody>
+  <tbody className="bg-white divide-y divide-gray-200">
+
     {courses.map((course) => (
-      <tr key={course.id} className="border-b hover:bg-gray-50 transition">
-        <td className="px-6 py-3">
+      <tr key={course.id}>
+        <td className="px-4 py-2">
           <input
             type="text"
-            className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border px-2 py-1 rounded-md w-full"
             value={course.name}
             onChange={(e) =>
               handleCourseEdit(course.id, e.target.value, course.students)
             }
           />
         </td>
-        <td className="px-6 py-3">
+        <td className="px-4 py-2">
           <input
             type="number"
-            className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border px-2 py-1 rounded-md w-full"
             value={course.students}
             onChange={(e) =>
               handleStudentCountChange(course.id, e.target.value)
             }
           />
         </td>
-        <td className="px-6 py-3">
+        <td className="px-4 py-2">
           <div className="flex justify-center">
             <button
               onClick={() => handleCourseRemove(course.id)}
-              className="text-red-600 hover:text-red-700 transition font-medium"
+              className="text-red-600 hover:text-red-700 transition"
             >
               Remove
             </button>
@@ -878,7 +883,6 @@ const LecturerDashboardX = () => {
     ))}
   </tbody>
 </table>
-
           
           </div>
 
