@@ -666,12 +666,17 @@ const LecturerDashboardX = () => {
 
   // Function to change the number of students in a course
   const handleStudentCountChange = (id, newCount) => {
+    const parsedCount = parseInt(newCount, 10);
+  
     setCourses((prevCourses) =>
       prevCourses.map((course) =>
-        course.id === id ? { ...course, students: newCount } : course  // Updates the student count for the course
+        course.id === id
+          ? { ...course, students: isNaN(parsedCount) ? 0 : parsedCount }
+          : course
       )
     );
   };
+  
 
   // Filter the mIssues that are either "On Hold" or "Pending"
   const escalatedIssues = mIssues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
