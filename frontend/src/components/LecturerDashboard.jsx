@@ -774,8 +774,8 @@ const LecturerDashboardX = () => {
               <tbody>
                 {escalatedIssues.map((issue) => (  // Loop through escalated mIssues
                   <tr key={issue.id}>
-                    <td className="px-4 py-2">{issue.id}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">{issue.id}</td>
+                    <td className="px-4 py-3">
                       <input
                         type="text"
                         className="border px-2 py-1 rounded-md w-full"
