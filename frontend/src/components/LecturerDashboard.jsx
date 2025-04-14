@@ -866,7 +866,7 @@ const LecturerDashboardX = () => {
           <div className="flex justify-center">
             <button
               onClick={() => handleCourseRemove(course.id)}
-              className="text-red-700 hover:text-red-700 transition"
+              className="text-red-600 hover:text-red-700 transition"
             >
               Remove
             </button>
