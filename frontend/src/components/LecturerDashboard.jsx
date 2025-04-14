@@ -762,13 +762,13 @@ const LecturerDashboardX = () => {
             <table className="min-w-full table-auto">
               <thead className="bg-blue-600 text-white">
                 <tr>
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Issue</th>
-                  <th className="px-4 py-2">Description</th>
-                  <th className="px-4 py-2">Student</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Comment</th>
-                  <th className="px-4 py-2">Actions</th>
+                  <th className="px-4 py-3">ID</th>
+                  <th className="px-4 py-3">Issue</th>
+                  <th className="px-4 py-3">Description</th>
+                  <th className="px-4 py-3">Student</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Comment</th>
+                  <th className="px-4 py-3">Actions</th>
                 </tr>
               </thead>
               <tbody>
