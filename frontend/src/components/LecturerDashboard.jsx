@@ -800,7 +800,7 @@ const LecturerDashboardX = () => {
                         <option value="Pending">Pending</option>
                         <option value="In Progress">In Progress</option>
                         <option value="Resolved">Resolved</option>
-                        <option value="Rejected">Rejected</option>
+                        <option value="Rejected">Refused</option>
                       </select>
                     </td>
                     <td className="px-4 py-2">
