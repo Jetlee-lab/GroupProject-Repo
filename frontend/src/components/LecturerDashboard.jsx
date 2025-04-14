@@ -179,16 +179,7 @@ const LecturerDashboard = () => {
                 ))}
               </tbody>
             </table>
-          </div>
-
-             {/* Button to Lecturer Reports Page */}
-         <div className="mt-4 text-left">
-              <Link to="/dashboard/lecturer-reports">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        View reports and Edit Issues
-                  </button>
-              </Link>
-          </div>          
+          </div>         
 
           {/* Escalated Issues Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
