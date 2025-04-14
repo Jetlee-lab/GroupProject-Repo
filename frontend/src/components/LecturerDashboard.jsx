@@ -884,7 +884,7 @@ const LecturerDashboardX = () => {
             <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
             <div className="flex space-x-4">
               <Link to="/dashboard/Settings" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Settings</Link>
-              <Link to="/dashboard/notifications" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Notifications</Link>
+              <Link to="/dashboard/notifications" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Notifications</Link>
             </div>
           </div>
         </div>
