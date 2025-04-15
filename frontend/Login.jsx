@@ -26,10 +26,10 @@ const Login = () => {
       const data = await response.json();
       localStorage.setItem("token", data.token);
       navigate("/dashboard");
-      console.log("Logged in successfully!");
+      console.log("Logging in  was successfully!");
 
     }catch (err) {
-    console.error("Login failed", err);
+    console.error("Login failed  retry", err);
     }
     
   };

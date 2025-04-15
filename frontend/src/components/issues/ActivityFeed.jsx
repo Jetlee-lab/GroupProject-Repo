@@ -7,7 +7,7 @@ export default function ActivityFeed() {
   ];
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
+    <div className="bg-blue p-4 rounded-lg shadow-md">
       <h2 className="text-xl font-bold ">Recent Activity</h2>
       <ul>
         {activities.map(activity => (

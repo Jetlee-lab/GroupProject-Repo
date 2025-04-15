@@ -154,6 +154,7 @@ async function request (method, path, data, headers) {
     const event = new CustomEvent('allauth.auth.change', { detail: msg })
     document.dispatchEvent(event)
   }
+  console.log({msg})
   return msg
 }
 

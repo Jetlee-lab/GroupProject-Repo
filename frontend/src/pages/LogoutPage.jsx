@@ -1,15 +1,17 @@
 import { useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { logout } from '../auth/lib/allauth'
 // import Button from '../components/Button'
 
 export default function Logout () {
   const [response, setResponse] = useState({ fetching: false, content: null })
+  const navigate = useNavigate();
   
   function submit () {
     setResponse({ ...response, fetching: true })
     logout().then((content) => {
       setResponse((r) => { return { ...r, content } })
+      navigate(-1)
     }).catch((e) => {
       console.error(e)
       window.alert(e)
@@ -21,13 +23,15 @@ export default function Logout () {
     return <Navigate to='/' />
   }
   return (
-    <div>
-      <h1>Logout</h1>
-      <p>
-        Are you sure you want to logout?
-      </p>
-
-      <button disabled={response.fetching} onClick={() => submit()} className="bg-blue-500">Logout</button>
+    <div className="flex flex-col items-center justify-center gap-6 h-screen">
+      <h1 className="text-2xl font-bold">Sure to Logout?</h1>
+      {/* <p className="text-gray-500">Please wait...</p> */}
+      <button
+        onClick={submit}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Logout
+      </button>
     </div>
   )
 }

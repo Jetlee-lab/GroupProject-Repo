@@ -74,7 +74,7 @@ const IssueForm = () => {
           required
         />
         <TextInput
-          label="Lecturer/Professor Name"
+          label="Lecturer"
           name="instructor"
           value={formData.instructor}
           onChange={handleChange}
