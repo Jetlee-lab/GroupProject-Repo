@@ -1,5 +1,5 @@
 "use client";
-
+import { Link } from "react-router-dom";
 import {
   Folder,
   Forward,
@@ -44,10 +44,10 @@ export function NavProjects({ projects }) {
         {projects.map((item) => (
           <SidebarMenuItem key={item.name} onClick={item.onClick}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link to={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

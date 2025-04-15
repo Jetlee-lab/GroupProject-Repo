@@ -32,7 +32,7 @@ export function LoginForm({ className, ...props }) {
         setResponse((r) => {
           return { ...r, content };
         });
-        console.log({ content });
+        // console.log({ content });
         if (content.status !== 200) {
           toast(<span className="font-bold text-white">Error Logging In</span>, {
             description: content.errors?.map((e, i) => <span key={i}>{e.message}</span>),
@@ -61,11 +61,13 @@ export function LoginForm({ className, ...props }) {
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
           <div className="relative hidden bg-white md:block">
+            <Link to="/">
             <img
               src={AitsLogo}
               alt="Image"
               className="absolute inset-0 h-full w-full object-contain dark:brightness-[0.2] dark:grayscale"
             />
+            </Link>
           </div>
           <form className="p-6 md:p-8" onSubmit={submit}>
             <div className="flex flex-col gap-6">
@@ -88,12 +90,12 @@ export function LoginForm({ className, ...props }) {
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a
+                  <Link
                     href="#"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
                     Forgot your password?
-                  </a>
+                  </Link>
                 </div>
                 <Input
                   id="password"

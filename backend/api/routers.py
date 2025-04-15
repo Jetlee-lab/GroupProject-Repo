@@ -8,7 +8,7 @@ from authentication.viewsets import (
     RegisterViewSet
 )
 from core.viewsets import UsersViewSet, DepartmentViewSet, FacultyViewSet, IssueViewSet, CategoriesViewSet, ReferenceTokenViewSet
-from search.viewsets import SearchViewSet
+from search.views import SearchView
 from stats.views import StatsView
 
 router = routers.SimpleRouter(trailing_slash=False)
@@ -28,6 +28,6 @@ router.register(r"issues", IssueViewSet, basename="issues")
 router.register(r"departments", DepartmentViewSet, basename="departments")
 router.register(r"faculties", FacultyViewSet, basename="faculties")
 router.register(r"reference-token", ReferenceTokenViewSet, basename="reference-token")
-router.register(r"search", SearchViewSet, basename="issue-search")
+router.register(r"search", SearchView, basename="issue-search")
 router.register(r"categories", CategoriesViewSet, basename="issue-categories")
 router.register(r"stats/(?P<stat>(issues)?)", StatsView, basename="stats")

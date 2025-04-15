@@ -34,7 +34,7 @@ export function SignupForm({ className, ...props }) {
       ]);
       return;
     }
-    console.log({ password1, password2 });
+    // console.log({ password1, password2 });
     setPassword2Errors([]);
     setResponse({ ...response, fetching: true });
     signUp({ email, username, token, password: password1 })
@@ -45,7 +45,7 @@ export function SignupForm({ className, ...props }) {
       })
       .catch((e) => {
         console.error(e);
-        window.alert(e);
+        // window.alert(e);
       })
       .then(() => {
         setResponse((r) => {
@@ -59,11 +59,13 @@ export function SignupForm({ className, ...props }) {
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
           <div className="relative hidden bg-white md:block">
-            <img
-              src={AitsLogo}
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-contain dark:brightness-[0.2] dark:grayscale"
-            />
+            <Link to="/">
+              <img
+                src={AitsLogo}
+                alt="Image"
+                className="absolute inset-0 h-full w-full object-contain dark:brightness-[0.2] dark:grayscale"
+              />
+            </Link>
           </div>
           <form className="p-6 md:p-8" onSubmit={submit}>
             <div className="flex flex-col gap-6">
@@ -71,7 +73,10 @@ export function SignupForm({ className, ...props }) {
                 <h1 className="text-2xl font-bold">Create an Account</h1>
                 <p className="mt-2 text-balance text-muted-foreground">
                   Already have an account?{" "}
-                  <Link to="/account/login" className="text-blue-400 underline underline-offset-4">
+                  <Link
+                    to="/account/login"
+                    className="text-blue-400 underline underline-offset-4"
+                  >
                     Login here.
                   </Link>
                 </p>
@@ -85,7 +90,9 @@ export function SignupForm({ className, ...props }) {
                   required
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                { response.fetching || <FormErrors param="email" errors={response.content?.errors} /> }
+                {response.fetching || (
+                  <FormErrors param="email" errors={response.content?.errors} />
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="username">Username</Label>
@@ -95,27 +102,34 @@ export function SignupForm({ className, ...props }) {
                   required
                   onChange={(e) => setUsername(e.target.value)}
                 />
-                { response.fetching || <FormErrors param="username" errors={response.content?.errors} /> }
+                {response.fetching || (
+                  <FormErrors
+                    param="username"
+                    errors={response.content?.errors}
+                  />
+                )}
               </div>
               <div className="md:flex gap-4 md:items-center">
                 <div>
                   <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"
-                    type={passwordVisible ? "text" : "password" }
+                    type={passwordVisible ? "text" : "password"}
                     required
                     onChange={(e) => setPassword2(e.target.value)}
                   />
-                  { response.fetching ||<FormErrors
-                    param="password"
-                    errors={response.content?.errors}
-                  /> }
+                  {response.fetching || (
+                    <FormErrors
+                      param="password"
+                      errors={response.content?.errors}
+                    />
+                  )}
                 </div>
                 <div className="relative">
                   <Label htmlFor="password">Repeat Password</Label>
                   <Input
                     id="password2"
-                    type={passwordVisible ? "text" : "password" }
+                    type={passwordVisible ? "text" : "password"}
                     required
                     onChange={(e) => setPassword1(e.target.value)}
                   />
@@ -124,12 +138,14 @@ export function SignupForm({ className, ...props }) {
                     className="absolute inset-y-1 top-4 right-3 flex items-center text-muted-foreground"
                     onClick={() => setPasswordVisible(!passwordVisible)}
                   >
-                    { passwordVisible ? <EyeOff size={18} /> : <Eye size={18} /> }
+                    {passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
-                  { response.fetching || <FormErrors param="password2" errors={password2Errors} /> }
+                  {response.fetching || (
+                    <FormErrors param="password2" errors={password2Errors} />
+                  )}
                 </div>
-                </div>
-                <div className="grid gap-2">
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="token">Reference Token</Label>
                 <Input
                   id="token"
@@ -137,7 +153,9 @@ export function SignupForm({ className, ...props }) {
                   required
                   onChange={(e) => setToken(e.target.value)}
                 />
-                { response.fetching || <FormErrors param="token" errors={response.content?.errors} /> }
+                {response.fetching || (
+                  <FormErrors param="token" errors={response.content?.errors} />
+                )}
               </div>
               <Button
                 type="submit"
@@ -149,7 +167,6 @@ export function SignupForm({ className, ...props }) {
                 )) ||
                   "Sign Up"}
               </Button>
-
             </div>
           </form>
         </CardContent>

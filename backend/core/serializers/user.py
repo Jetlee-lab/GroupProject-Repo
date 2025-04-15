@@ -34,10 +34,12 @@ class RoleSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         if 'permissions' in data:
             data['permissions'] = [permission['name'] for permission in data['permissions']]
-        return {
-            "id": data['id'],
+        # return {
+        #     "id": data['id'],
+        # }
+        return data | {
+            "display": Role.ROLE_CHOICES[data['name']],
         }
-        return data
 
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:

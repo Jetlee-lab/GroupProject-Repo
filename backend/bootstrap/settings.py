@@ -22,7 +22,7 @@ env = environ.Env(
     CORS_ALLOW_CREDENTIALS=(bool, False),
     CSRF_TRUSTED_ORIGINS=(tuple),
 
-    EMAIL_PORT=(tuple),
+    EMAIL_PORT=(int),
     EMAIL_USE_TLS=(bool),
 )
 
@@ -59,14 +59,14 @@ INSTALLED_APPS = [
 
     # 'dj_rest_auth',
 
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.github',
-    # "allauth.mfa",
-    # "allauth.headless",
-    # "allauth.usersessions",
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    "allauth.mfa",
+    "allauth.headless",
+    "allauth.usersessions",
 
     'api',
     'authentication',
@@ -85,7 +85,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'allauth.account.middleware.AccountMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'bootstrap.urls'
@@ -148,10 +148,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS':{
+            'min_length': 1,
+        }
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -177,7 +180,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Custom user Model
 AUTH_USER_MODEL = "core.User"
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 FIXTURE_DIRS = (
     os.path.join(BASE_DIR, 'fixtures'),
@@ -221,9 +224,9 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 2,
 }
 
-# ##################################################################### #
+# #####################################################################
 #  CORS 
-# ##################################################################### #
+# #####################################################################
 
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=ALLOWED_HOSTS)
 CORS_ALLOW_ALL_ORIGINS =env("CORS_ALLOW_ALL_ORIGINS")
@@ -232,14 +235,14 @@ CORS_ALLOW_CREDENTIALS = env("CORS_ALLOW_CREDENTIALS")
 #  CSRF
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=ALLOWED_HOSTS)
 
-# ##################################################################### #
+# #####################################################################
 # ALLAUTH
-# # ##################################################################### #
+# # ###################################################################
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'authentication.backends.ActiveSessionAuthentication',
-    # 'allauth.account.auth_backends.AuthenticationBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
     # 'allauth.socialaccount.auth_backends.AuthenticationBackend',
 ]
 
@@ -261,7 +264,25 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+ACCOUNT_ADAPTER = "core.adapters.CustomAccountAdapter"
 HEADLESS_ADAPTER = "core.adapters.CustomHeadlessAdapter"
 
 SOCIALACCOUNT_QUERY_EMAIL = True
 # HEADLESS_ONLY = True
+
+# ACCOUNT_FORMS = {'signup': 'core.forms.CustomSignupForm'}
+# ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'
+
+# #####################################################################
+# EMAIL
+# #####################################################################
+SENDGRID_API_KEY=env('SENDGRID_API_KEY')
+
+EMAIL_BACKEND=env('EMAIL_BACKEND')
+DEFAULT_FROM_EMAIL=env('DEFAULT_FROM_EMAIL')
+EMAIL_HOST=env('EMAIL_HOST')
+# this is exactly the value 'apikey'
+EMAIL_HOST_USER=env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT=env('EMAIL_PORT')
+EMAIL_USE_TLS=env('EMAIL_USE_TLS')

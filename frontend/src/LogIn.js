@@ -19,10 +19,14 @@ function MyLogin(){
   return (
     <form onSubmit={handleSubmit}>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <label>Enter your name
 =======
       <label>Enter your name here
 >>>>>>> frontend
+=======
+      <label>Enter your name here
+>>>>>>> a244366d6328ee5ce5e0e169939a959c543f6f4d
       <input type="text"
       name="username"
       value={inputs.username}
@@ -50,7 +54,11 @@ function MyLogin(){
 const root=ReactDOM.createRoot(document.getElementById('root'));
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 root.render(<MyLogin />);     
 =======
 root.render(<MyLogin />);     
 >>>>>>> frontend
+=======
+root.render(<MyLogin />);     
+>>>>>>> a244366d6328ee5ce5e0e169939a959c543f6f4d

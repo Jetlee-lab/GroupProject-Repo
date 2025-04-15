@@ -42,6 +42,8 @@ const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 // const LogoutPage = lazy(() => import("@/pages/LogoutPage"));
 const NotFound = lazy(() => import("@/pages/404"));
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
+import { useQuery } from "@tanstack/react-query";
+import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
 
 
 const dashboardRoutes = [
@@ -90,19 +92,63 @@ const dashboardRoutes = [
       {
         path: "*",
         Component: NotFound,
-      }
+      },
     ],
   },
 ];
 
 export default function Dashboard() {
   const routes = useRoutes(dashboardRoutes);
-  return routes
+  return routes;
 }
 
 export function DashboardLayout() {
   const role = useRole();
   const { pathname } = useLocation();
+<<<<<<< HEAD
+=======
+  const [statsParams, setStatParams] = useState({}); // ({ priority: '' });
+  const {
+    isPending: statsPending,
+    error: statsError,
+    data: statsRes,
+    isFetching: statsFetching,
+  } = useQuery({
+    queryKey: ["stats", statsParams],
+    queryFn: () => fetchStats({ stat: "issues", params: statsParams }),
+  });
+  const {
+    isPending: issuesPending,
+    error: issuesError,
+    data: issuesRes,
+    isFetching: issuesFetching,
+  } = useQuery({
+    queryKey: ["issues"],
+    queryFn: () => fetchIssues(),
+  });
+  const {
+    isPending: usersPending,
+    error: usersError,
+    data: usersRes,
+    isFetching: usersFetching,
+  } = useQuery({
+    queryKey: ["issues"],
+    queryFn: () => fetchUsers(),
+  });
+
+  if (statsFetching) {
+    // return <>Fetching issues...</>;
+  } else if (statsPending) {
+    // return <>Loading data...</>;
+  } else if (statsError) {
+    return <UnknownError error="Failed Loading resource." />;
+  }
+
+  const stats = {data: statsRes?.data, fetching: statsFetching, pending: statsPending, error: statsError};
+  const issues = {data: issuesRes?.data, fetching: issuesFetching, pending: issuesPending, error: issuesError};
+  const users = {data: usersRes?.data, fetching: usersFetching, pending: usersPending, error: usersError};
+
+>>>>>>> a244366d6328ee5ce5e0e169939a959c543f6f4d
   // const role = "student";
   // const role = "lecturer";
   // const role = "registrar"
@@ -121,9 +167,9 @@ export function DashboardLayout() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{`${role?.charAt(0).toUpperCase()}${role?.slice(
-                    1
-                  )}`}</BreadcrumbPage>
+                  <BreadcrumbPage>{`${role
+                    ?.charAt(0)
+                    .toUpperCase()}${role?.slice(1)}`}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -138,14 +184,20 @@ export function DashboardLayout() {
           <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
             {(pathname == "/dashboard" &&
               (role === "student" ? (
-                <StudentDashboard />
+                <StudentDashboard stats={stats} issues={issues} users={users} />
               ) : role === "lecturer" ? (
-                <LecturerDashboard />
+                <LecturerDashboard stats={stats} issues={issues} users={users} />
               ) : role === "registrar" ? (
-                <AcademicRegistrarDashboard />
+                <AcademicRegistrarDashboard stats={stats} issues={issues} users={users} />
               ) : (
                 <div className="flex justify-center">
-                  <UnknownError error={<>Failed to load{" "}<strong>{role}</strong>...</>} />
+                  <UnknownError
+                    error={
+                      <>
+                        Failed to load <strong>{role}</strong>...
+                      </>
+                    }
+                  />
                 </div>
               ))) || <Outlet />}
           </div>

@@ -23,15 +23,17 @@ class StatsView(IOMixin, generics.ListCreateAPIView):
         return self.stat(request.data, kwargs.get('stat'))
 
     def stat(self, q, stat):
-        role = self.request.user.roles.first()
+        # role = self.request.user.roles.first()
 
-        if role.name == Role.ROLE_STUDENT:
-            issues = Issue.objects.filter(owner=pk)
-        elif role.name == Role.ROLE_LECTURER:
-            issues = Issue.objects.filter(assignee=pk)
-        else:
-            issues = Issue.objects.all()
+        # if role.name == Role.ROLE_STUDENT:
+        #     issues = Issue.objects.filter(owner=pk)
+        # elif role.name == Role.ROLE_LECTURER:
+        #     issues = Issue.objects.filter(assignee=pk)
+        # else:
+        #     issues = Issue.objects.all()
 
+        query = self.get_queryset()
+        # print({'query':query})
 
         kwargs = parse_query(q)
 
@@ -40,10 +42,10 @@ class StatsView(IOMixin, generics.ListCreateAPIView):
         }
 
         if stat:
-            result = stat_map[stat]().stats(**kwargs)
+            result = stat_map[stat]().stats(query, **kwargs)
         else:
             result = {
-                k: v().stats(**kwargs)
+                k: v().stats(query, **kwargs)
                 for k, v in stat_map.items()
             }
 
