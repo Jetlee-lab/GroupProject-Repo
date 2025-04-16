@@ -29,7 +29,7 @@ class LoginSerializer(serializers.Serializer):
 
         if email is None:
             logger.warning("Login failed: Email is missing")
-            raise exceptions.ValidationError({"message":"Email is required to login"})
+            raise exceptions.ValidationError({"message": "Email is required to login"})
 
         if password is None:
             logger.warning(f"Login failed for {email}: Password is missing")
@@ -42,7 +42,6 @@ class LoginSerializer(serializers.Serializer):
             raise exceptions.AuthenticationFailed({"message": "Wrong credentials"})
 
         login(self.context.get('request'), user)
-
         logger.info(f"Login successful for user: {user.username}")
 
         if not user.is_active:
@@ -51,12 +50,31 @@ class LoginSerializer(serializers.Serializer):
         try:
             session = ActiveSession.objects.get(user=user)
             if not session.token:
-                raise ValueError
+                logger.warning(f"No token found for user: {user.username}")
+                raise ValueError("No token found")
+
             jwt.decode(session.token, settings.SECRET_KEY, algorithms=["HS256"])
-        except (ObjectDoesNotExist, ValueError, jwt.ExpiredSignatureError):
+            logger.info(f"Valid token found for user: {user.username}")
+
+        except ObjectDoesNotExist:
+            logger.warning(f"No active session found for user: {user.username}")
             session = ActiveSession.objects.create(
                 user=user, token=_generate_jwt_token(user)
             )
+            logger.info(f"New token generated for user (no session): {user.username}")
+
+        except jwt.ExpiredSignatureError:
+            logger.warning(f"Expired token for user: {user.username}")
+            session = ActiveSession.objects.create(
+                user=user, token=_generate_jwt_token(user)
+            )
+            logger.info(f"New token generated for user (expired token): {user.username}")
+
+        except ValueError:
+            session = ActiveSession.objects.create(
+                user=user, token=_generate_jwt_token(user)
+            )
+            logger.info(f"New token generated for user (invalid token): {user.username}")
 
         return {
             "user": {
@@ -66,4 +84,3 @@ class LoginSerializer(serializers.Serializer):
             },
             "token": session.token,
         }
-# Logging added for monitoring
