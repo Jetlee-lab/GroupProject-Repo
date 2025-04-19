@@ -6,7 +6,7 @@ import ContactSupport from '../components/ContactSupport';
 
 const HelpPage = () => {
   return (
-    <div className='p-10 w-full bg-blue-100 h-screen'>
+    <div className='p-10 w-full bg-blue-110 h-screen'>
       <HelpHeader />
       <UserGuide />
       <FAQ />       
