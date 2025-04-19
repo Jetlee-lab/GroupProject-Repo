@@ -50,7 +50,7 @@ const HomePage = () => {
       {/* Call-to-Action */}
       <div className="mt-10 text-center">
         <h2 className="text-2xl font-semibold">Take Control of Academic Issue Tracking</h2>
-        <p className="mt-2 text-gray-700">Sign up today and make academic management seamless and efficient.</p>
+        <p className="mt-2 text-gray-700">Sign up today  to use the system excently.</p>
         <Link to="/account/login">
           <button className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition">Get Started</button>
         </Link>
@@ -76,7 +76,7 @@ const HomePage = () => {
 
         <div className="mt-6 bg-white p-6 rounded-lg shadow-lg">
           <p className="italic text-gray-700">
-            "As a student, I used to struggle with reporting academic issues. This platform has made it so easy to communicate with faculty!"
+            "As a student, I used to struggle with reporting academic issues. This platform has made it so easy to communicate with faculty and the lecturers so quickly!"
           </p>
           <span className="block mt-4 font-bold">- Michael Kintu, Student</span>
         </div>
@@ -97,7 +97,7 @@ const HomePage = () => {
 
         <div className="mt-6 bg-white p-6 rounded-lg shadow-lg">
           <p className="italic text-gray-700">
-            "This system has improved transparency in handling academic concerns. Everyone is now accountable."
+            "This system has improved transparency in handling academic concerns. Everyone is now accountable and able to resolve his issue."
           </p>
           <span className="block mt-4 font-bold">- Florence Achan, Lecturer</span>
         </div>
