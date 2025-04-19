@@ -37,9 +37,9 @@ import {
 } from "@/components/ui/table"
 
 
-const LecturerDashboard = () => {
-  // State hook to store the issues and set them
-  const [issues, setIssues] = useState([
+const LecturerDashboard = ({ stats, issues, users }) => {
+  // State hook to store the mIssues and set them
+  const [mIssues, setIssues] = useState([
     { id: 1, title: "Missing course unit marks", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },
     { id: 2, title: "Technical issue with AITS platform", description: "System crash during exam upload.", status: "Resolved", student: "Mukisa John", comment: "" },
     { id: 3, title: "Conflicting exam schedule", description: "Two exams scheduled at the same time.", status: "On Hold", student: "Nakato Mary", comment: "" },
@@ -107,8 +107,8 @@ const LecturerDashboard = () => {
     );
   };
 
-  // Filter the issues that are either "On Hold" or "Pending"
-  const escalatedIssues = issues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
+  // Filter the mIssues that are either "On Hold" or "Pending"
+  const escalatedIssues = mIssues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
 
   return (
     <div>
@@ -118,8 +118,8 @@ const LecturerDashboard = () => {
 
           {/* Manage Student Issues Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Manage Student Issues</h2> {/* Subheading for this section */}
-            <table className="min-w-full table-auto"> {/* Table to display issues */}
+            <h2 className="text-xl font-semibold mb-4"> Student Issues</h2> {/* Subheading for this section */}
+            <table className="min-w-full table-auto"> {/* Table to display mIssues */}
               <thead className="bg-blue-600 text-white"> {/* Table header with styling */}
                 <tr>
                   <th className="px-4 py-2">ID</th>
@@ -132,7 +132,7 @@ const LecturerDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {issues.map((issue) => (  // Loops through each issue and display it in a table row
+                {mIssues.map((issue) => (  // Loops through each issue and display it in a table row
                   <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td> {/* Display the issue ID */}
                     <td className="px-4 py-2">
@@ -197,7 +197,7 @@ const LecturerDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {escalatedIssues.map((issue) => (  // Loop through escalated issues
+                {escalatedIssues.map((issue) => (  // Loop through escalated mIssues
                   <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td>
                     <td className="px-4 py-2">
@@ -595,8 +595,8 @@ export function DataTableDemo() {
 const LecturerDashboardM = DataTableDemo
 
 const LecturerDashboardX = () => {
-  // State hook to store the issues and set them
-  const [issues, setIssues] = useState([
+  // State hook to store the mIssues and set them
+  const [mIssues, setIssues] = useState([
     { id: 1, title: "Missing course unit marks", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },
     { id: 2, title: "Technical issue with AITS platform", description: "System crash during exam upload.", status: "Resolved", student: "Mukisa John", comment: "" },
     { id: 3, title: "Conflicting exam schedule", description: "Two exams scheduled at the same time.", status: "On Hold", student: "Nakato Mary", comment: "" },
@@ -664,8 +664,8 @@ const LecturerDashboardX = () => {
     );
   };
 
-  // Filter the issues that are either "On Hold" or "Pending"
-  const escalatedIssues = issues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
+  // Filter the mIssues that are either "On Hold" or "Pending"
+  const escalatedIssues = mIssues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
 
   return (
     <div>
@@ -676,7 +676,7 @@ const LecturerDashboardX = () => {
           {/* Manage Student Issues Section */}
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
             <h2 className="text-xl font-semibold mb-4">Manage Student Issues</h2> {/* Subheading for this section */}
-            <table className="min-w-full table-auto"> {/* Table to display issues */}
+            <table className="min-w-full table-auto"> {/* Table to display mIssues */}
               <thead className="bg-blue-600 text-white"> {/* Table header with styling */}
                 <tr>
                   <th className="px-4 py-2">ID</th>
@@ -689,7 +689,7 @@ const LecturerDashboardX = () => {
                 </tr>
               </thead>
               <tbody>
-                {issues.map((issue) => (  // Loops through each issue and display it in a table row
+                {mIssues.map((issue) => (  // Loops through each issue and display it in a table row
                   <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td> {/* Display the issue ID */}
                     <td className="px-4 py-2">
@@ -741,7 +741,7 @@ const LecturerDashboardX = () => {
              {/* Button to Lecturer Reports Page */}
          <div className="mt-4 text-left">
                     <Link to="/dashboard/lecturer-reports">
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                      <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-00">
                         View and Edit Issues
                       </button>
                     </Link>
@@ -763,7 +763,7 @@ const LecturerDashboardX = () => {
                 </tr>
               </thead>
               <tbody>
-                {escalatedIssues.map((issue) => (  // Loop through escalated issues
+                {escalatedIssues.map((issue) => (  // Loop through escalated mIssues
                   <tr key={issue.id}>
                     <td className="px-4 py-2">{issue.id}</td>
                     <td className="px-4 py-2">
@@ -816,50 +816,58 @@ const LecturerDashboardX = () => {
           <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
             <h2 className="text-xl font-semibold mb-4">Courses You Teach</h2>
             <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
               onClick={handleCourseAdd}
+            />
+            <button className="mb-4 bg-blue-600 text-white px-4 py-2 rounded-md">
+  Add New Course
+</button>
+<table className="min-w-full table-auto">
+  <thead className="bg-blue-600 text-white">
+    <tr>
+      <th className="px-4 py-2">Course Name</th>
+      <th className="px-4 py-2">Number of Students</th>
+      <th className="px-4 py-2 text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {courses.map((course) => (
+      <tr key={course.id}>
+        <td className="px-4 py-2">
+          <input
+            type="text"
+            className="border px-2 py-1 rounded-md w-full"
+            value={course.name}
+            onChange={(e) =>
+              handleCourseEdit(course.id, e.target.value, course.students)
+            }
+          />
+        </td>
+        <td className="px-4 py-2">
+          <input
+            type="number"
+            className="border px-2 py-1 rounded-md w-full"
+            value={course.students}
+            onChange={(e) =>
+              handleStudentCountChange(course.id, e.target.value)
+            }
+          />
+        </td>
+        <td className="px-4 py-2">
+          <div className="flex justify-center">
+            <button
+              onClick={() => handleCourseRemove(course.id)}
+              className="text-red-700 hover:text-red-700 transition"
             >
-              Add New Course
-            </button>
-            <table className="min-w-full table-auto">
-              <thead className="bg-blue-600 text-white">
-                <tr>
-                  <th className="px-4 py-2">Course Name</th>
-                  <th className="px-4 py-2">Number of Students</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {courses.map((course) => (  // Loop through each course and display it
-                  <tr key={course.id}>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={course.name}
-                        onChange={(e) => handleCourseEdit(course.id, e.target.value, course.students)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="number"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={course.students}
-                        onChange={(e) => handleStudentCountChange(course.id, e.target.value)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button
-                        onClick={() => handleCourseRemove(course.id)}  // Remove course button
-                        className="text-red-500 hover:text-red-700 transition"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              Remove
+              </button>
+          </div>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+          
           </div>
 
           {/* Quick Links Section */}
@@ -867,7 +875,7 @@ const LecturerDashboardX = () => {
             <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
             <div className="flex space-x-4">
               <Link to="/dashboard/Settings" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Settings</Link>
-              <Link to="/dashboard/notifications" className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Notifications</Link>
+              <Link to="/dashboard/notifications" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-800 transition">Notifications</Link>
             </div>
           </div>
         </div>

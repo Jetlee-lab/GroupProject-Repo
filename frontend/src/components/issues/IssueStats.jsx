@@ -65,7 +65,11 @@ export default function IssueStats({ stats }) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+<<<<<<< HEAD
       <IssueStatusStat statuses={stats.status || {}} />
+=======
+      { (stats.pending || stats.fetching) && <IssueStats.Skeleton /> || <IssueStatusStat statuses={stats.data?.status || {}} /> }
+>>>>>>> a244366d6328ee5ce5e0e169939a959c543f6f4d
     </div>
   );
 }
@@ -80,7 +84,7 @@ function IssueStatusStat({ statuses }) {
     <>
       {Object.entries(config).map(([configStatus, configInfo], index) => {
         const status = statuses[configStatus];
-        console.log({ configStatus, configInfo, status });
+        // console.log({ configStatus, configInfo, status });
         // if (status === undefined)
         //   return
 
@@ -115,17 +119,19 @@ function IssueStatusStat({ statuses }) {
 
 IssueStats.Skeleton = function () {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <>
+    {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4"> */}
       {new Array(Object.entries(config).length + 1).fill().map((_, index) => {
         return (
-          <div key={index} className="p-4 rounded-lg bg-gray-300">
+          <div key={index} className="p-4 rounded-lg bg-gray-200">
             <div className="space-y-6">
-              <Skeleton className="bg-gray-200 h-4 w-[100px] sm:w-full mr-8" />
-              <Skeleton className=" bg-gray-200 h-4 w-[60px]" />
+              <Skeleton className="bg-gray-100 h-4 w-[100px] sm:w-full mr-8" />
+              <Skeleton className=" bg-gray-100 h-4 w-[60px]" />
             </div>
           </div>
         );
       })}
-    </div>
+    {/* </div> */}
+    </>
   );
 };

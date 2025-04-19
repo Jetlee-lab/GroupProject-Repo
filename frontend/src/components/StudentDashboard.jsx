@@ -1,5 +1,58 @@
+<<<<<<< HEAD
+// src/components/StudentDashboard.js
+// src/components/StudentDashboard.js
+import React, { useState, useEffect } from "react";
+
+import IssueForm from "./IssueForm";
+
+
+import Notifications from "./Notification";
+import Navbar from "./Navbar";
+
+
+const StudentDashboard = () => {
+  const [issues, setIssues] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchIssues = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token");
+  //       const response = await fetch("http://localhost:8000/api/issues/", {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       });
+  //       setIssues(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching issues:", error);
+  //     }
+  //   };
+  //   fetchIssues();
+  // }, []);
+  console.log({issues})
+
+
+  return (
+    <div>
+      <Navbar />
+      <div className="p-4">
+        <h1 className="text-2xl font-bold mb-4">Student Dashboard</h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Log a New Issue</h2>
+            <IssueForm />
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md col-span-2">
+            <h2 className="text-xl font-semibold mb-4">Issue Tracking</h2>
+            
+            <ul>
+              {issues.length}
+            </ul>
+          </div>
+        </div>
+        <Notifications />
+=======
 import React from 'react';
 import { Link } from 'react-router-dom';
+import IssueStats from "./issues/IssueStats";
 
 const stats = [
   { title: 'Open Issues', value: 4 },
@@ -48,26 +101,23 @@ const enrolledCourses = [
   },
 ];
 
-const StudentDashboard = () => {
+const StudentDashboard = ({ stats, issues, users }) => {
   return (
     <div className="space-y-6 px-4 py-6  bg-blue-200 rounded-lg">
       <p className= "font-bold text-center text-3xl">Student Dashboard</p>
 
       {/* Quick Stats */}
-      <h2 className="text-xl font-semibold mb-2">Issue Stats</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white hover:bg-blue-100  shadow-md rounded-2xl p-4 text-center"
-          >
-            <div className="text-2xl font-semibold">{stat.value}</div>
-            <div className="text-gray-600 text-sm">{stat.title}</div>
-          </div>
-        ))}
-      </div>
+      <h2 className="text-xl font-semibold mb-2">Issue Statistics</h2>
+      <IssueStats stats={stats} />
 
-    
+       {/* Button to Student Reports Page */}
+       <div className="mt-4 text-left ">
+          <Link to="/dashboard/student-reports">
+            <button className="bg-blue-500 text-white px-4 py-2 cursor-pointer rounded hover:bg-blue-600">
+              View reports and Add New Issues
+            </button>
+          </Link>
+      </div>
       
 
       {/* My Courses */}
@@ -145,6 +195,7 @@ const StudentDashboard = () => {
             </div>
           ))}
         </div>
+>>>>>>> a244366d6328ee5ce5e0e169939a959c543f6f4d
       </div>
     </div>
   );

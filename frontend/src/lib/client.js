@@ -19,6 +19,6 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
     },
   },
-})
+});
 
 export { apiClient, queryClient };

@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { useEffect } from "react"
 
 // export function TeamSwitcher({
 //     teams,
@@ -33,6 +34,8 @@ import {
     }) {
   const { isMobile } = useSidebar()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
+  // Fix useState(teams[0]) not updating correctly
+  useEffect(() => setActiveTeam(teams[0]), [teams])
 
   if (!activeTeam) {
     return null
