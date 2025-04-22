@@ -1,23 +1,20 @@
+import logging
 import jwt
 from rest_framework import serializers, exceptions
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth import login
-
 from authentication.models import ActiveSession
-#from core.utils.io import format_response
 
+logger = logging.getLogger(__name__)
 
 def _generate_jwt_token(user):
     token = jwt.encode(
         {"id": user.pk, "exp": datetime.utcnow() + timedelta(days=7)},
         settings.SECRET_KEY,
     )
-
     return token
-
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=255)
@@ -28,17 +25,24 @@ class LoginSerializer(serializers.Serializer):
         email = data.get("email", None)
         password = data.get("password", None)
 
+        logger.info(f"Login attempt with email: {email}")
+
         if email is None:
-            raise exceptions.ValidationError({"message":"Email is required to login"})
+            logger.warning("Login failed: Email is missing")
+            raise exceptions.ValidationError({"message": "Email is required to login"})
+
         if password is None:
+            logger.warning(f"Login failed for {email}: Password is missing")
             raise exceptions.ValidationError({"message": "Password is required to log in."})
+
         user = authenticate(username=email, password=password)
 
         if user is None:
+            logger.warning(f"Login failed for {email}: Invalid credentials")
             raise exceptions.AuthenticationFailed({"message": "Wrong credentials"})
 
-        ##############
         login(self.context.get('request'), user)
+        logger.info(f"Login successful for user: {user.username}")
 
         if not user.is_active:
             raise exceptions.ValidationError({"message": "User is not active"})
@@ -46,28 +50,11 @@ class LoginSerializer(serializers.Serializer):
         try:
             session = ActiveSession.objects.get(user=user)
             if not session.token:
-                raise ValueError
+                logger.warning(f"No token found for user: {user.username}")
+                raise ValueError("No token found")
 
             jwt.decode(session.token, settings.SECRET_KEY, algorithms=["HS256"])
+            logger.info(f"Valid token found for user: {user.username}")
 
-        except (ObjectDoesNotExist, ValueError, jwt.ExpiredSignatureError):
-            session = ActiveSession.objects.create(
-                user=user, token=_generate_jwt_token(user)
-            )
-
-        # return format_response({
-        #     "user": {
-        #         "_id": user.pk,
-        #         "username": user.username,
-        #         "email": user.email,
-        #     },
-        #     "token": session.token,
-        # })
-        return {
-            "user": {
-                "_id": user.pk,
-                "username": user.username,
-                "email": user.email,
-            },
-            "token": session.token,
-        }
+        except ObjectDoesNotExist:
+            logger.warning(f"No active session found for user:

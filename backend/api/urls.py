@@ -1,10 +1,11 @@
-from django.urls import include, re_path
-from .routers import router
+# api/urls.py
 
-versions = '|'.join( ("v1", ) )
+from django.urls import include, re_path
+from .router import router  # Make sure this matches your file name
+
+# API versioning (currently only v1)
+versions = '|'.join(("v1",))
 
 urlpatterns = [
-    #*router.urls,
-    #re_path(f"api/(?P<version>({versions}))/", include(("api.routers", "api"), namespace="api")),
-    re_path(f"(?P<version>({versions}))/", include((router.urls, "api"), namespace="api")),
+    re_path(f"^(?P<version>({versions}))/", include((router.urls, "api"), namespace="api")),
 ]
