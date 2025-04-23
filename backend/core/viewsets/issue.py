@@ -32,14 +32,14 @@ class IssueViewSet(
     # permission_classes = (AllowAny,)
     serializer_class = IssueSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data) #, many=True
-        # print("testinhgf", data)
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data) #, many=True
+    #     # print("testinhgf", data)
 
-        serializer.is_valid(raise_exception=True)
-        issue = serializer.save()
+    #     serializer.is_valid(raise_exception=True)
+    #     issue = serializer.save()
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
     
     @action(detail=True, methods=['GET'])
     def assignees(self, request, *args, **kwargs):
@@ -79,6 +79,36 @@ class IssueViewSet(
             raise ValidationError({'message': 'Categories not found'})
 
         return paginate_response(self, cats, CategorySerializer)
+
+    @action(detail=False, methods=['GET'])
+    def meta(self, request, *args, pk=None, **kwargs):
+        from django.db.models.functions import JSONObject
+        from django.db.models import Case, When, Value
+        from django.contrib.postgres.aggregates import ArrayAgg
+
+        priority_annotation = [
+            When(priority=k, then=JSONObject(id=k, name=Value(v)))
+            for k, v in Issue.PRIORITY_CHOICES.items()
+        ]
+        status_annotation = [
+            When(priority=k, then=JSONObject(id=k, name=Value(v)))
+            for k, v in Issue.STATUS_CHOICES.items()
+        ]
+        escalation_annotation = [
+            When(priority=k, then=JSONObject(id=k, name=Value(v)))
+            for k, v in Issue.ESCALATION_CHOICES.items()
+        ]
+        categories = Category.objects.values()
+
+        metas = Issue.objects.aggregate(
+            priorities=ArrayAgg(Case(*priority_annotation), distinct=True),
+            statuses=ArrayAgg(Case(*status_annotation), distinct=True),
+            escalation_levels=ArrayAgg(Case(*escalation_annotation), distinct=True),
+        ) | {
+            'categories': categories,
+        }
+
+        return Response(metas, status=status.HTTP_200_OK)
     
     def get_queryset(self):
         user = self.request.user

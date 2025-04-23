@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AitsLogo from "@/components/images/logo2.jpg";
 import { useState } from "react";
-import { useConfig } from "@/auth";
-import { login } from "@/auth/lib/allauth";
+import { useConfig } from "@/features/auth";
+import { login } from "@/features/auth/lib/allauth";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { LoaderIcon } from "lucide-react";
@@ -80,6 +80,7 @@ export function LoginForm({ className, ...props }) {
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
+                name="hello"
                   id="email"
                   type="email"
                   placeholder="email@example.com"

@@ -1,7 +1,6 @@
-from ..models import User, Role
 from rest_framework import serializers
-
 from ..models import User, Role, Staff, Student
+from .common import DynamicFieldsModelSerializer
 
 
 class RoleListingField(serializers.RelatedField):
@@ -41,15 +40,15 @@ class RoleSerializer(serializers.ModelSerializer):
             "display": Role.ROLE_CHOICES[data['name']],
         }
 
-class StaffSerializer(serializers.ModelSerializer):
-    class Meta:
+class StaffSerializer(DynamicFieldsModelSerializer, UserSerializer):
+    class Meta(UserSerializer.Meta):
         model = Staff
-        exclude = ['password']
-        read_only_field = ["id"]
+        # exclude = ['password']
+        # read_only_field = ["id"]
 
-class StudentSerializer(serializers.ModelSerializer):
-    class Meta:
+class StudentSerializer(DynamicFieldsModelSerializer, UserSerializer):
+    class Meta(UserSerializer.Meta):
         model = Student
-        exclude = ['password']
-        read_only_field = ["id"]
+        # exclude = ['password']
+        # read_only_field = ["id"]
 

@@ -1,7 +1,8 @@
 import React, { Children, useState, lazy } from "react"; // Importing React and the useState hook for state management
 import { Link, useLocation, Outlet, useRoutes } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
-import { useRole } from "@/auth";
+import { useActiveRole, useRoles } from "@/hooks/use-auth";
 import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
+import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,8 +17,21 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-import { Component, Outdent } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Component, Outdent, CircleUserRound } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 
 // const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const LecturerDashboard = lazy(() => import("@/components/LecturerDashboard"));
@@ -43,8 +57,15 @@ const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const NotFound = lazy(() => import("@/pages/404"));
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
 import { useQuery } from "@tanstack/react-query";
-import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
-
+import {
+  fetchIssues,
+  fetchUsers,
+  fetchStats,
+  fetchIssuesMeta,
+} from "@/lib/api";
+import { Search } from "@/components/search";
+import { useDispatch } from "react-redux";
+import { setMeta as setIssuesMeta } from "@/redux/features/issuesSilce";
 
 const dashboardRoutes = [
   {
@@ -52,6 +73,10 @@ const dashboardRoutes = [
     path: "",
     Component: DashboardLayout,
     children: [
+      {
+        index: true,
+        Component: Dashboard,
+      },
       {
         path: "/notifications",
         Component: NotificationsPage,
@@ -97,15 +122,83 @@ const dashboardRoutes = [
   },
 ];
 
-export default function Dashboard() {
+export default function DashboardRoutes() {
   const routes = useRoutes(dashboardRoutes);
   return routes;
 }
 
 export function DashboardLayout() {
-  const role = useRole();
-  const { pathname } = useLocation();
+  // TODO: Show progress when switching roles
+
+  const roles = useRoles();
+  const [{ name: role }, setActiveRole] = useActiveRole();
+  // const { pathname } = useLocation();
+  const switchRole = (role) => setActiveRole(role);
+
+  return (
+    <SidebarProvider defaultOpen={false}>
+      <AppSidebar userRoles={roles} onRoleChange={() => void 0} />
+      <SidebarInset>
+        {/* <div className="sticky top-0 bg-gradient-to-r from-blue-100 to-green-200"> */}
+        <header className="flex sticky top-0 min-h-14 p-4 mb-2 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 backdrop-blur-3xl">
+          <div className="flex items-center gap-2 px-4">
+            <SidebarTrigger className="-ml-1" />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{`${role
+                    ?.charAt(0)
+                    .toUpperCase()}${role?.slice(1)}`}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <Search />
+          </div>
+          <div className="flex flex-row gap-x-4 ml-auto">
+            <RoleSwitcher role={role} onChange={switchRole} />
+          </div>
+        </header>
+        {/* <Separator orientation="horizontal" /> */}
+        <div>
+          <div className="flex flex-col lg:fixed lg:flex-row h-full">
+            <div className="flex flex-3 flex-col gap-5 p-2 pt-0 lg:overflow-auto h-full">
+              <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+                <Outlet />
+              </div>
+            </div>
+            <div className="flex flex-1 p-5 pr-2 overflow-auto h-full">
+              <CalendarDemo />
+            </div>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}
+
+export function CalendarDemo() {
+  // const [date, setDate] = React.useState<Date | undefined>(new Date())
+  const [date, setDate] = React.useState(new Date());
+
+  return (
+    <Calendar
+      mode="single"
+      selected={date}
+      onSelect={setDate}
+      className="rounded-md border shadow h-fit"
+    />
+  );
+}
+
+export function Dashboard() {
+  const [{ name: role }, setRole] = useActiveRole();
   const [statsParams, setStatParams] = useState({}); // ({ priority: '' });
+  const dispatch = useDispatch();
   const {
     isPending: statsPending,
     error: statsError,
@@ -130,76 +223,124 @@ export function DashboardLayout() {
     data: usersRes,
     isFetching: usersFetching,
   } = useQuery({
-    queryKey: ["issues"],
+    queryKey: ["users"],
     queryFn: () => fetchUsers(),
   });
+  const {
+    error: issuesMetaError,
+    data: issuesMetaRes,
+    isFetching: issuesMetaFetching,
+  } = useQuery({
+    queryKey: ["issues", "meta"],
+    queryFn: () => fetchIssuesMeta(),
+  });
 
-  if (statsFetching) {
+  if (statsError || issuesMetaError || usersError || issuesMetaError) {
+    console.log({ statsError, issuesError, usersError, issuesMetaError });
+    return <UnknownError error="Failed Loading resource." />;
+  } else if (statsFetching) {
     // return <>Fetching issues...</>;
   } else if (statsPending) {
     // return <>Loading data...</>;
-  } else if (statsError) {
-    return <UnknownError error="Failed Loading resource." />;
   }
 
-  const stats = {data: statsRes?.data, fetching: statsFetching, pending: statsPending, error: statsError};
-  const issues = {data: issuesRes?.data, fetching: issuesFetching, pending: issuesPending, error: issuesError};
-  const users = {data: usersRes?.data, fetching: usersFetching, pending: usersPending, error: usersError};
+  if (issuesFetching) {
+    return null;
+  } else if (issuesMetaRes) {
+    dispatch(setIssuesMeta(issuesMetaRes.data));
+  }
 
-  // const role = "student";
-  // const role = "lecturer";
-  // const role = "registrar"
-  return (
-    <SidebarProvider defaultOpen={false}>
-      <AppSidebar userRole={role} />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-          <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{`${role
-                    ?.charAt(0)
-                    .toUpperCase()}${role?.slice(1)}`}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
-        <div className="flex flex-1 flex-col gap-5 p-5 pt-0">
-          {/* <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-            <div className="aspect-video rounded-xl bg-muted/50" />
-          </div> */}
-          <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
-            {(pathname == "/dashboard" &&
-              (role === "student" ? (
-                <StudentDashboard stats={stats} issues={issues} users={users} />
-              ) : role === "lecturer" ? (
-                <LecturerDashboard stats={stats} issues={issues} users={users} />
-              ) : role === "registrar" ? (
-                <AcademicRegistrarDashboard stats={stats} issues={issues} users={users} />
-              ) : (
-                <div className="flex justify-center">
-                  <UnknownError
-                    error={
-                      <>
-                        Failed to load <strong>{role}</strong>...
-                      </>
-                    }
-                  />
-                </div>
-              ))) || <Outlet />}
-          </div>
+  const stats = {
+    data: statsRes?.data,
+    fetching: statsFetching,
+    pending: statsPending,
+    error: statsError,
+  };
+  const issues = {
+    data: issuesRes?.data,
+    fetching: issuesFetching,
+    pending: issuesPending,
+    error: issuesError,
+  };
+  const users = {
+    data: usersRes?.data,
+    fetching: usersFetching,
+    pending: usersPending,
+    error: usersError,
+  };
+  switch (role) {
+    case "student":
+      return <StudentDashboard stats={stats} issues={issues} users={users} />;
+    case "lecturer":
+      return <LecturerDashboard stats={stats} issues={issues} users={users} />;
+    case "registrar":
+      return (
+        <AcademicRegistrarDashboard
+          stats={stats}
+          issues={issues}
+          users={users}
+        />
+      );
+    default:
+      return (
+        <div className="flex justify-center">
+          <UnknownError
+            error={
+              <>
+                Failed to load <strong>{role}</strong>...
+              </>
+            }
+          />
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+      );
+  }
+}
+
+export function RoleSwitcher({ role, onChange }) {
+  const [open, setOpen] = React.useState(false);
+  // const [selectedRole, setSelectedRole] = React.useState(null);
+  const roles = useRoles();
+  // console.log("RoleSwitcher", { role, roles, onChange });
+
+  return (
+    <div className="flex items-center space-x-4 mr-3">
+      {/* <p className="text-sm text-muted-foreground">Status</p> */}
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-[32px] h-[32px] justify-center overflow-clip rounded-2xl"
+          >
+            {/* {role ? <>{role}</> : null} */}
+            <CircleUserRound size={24} />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0" side="left" align="start">
+          <Command>
+            <CommandInput placeholder="Change status..." />
+            <CommandList>
+              <CommandEmpty>No Roles Found.</CommandEmpty>
+              <CommandGroup>
+                {roles.map((role) => (
+                  <CommandItem
+                    key={role.id}
+                    value={role.name}
+                    onSelect={(value) => {
+                      onChange(
+                        roles.find((role) => role.name === value) || null
+                      );
+                      setOpen(false);
+                      // onChange(role);
+                    }}
+                  >
+                    {role.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
   );
 }

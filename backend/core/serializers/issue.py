@@ -2,6 +2,9 @@ from django.db import transaction
 from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from ..models import Issue, IssueLog, Category, Attachment, Issue, Role
+from .common import DynamicFieldsModelSerializer
+from django.core.serializers.json import DjangoJSONEncoder
+# from django.core.serializers import serialize
 
 # class CategoriesListingField(serializers.RelatedField):
 #     # def get_queryset(self, *args, **kwargs):
@@ -60,6 +63,7 @@ class IssueSerializer(serializers.ModelSerializer):
 
         actor = self.context['request'].user
         categories = log_kwargs.pop('categories').all()
+        print({"log_kwargs": log_kwargs})
         issue_log = IssueLog.objects.create(issue=instance, actor=actor, **log_kwargs)
         issue_log.categories.set(categories)
         issue_log.save()
@@ -67,16 +71,17 @@ class IssueSerializer(serializers.ModelSerializer):
         return instance
 
     def validate_owner(self, value):
-        if value and not value.roles.filter(name=Role.ROLE_STUDENT).exists():
+        # if value and not value.roles.filter(name__in=[Role.ROLE_STUDENT, Role.ROLE_REGISTRAR]).exists():
+        if value and not value.roles.filter(name__in=[Role.ROLE_STUDENT, Role.ROLE_REGISTRAR]).exists():
             raise serializers.ValidationError(
-                "Only students can create issues"
+                "Only students or registrars can create issues"
             )
         return value
 
     def validate_assignee(self, value):
-        if value and not value.roles.filter(name=Role.ROLE_LECTURER).exists():
-            raise serializers.validationError(
-                "Only lecturers can be assigned to issues"
+        if value and not value.roles.filter(name__in=[Role.ROLE_LECTURER, Role.ROLE_REGISTRAR]).exists():
+            raise serializers.ValidationError(
+                "Only lecturers or registrars can be assigned to issues"
             )
         return value
 
@@ -96,11 +101,24 @@ class IssueSerializer(serializers.ModelSerializer):
             data["categories"] = Category.objects.filter(id__in=categories).values("id", "name")
             # data["categories"] = list(map(lambda c: Category.objects.values(), categories))
         
-        # print({"my_trep": data})
+        if data.get("owner", None):
+            owner = instance.owner
+            data['owner'] = {
+                k: getattr(owner, k)
+                for k in ['id', 'username', 'email']
+            }
+
+        if data.get("assignee", None):
+            assignee = instance.assignee
+            data['assignee'] = {
+                k: getattr(assignee, k)
+                for k in ['id', 'username', 'email']
+            }
+
         return data
 
 
-class IssueLogSerializer(serializers.ModelSerializer):
+class IssueLogSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = IssueLog
@@ -111,7 +129,7 @@ class IssueLogSerializer(serializers.ModelSerializer):
         ]
 
 
-class AttachmentSerializer(serializers.ModelSerializer):
+class AttachmentSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = Attachment
@@ -119,7 +137,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
         # exclude = ['id']
         read_only_fields = ['issue', 'name', 'size', 'type']
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'

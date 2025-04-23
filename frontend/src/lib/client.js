@@ -4,9 +4,10 @@ import { API_URL } from "./constants";
 
 const apiClient = axios.create({
   baseURL: API_URL,
-  timeout: 1000,
+  // timeout: 2000,
   xsrfCookieName: "csrftoken",
   xsrfHeaderName: "X-CSRFToken",
+  withXSRFToken: true,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

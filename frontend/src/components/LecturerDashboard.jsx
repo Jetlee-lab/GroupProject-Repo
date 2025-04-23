@@ -1,6 +1,7 @@
-import React, { useState } from "react";  // Importing React and the useState hook for state management
-import { Link } from "react-router-dom";  // Importing Link component from react-router-dom for navigation
-// import * as React from "react"
+import React, { useState } from "react"; // Importing React and the useState hook for state management
+import { Link } from "react-router-dom";
+import IssueTable from "./issues/issue-table"; // Importing Link component from react-router-dom for navigation
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   // ColumnDef,
   // ColumnFiltersState,
@@ -12,11 +13,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -25,8 +26,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,15 +35,79 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+import { fetchIssues, paginate } from "@/lib/api";
 
+import issueData from "./issues/data.json";
 
 const LecturerDashboard = ({ stats, issues, users }) => {
+  const [page, setPage] = React.useState(0);
+  const { status, data, error, isFetching, isPlaceholderData, isSuccess } = useQuery({
+    queryKey: ["issues", page],
+    queryFn: () => fetchIssues({ params: paginate(page, 4) }),
+    placeholderData: keepPreviousData,
+    // staleTime: 5000,
+  });
+  // console.log({ status, data, error });
+  // Prefetch the next page!
+  React.useEffect(() => {
+    if (!isPlaceholderData && data?.hasMore) {
+      queryClient.prefetchQuery({
+        queryKey: ["issues", page + 1],
+        queryFn: () => fetchIssues({ params: paginate(page + 1, 4) }),
+      });
+    }
+  }, [data, isPlaceholderData, page]);
+
+  return (
+    <div className="p-4">
+      {/* <h1 className="text-2xl font-bold mb-4">Lecturer Dashboard</h1>{" "} */}
+      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
+      <div className="mt-4 text-left">
+        <Link to="/dashboard/lecturer-reports">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            View reports and Edit Issues
+          </button>
+        </Link>
+      </div>
+      <div className="overflow-x-scroll">
+      {/* <IssueTable data={issueData} /> */}
+      { isSuccess && <IssueTable data={data.data} /> }
+      </div>
+      {/* <LecturerDashboardOld /> */}
+    </div>
+    // </div>
+  );
+};
+
+
+const LecturerDashboardOld = () => {
   // State hook to store the mIssues and set them
   const [mIssues, setIssues] = useState([
-    { id: 1, title: "Missing course unit marks", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },
-    { id: 2, title: "Technical issue with AITS platform", description: "System crash during exam upload.", status: "Resolved", student: "Mukisa John", comment: "" },
-    { id: 3, title: "Conflicting exam schedule", description: "Two exams scheduled at the same time.", status: "On Hold", student: "Nakato Mary", comment: "" },
+    {
+      id: 1,
+      title: "Missing course unit marks",
+      description: "Marks for MAT101 missing.",
+      status: "Pending",
+      student: "Mulungi Martha",
+      comment: "",
+    },
+    {
+      id: 2,
+      title: "Technical issue with AITS platform",
+      description: "System crash during exam upload.",
+      status: "Resolved",
+      student: "Mukisa John",
+      comment: "",
+    },
+    {
+      id: 3,
+      title: "Conflicting exam schedule",
+      description: "Two exams scheduled at the same time.",
+      status: "On Hold",
+      student: "Nakato Mary",
+      comment: "",
+    },
   ]);
 
   // State hook that stores the courses and set them
@@ -54,8 +119,8 @@ const LecturerDashboard = ({ stats, issues, users }) => {
   // Function that handles changing the status of an issue
   const handleStatusChange = (id, newStatus) => {
     setIssues((prevIssues) =>
-      prevIssues.map((issue) =>
-        issue.id === id ? { ...issue, status: newStatus } : issue  // Update the issue with the new status
+      prevIssues.map(
+        (issue) => (issue.id === id ? { ...issue, status: newStatus } : issue) // Update the issue with the new status
       )
     );
   };
@@ -63,8 +128,8 @@ const LecturerDashboard = ({ stats, issues, users }) => {
   // Function that handles changes in the comment field for an issue
   const handleCommentChange = (id, newComment) => {
     setIssues((prevIssues) =>
-      prevIssues.map((issue) =>
-        issue.id === id ? { ...issue, comment: newComment } : issue  // Updates the issue with the new comment
+      prevIssues.map(
+        (issue) => (issue.id === id ? { ...issue, comment: newComment } : issue) // Updates the issue with the new comment
       )
     );
   };
@@ -72,28 +137,31 @@ const LecturerDashboard = ({ stats, issues, users }) => {
   // Function that handles edits in the issue title and description
   const handleIssueEdit = (id, newTitle, newDescription) => {
     setIssues((prevIssues) =>
-      prevIssues.map((issue) =>
-        issue.id === id ? { ...issue, title: newTitle, description: newDescription } : issue  // Updates the issue with new title and description
+      prevIssues.map(
+        (issue) =>
+          issue.id === id
+            ? { ...issue, title: newTitle, description: newDescription }
+            : issue // Updates the issue with new title and description
       )
     );
   };
 
   // Function that adds a new course
   const handleCourseAdd = () => {
-    const newCourse = { id: Date.now(), name: "New Course", students: 0 };  // Creates a new course with unique ID
-    setCourses([...courses, newCourse]);  // Adds the new course to the courses array
+    const newCourse = { id: Date.now(), name: "New Course", students: 0 }; // Creates a new course with unique ID
+    setCourses([...courses, newCourse]); // Adds the new course to the courses array
   };
 
   // Function that removes a course
   const handleCourseRemove = (id) => {
-    setCourses(courses.filter(course => course.id !== id));  // Removes the course with the given ID
+    setCourses(courses.filter((course) => course.id !== id)); // Removes the course with the given ID
   };
 
   // Function that edits a course name
   const handleCourseEdit = (id, newName, students) => {
     setCourses((prevCourses) =>
-      prevCourses.map((course) =>
-        course.id === id ? { ...course, name: newName } : course  // Updates the course name
+      prevCourses.map(
+        (course) => (course.id === id ? { ...course, name: newName } : course) // Updates the course name
       )
     );
   };
@@ -101,227 +169,100 @@ const LecturerDashboard = ({ stats, issues, users }) => {
   // Function to change the number of students in a course
   const handleStudentCountChange = (id, newCount) => {
     setCourses((prevCourses) =>
-      prevCourses.map((course) =>
-        course.id === id ? { ...course, students: newCount } : course  // Updates the student count for the course
+      prevCourses.map(
+        (course) =>
+          course.id === id ? { ...course, students: newCount } : course // Updates the student count for the course
       )
     );
   };
 
-  // Filter the mIssues that are either "On Hold" or "Pending"
-  const escalatedIssues = mIssues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
-
   return (
-    <div>
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Lecturer Dashboard</h1> {/* Heading for the page */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> {/* Grid container for the sections */}
-
-          {/* Manage Student Issues Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Manage Student Issues</h2> {/* Subheading for this section */}
-            <table className="min-w-full table-auto"> {/* Table to display mIssues */}
-              <thead className="bg-blue-600 text-white"> {/* Table header with styling */}
-                <tr>
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Issue</th>
-                  <th className="px-4 py-2">Description</th>
-                  <th className="px-4 py-2">Student</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Comment</th>
-                  <th className="px-4 py-2">Actions</th>
+    <>
+      <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
+        <h2 className="text-xl font-semibold mb-4">Courses You Teach</h2>
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
+          onClick={handleCourseAdd}
+        >
+          Add New Course
+        </button>
+        <table className="min-w-full table-auto">
+          <thead className="bg-blue-600 text-white">
+            <tr>
+              <th className="px-4 py-2">Course Name</th>
+              <th className="px-4 py-2">Number of Students</th>
+              <th className="px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {courses.map(
+              (
+                course // Loop through each course and display it
+              ) => (
+                <tr key={course.id}>
+                  <td className="px-4 py-2">
+                    <input
+                      type="text"
+                      className="border px-2 py-1 rounded-md w-full"
+                      value={course.name}
+                      onChange={(e) =>
+                        handleCourseEdit(
+                          course.id,
+                          e.target.value,
+                          course.students
+                        )
+                      }
+                    />
+                  </td>
+                  <td className="px-4 py-2">
+                    <input
+                      type="number"
+                      className="border px-2 py-1 rounded-md w-full"
+                      value={course.students}
+                      onChange={(e) =>
+                        handleStudentCountChange(course.id, e.target.value)
+                      }
+                    />
+                  </td>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() => handleCourseRemove(course.id)} // Remove course button
+                      className="text-red-500 hover:text-red-700 transition"
+                    >
+                      Remove
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {mIssues.map((issue) => (  // Loops through each issue and display it in a table row
-                  <tr key={issue.id}>
-                    <td className="px-4 py-2">{issue.id}</td> {/* Display the issue ID */}
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.title}
-                        onChange={(e) => handleIssueEdit(issue.id, e.target.value, issue.description)} // Updates title on change
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <textarea
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.description}
-                        onChange={(e) => handleIssueEdit(issue.id, issue.title, e.target.value)} // Updates description on change
-                      />
-                    </td>
-                    <td className="px-4 py-2">{issue.student}</td> {/* Display the student name */}
-                    <td className="px-4 py-2">
-                      <select
-                        className="border px-2 py-1 rounded-md"
-                        value={issue.status}
-                        onChange={(e) => handleStatusChange(issue.id, e.target.value)} // Change status on selection
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Resolved">Resolved</option>
-                        <option value="Rejected">Rejected</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.comment || ""}
-                        onChange={(e) => handleCommentChange(issue.id, e.target.value)} // Change comment on input
-                        placeholder="Add comment"
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Save</button> {/* Save button */}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-             {/* Button to Lecturer Reports Page */}
-         <div className="mt-4 text-left">
-              <Link to="/dashboard/lecturer-reports">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        View reports and Edit Issues
-                  </button>
-              </Link>
-          </div>          
-
-          {/* Escalated Issues Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Escalated Issues</h2>
-            <table className="min-w-full table-auto">
-              <thead className="bg-blue-600 text-white">
-                <tr>
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Issue</th>
-                  <th className="px-4 py-2">Description</th>
-                  <th className="px-4 py-2">Student</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Comment</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {escalatedIssues.map((issue) => (  // Loop through escalated mIssues
-                  <tr key={issue.id}>
-                    <td className="px-4 py-2">{issue.id}</td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.title}
-                        onChange={(e) => handleIssueEdit(issue.id, e.target.value, issue.description)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <textarea
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.description}
-                        onChange={(e) => handleIssueEdit(issue.id, issue.title, e.target.value)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">{issue.student}</td>
-                    <td className="px-4 py-2">
-                      <select
-                        className="border px-2 py-1 rounded-md"
-                        value={issue.status}
-                        onChange={(e) => handleStatusChange(issue.id, e.target.value)}
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Resolved">Resolved</option>
-                        <option value="Rejected">Rejected</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.comment || ""}
-                        onChange={(e) => handleCommentChange(issue.id, e.target.value)}
-                        placeholder="Add comment"
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Save</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Course Management Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Courses You Teach</h2>
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
-              onClick={handleCourseAdd}
-            >
-              Add New Course
-            </button>
-            <table className="min-w-full table-auto">
-              <thead className="bg-blue-600 text-white">
-                <tr>
-                  <th className="px-4 py-2">Course Name</th>
-                  <th className="px-4 py-2">Number of Students</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {courses.map((course) => (  // Loop through each course and display it
-                  <tr key={course.id}>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={course.name}
-                        onChange={(e) => handleCourseEdit(course.id, e.target.value, course.students)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="number"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={course.students}
-                        onChange={(e) => handleStudentCountChange(course.id, e.target.value)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button
-                        onClick={() => handleCourseRemove(course.id)}  // Remove course button
-                        className="text-red-500 hover:text-red-700 transition"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Quick Links Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
-            <div className="flex space-x-4">
-              <Link to="/dashboard/Settings" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Settings</Link>
-              <Link to="/dashboard/notifications" className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Notifications</Link>
-            </div>
-          </div>
+              )
+            )}
+          </tbody>
+        </table>
+      </div>
+      {/* Quick Links Section */}
+      <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
+        <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
+        <div className="flex space-x-4">
+          <Link
+            to="/dashboard/Settings"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Settings
+          </Link>
+          <Link
+            to="/dashboard/notifications"
+            className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition"
+          >
+            Notifications
+          </Link>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
 // const data: Payment[] = [
-  const data = [
-    {
+const data = [
+  {
     id: "m5gr84i9",
     amount: 316,
     status: "success",
@@ -351,7 +292,7 @@ const LecturerDashboard = ({ stats, issues, users }) => {
     status: "failed",
     email: "carmella@example.com",
   },
-]
+];
 
 // export type Payment = {
 //   id: string
@@ -361,8 +302,8 @@ const LecturerDashboard = ({ stats, issues, users }) => {
 // }
 
 // export const columns: ColumnDef<Payment>[] = [
-const columns  = [
-    {
+const columns = [
+  {
     id: "select",
     header: ({ table }) => (
       <Checkbox
@@ -402,7 +343,7 @@ const columns  = [
           Email
           <ArrowUpDown />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
@@ -410,22 +351,22 @@ const columns  = [
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amount = parseFloat(row.getValue("amount"));
 
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(amount)
+      }).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className="text-right font-medium">{formatted}</div>;
     },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const payment = row.original;
 
       return (
         <DropdownMenu>
@@ -447,22 +388,20 @@ const columns  = [
             <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export function DataTableDemo() {
   // const [sorting, setSorting] = React.useState<SortingState>([])
-  const [sorting, setSorting] = React.useState([])
+  const [sorting, setSorting] = React.useState([]);
   // const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    const [columnFilters, setColumnFilters] = React.useState(
-      []
-  )
+  const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] =
-  // React.useState<VisibilityState>({})
-  React.useState({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    // React.useState<VisibilityState>({})
+    React.useState({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -481,7 +420,7 @@ export function DataTableDemo() {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -489,7 +428,7 @@ export function DataTableDemo() {
         <Input
           placeholder="Filter emails..."
           // value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          value={(table.getColumn("email")?.getFilterValue()) ?? ""}
+          value={table.getColumn("email")?.getFilterValue() ?? ""}
           onChange={(event) =>
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
@@ -517,7 +456,7 @@ export function DataTableDemo() {
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -537,7 +476,7 @@ export function DataTableDemo() {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -597,292 +536,9 @@ export function DataTableDemo() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
+const LecturerDashboardM = DataTableDemo;
 
-const LecturerDashboardM = DataTableDemo
-
-const LecturerDashboardX = () => {
-  // State hook to store the mIssues and set them
-  const [mIssues, setIssues] = useState([
-    { id: 1, title: "Missing course unit marks", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },
-    { id: 2, title: "Technical issue with AITS platform", description: "System crash during exam upload.", status: "Resolved", student: "Mukisa John", comment: "" },
-    { id: 3, title: "Conflicting exam schedule", description: "Two exams scheduled at the same time.", status: "On Hold", student: "Nakato Mary", comment: "" },
-  ]);
-
-  // State hook that stores the courses and set them
-  const [courses, setCourses] = useState([
-    { id: 101, name: "Computer Science 101", students: 120 },
-    { id: 102, name: "Software Engineering", students: 95 },
-  ]);
-
-  // Function that handles changing the status of an issue
-  const handleStatusChange = (id, newStatus) => {
-    setIssues((prevIssues) =>
-      prevIssues.map((issue) =>
-        issue.id === id ? { ...issue, status: newStatus } : issue  // Update the issue with the new status
-      )
-    );
-  };
-
-  // Function that handles changes in the comment field for an issue
-  const handleCommentChange = (id, newComment) => {
-    setIssues((prevIssues) =>
-      prevIssues.map((issue) =>
-        issue.id === id ? { ...issue, comment: newComment } : issue  // Updates the issue with the new comment
-      )
-    );
-  };
-
-  // Function that handles edits in the issue title and description
-  const handleIssueEdit = (id, newTitle, newDescription) => {
-    setIssues((prevIssues) =>
-      prevIssues.map((issue) =>
-        issue.id === id ? { ...issue, title: newTitle, description: newDescription } : issue  // Updates the issue with new title and description
-      )
-    );
-  };
-
-  // Function that adds a new course
-  const handleCourseAdd = () => {
-    const newCourse = { id: Date.now(), name: "New Course", students: 0 };  // Creates a new course with unique ID
-    setCourses([...courses, newCourse]);  // Adds the new course to the courses array
-  };
-
-  // Function that removes a course
-  const handleCourseRemove = (id) => {
-    setCourses(courses.filter(course => course.id !== id));  // Removes the course with the given ID
-  };
-
-  // Function that edits a course name
-  const handleCourseEdit = (id, newName, students) => {
-    setCourses((prevCourses) =>
-      prevCourses.map((course) =>
-        course.id === id ? { ...course, name: newName } : course  // Updates the course name
-      )
-    );
-  };
-
-  // Function to change the number of students in a course
-  const handleStudentCountChange = (id, newCount) => {
-    setCourses((prevCourses) =>
-      prevCourses.map((course) =>
-        course.id === id ? { ...course, students: newCount } : course  // Updates the student count for the course
-      )
-    );
-  };
-
-  // Filter the mIssues that are either "On Hold" or "Pending"
-  const escalatedIssues = mIssues.filter(issue => issue.status === "On Hold" || issue.status === "Pending");
-
-  return (
-    <div>
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Lecturer Dashboard</h1> {/* Heading for the page */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> {/* Grid container for the sections */}
-
-          {/* Manage Student Issues Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Manage Student Issues</h2> {/* Subheading for this section */}
-            <table className="min-w-full table-auto"> {/* Table to display mIssues */}
-              <thead className="bg-blue-600 text-white"> {/* Table header with styling */}
-                <tr>
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Issue</th>
-                  <th className="px-4 py-2">Description</th>
-                  <th className="px-4 py-2">Student</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Comment</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mIssues.map((issue) => (  // Loops through each issue and display it in a table row
-                  <tr key={issue.id}>
-                    <td className="px-4 py-2">{issue.id}</td> {/* Display the issue ID */}
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.title}
-                        onChange={(e) => handleIssueEdit(issue.id, e.target.value, issue.description)} // Updates title on change
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <textarea
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.description}
-                        onChange={(e) => handleIssueEdit(issue.id, issue.title, e.target.value)} // Updates description on change
-                      />
-                    </td>
-                    <td className="px-4 py-2">{issue.student}</td> {/* Display the student name */}
-                    <td className="px-4 py-2">
-                      <select
-                        className="border px-2 py-1 rounded-md"
-                        value={issue.status}
-                        onChange={(e) => handleStatusChange(issue.id, e.target.value)} // Change status on selection
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Resolved">Resolved</option>
-                        <option value="Rejected">Rejected</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.comment || ""}
-                        onChange={(e) => handleCommentChange(issue.id, e.target.value)} // Change comment on input
-                        placeholder="Add comment"
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Save</button> {/* Save button */}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-             {/* Button to Lecturer Reports Page */}
-         <div className="mt-4 text-left">
-                    <Link to="/dashboard/lecturer-reports">
-                      <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                        View and Edit Issues
-                      </button>
-                    </Link>
-          </div>          
-
-          {/* Escalated Issues Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Escalated Issues</h2>
-            <table className="min-w-full table-auto">
-              <thead className="bg-blue-600 text-white">
-                <tr>
-                  <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Issue</th>
-                  <th className="px-4 py-2">Description</th>
-                  <th className="px-4 py-2">Student</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Comment</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {escalatedIssues.map((issue) => (  // Loop through escalated mIssues
-                  <tr key={issue.id}>
-                    <td className="px-4 py-2">{issue.id}</td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.title}
-                        onChange={(e) => handleIssueEdit(issue.id, e.target.value, issue.description)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <textarea
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.description}
-                        onChange={(e) => handleIssueEdit(issue.id, issue.title, e.target.value)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">{issue.student}</td>
-                    <td className="px-4 py-2">
-                      <select
-                        className="border px-2 py-1 rounded-md"
-                        value={issue.status}
-                        onChange={(e) => handleStatusChange(issue.id, e.target.value)}
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Resolved">Resolved</option>
-                        <option value="Rejected">Rejected</option>
-                      </select>
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={issue.comment || ""}
-                        onChange={(e) => handleCommentChange(issue.id, e.target.value)}
-                        placeholder="Add comment"
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Save</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Course Management Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Courses You Teach</h2>
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition mb-4"
-              onClick={handleCourseAdd}
-            >
-              Add New Course
-            </button>
-            <table className="min-w-full table-auto">
-              <thead className="bg-blue-600 text-white">
-                <tr>
-                  <th className="px-4 py-2">Course Name</th>
-                  <th className="px-4 py-2">Number of Students</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {courses.map((course) => (  // Loop through each course and display it
-                  <tr key={course.id}>
-                    <td className="px-4 py-2">
-                      <input
-                        type="text"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={course.name}
-                        onChange={(e) => handleCourseEdit(course.id, e.target.value, course.students)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <input
-                        type="number"
-                        className="border px-2 py-1 rounded-md w-full"
-                        value={course.students}
-                        onChange={(e) => handleStudentCountChange(course.id, e.target.value)}
-                      />
-                    </td>
-                    <td className="px-4 py-2">
-                      <button
-                        onClick={() => handleCourseRemove(course.id)}  // Remove course button
-                        className="text-red-500 hover:text-red-700 transition"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Quick Links Section */}
-          <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-            <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
-            <div className="flex space-x-4">
-              <Link to="/dashboard/Settings" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">Settings</Link>
-              <Link to="/dashboard/notifications" className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition">Notifications</Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default LecturerDashboard;  // Exporting the LecturerDashboard component
+export default LecturerDashboard; // Exporting the LecturerDashboard component

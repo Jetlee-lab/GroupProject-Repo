@@ -31,7 +31,7 @@ class IssueSearch:
         else:
             query = extra
 
-        query_serializer = IssueQuerySerializer(data=extra)
+        query_serializer = IssueSerializer(data=extra)
         query_serializer.is_valid()
 
         validated_data = query_serializer.validated_data

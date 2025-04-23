@@ -11,7 +11,9 @@ from ..serializers import (
     RoleSerializer,
     DepartmentSerializer,
     FacultySerializer,
-    IssueSerializer
+    IssueSerializer,
+    StaffSerializer,
+    StudentSerializer,
 )
 from ..models import User, Role, Student, Staff, Faculty, Issue
 from ..utils.io import IOMixin, paginate_response #format_response
@@ -82,8 +84,10 @@ class UsersViewSet(
 
     @action(methods=["GET"], detail=False, url_path="students", url_name="students")
     def students(self, request, *args, **kwargs):
-        students = User.objects.filter(student__isnull=False)
-        return paginate_response(self, students, UserSerializer)
+        # students = User.objects.filter(student__isnull=False)
+        # return paginate_response(self, students, UserSerializer)
+        students = Student.objects.all()
+        return paginate_response(self, students, StudentSerializer)
 
     @action(methods=["GET"], detail=False, url_path="staff", url_name="staff")
     def staff(self, request, *args, **kwargs):

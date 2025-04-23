@@ -1,12 +1,12 @@
 import { useState } from "react";
 // import FormErrors from '../components/FormErrors'
-import { signUp } from "@/auth/lib/allauth";
+import { signUp } from "@/features/auth/lib/allauth";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useConfig } from "@/auth";
+import { useConfig } from "@/features/auth";
 import AitsLogo from "@/components/images/logo2.jpg";
 import { cn } from "@/lib/utils";
 import { LoaderIcon, Eye, EyeOff } from "lucide-react";

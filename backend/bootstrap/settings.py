@@ -242,7 +242,7 @@ CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=ALLOWED_HOSTS)
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'authentication.backends.ActiveSessionAuthentication',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    'allauth.account.auth_backends.AuthenticationBackend', 
     # 'allauth.socialaccount.auth_backends.AuthenticationBackend',
 ]
 

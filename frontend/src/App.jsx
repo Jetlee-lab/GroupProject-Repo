@@ -4,14 +4,15 @@ import {
   AuthChangeRedirector,
   AnonymousRoute,
   AuthenticatedRoute,
-} from "./auth";
+} from "@/features/auth";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useConfig } from "./auth/hooks";
+import { useConfig } from "@/features/auth/hooks";
 import Provider from "./provider";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 
-const HomePage = lazy(() => import("@/pages/HomePage"));
+const Landing = lazy(() => import("@/pages/landing"));
+// const HomePage = lazy(() => import("@/pages/HomePage"));
 const Dashboard = lazy(() => import("@/components/dashboard/Dashboard"));
 const Login = lazy(() => import("@/components/auth/Login"));
 const SignUp = lazy(() => import("@/components/auth/SignUp"));
@@ -19,7 +20,6 @@ const AppLayout = lazy(() => import("@/components/common/AppLayout"));
 const HelpPage = lazy(() => import("@/pages/HelpPage"));
 const LogoutPage = lazy(() => import("./pages/LogoutPage"));
 const NotFound = lazy(() => import("@/pages/404"));
-
 
 function createRouter(config) {
   return createBrowserRouter([
@@ -33,22 +33,22 @@ function createRouter(config) {
       children: [
         {
           path: "",
-          Component: HomePage,
+          Component: Landing,
         },
-        // {
-        //   path: "/landing",
-        //   element: <LandingPage />,
-        // },
-        // {
-        //   path: "/login",
-        //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
-        // },
+    //     // {
+    //     //   path: "/landing",
+    //     //   element: <LandingPage />,
+    //     // },
+    //     // {
+    //     //   path: "/login",
+    //     //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
+    //     // },
       ],
     },
-    {
-      path: "/account/logout",
-      Component: LogoutPage,
-    },
+    // {
+    //   path: "/account/logout",
+    //   Component: LogoutPage,
+    // },
     {
       path: "/account/*",
       element: <AnonymousRoute />,
@@ -76,14 +76,14 @@ function createRouter(config) {
     //   path: "/dashboard",
     //   element: <Dashboard />
     // },
-    {
-      path: "/help",
-      Component: HelpPage,
-    },
+    // {
+    //   path: "/help",
+    //   Component: HelpPage,
+    // },
     {
       path: "*",
       Component: NotFound,
-    }
+    },
   ]);
 }
 
@@ -96,6 +96,7 @@ export function Router() {
   useEffect(() => {
     setRouter(createRouter(config));
   }, [config]);
+
   return router ? (
     <RouterProvider
       router={router}
@@ -112,11 +113,12 @@ export function Router() {
 }
 
 export default function App() {
+  // return <Test/>
   return (
     // <AuthContextProvider>
     <Provider>
-      <Router />
       <Toaster />
+      <Router />
     </Provider>
     // </AuthContextProvider>
   );

@@ -57,11 +57,7 @@ export default function RegistrarDashboard({ stats, issues, users }) {
   // const users = usersRes.data;
 
   return (
-    <div className="flex flex-col gap-y-8 p-4">
-      <h2 className=" gap-y-8 text-2xl text-center font-bold mb-4">
-        ACADEMIC REGISTRAR DASHBOARD
-      </h2>
-
+    <div className="flex flex-col gap-y-8 p-4  bg-blue-200  rounded-lg">
       {/* Overview section */}
       <div className="">
         <IssueStats stats={stats} />

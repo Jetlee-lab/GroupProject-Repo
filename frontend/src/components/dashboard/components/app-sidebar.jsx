@@ -18,6 +18,9 @@ import {
   Settings,
   CircleHelp,
   LogOut,
+  LifeBuoy,
+  Send,
+  HelpCircle,
 } from "lucide-react";
 import {
   Dialog,
@@ -31,8 +34,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { NavMain } from "@/components/dashboard/components/nav-main";
 import { NavProjects } from "@/components/dashboard/components/nav-projects";
+import { NavSecondary } from "@/components/dashboard/components/nav-secondary";
 import { NavUser } from "@/components/dashboard/components/nav-user";
-import { TeamSwitcher } from "@/components/dashboard/components/team-switcher";
+import { RoleSwitcher } from "@/components/dashboard/components/role-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -40,28 +44,12 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useUser } from "@/auth";
+import { useUser } from "@/features/auth";
+import { useActiveRole } from "@/hooks/use-auth";
 
 function getData(role) {
   // This is sample data.
   const data = {
-    teams: [
-      {
-        name: "AITS",
-        logo: GalleryVerticalEnd,
-        plan: "system",
-      },
-      {
-        name: "Acme Corp.",
-        logo: AudioWaveform,
-        plan: "Startup",
-      },
-      {
-        name: "Evil Corp.",
-        logo: Command,
-        plan: "Free",
-      },
-    ],
     navMain: [
       {
         title: "Dashboard",
@@ -149,6 +137,18 @@ function getData(role) {
         ],
       },
     ],
+    navSecondary: [
+      {
+        title: "Help & Support",
+        url: "/help",
+        icon: HelpCircle,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: Send,
+      },
+    ],
     projects: [
       // {
       //   name: "Dashboard",
@@ -185,28 +185,34 @@ function getData(role) {
 }
 
 // export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-export function AppSidebar({ userRole, ...props }) {
+export function AppSidebar({ userRoles, onRoleChange = () => void(0), ...props }) {
   const [data, setData] = useState(null);
   const user = useUser();
+  const [activeRole] = useActiveRole() 
 
-  useEffect(() => setData(getData(userRole)), [userRole]);
-  console.log({ userRole, data });
+  useEffect(() => setData(getData(activeRole.name)), [activeRole]);
+  // console.log({ userRole, data });
   // const data = getData(userRole)
   return (
     // (data && (
-      <Sidebar collapsible="icon" {...props}>
-        <SidebarHeader>
-          <TeamSwitcher teams={data?.teams || []} />
-        </SidebarHeader>
-        <SidebarContent>
-          <NavMain items={data?.navMain || []} />
-          <NavProjects projects={data?.projects || []} />
-        </SidebarContent>
-        <SidebarFooter>
-          <NavUser user={user} />
-        </SidebarFooter>
-        <SidebarRail />
-      </Sidebar>
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <RoleSwitcher roles={userRoles} onRoleChange={onRoleChange} />
+      </SidebarHeader>
+      <SidebarContent>
+        {data && (
+          <>
+            <NavMain items={data.navMain} />
+            <NavProjects projects={data?.projects} />
+            <NavSecondary items={data?.navSecondary} className="mt-auto" />
+          </>
+        )}
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser user={user} />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
     // )) || <></>
   );
 }

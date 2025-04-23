@@ -52,7 +52,7 @@ const enrolledCourses = [
 const StudentDashboard = ({ stats, issues, users }) => {
   return (
     <div className="space-y-6 px-4 py-6  bg-blue-200 rounded-lg">
-      <p className= "font-bold text-center text-3xl">Student Dashboard</p>
+      <p className= "font-bold text-3xl">Dashboard</p>
 
       {/* Quick Stats */}
       <h2 className="text-xl font-semibold mb-2">Issue Statistics</h2>
