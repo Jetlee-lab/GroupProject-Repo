@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Header from './header';
+import Header from './Header';
 // import SideBar from './SideBar';
 // import { useUser } from '../context/UserContext';
 
