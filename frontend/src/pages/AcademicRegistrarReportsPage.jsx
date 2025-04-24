@@ -2,7 +2,7 @@ import React, { useState, lazy } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@/hooks"
 import { fetchIssues, fetchUsers } from '@/lib/api';
-import { STATUS_CLOSED, STATUS_OPEN, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_INREVIEW } from '@/lib/constants';
+import { STATUS_CLOSED, STATUS_PENDING, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_INREVIEW } from '@/lib/constants';
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
 
 const AcademicRegistrarReportsPage = () => {
@@ -72,13 +72,13 @@ const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError
                   {/*Display status with different colors */}
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                      [ STATUS_INREVIEW, STATUS_ESCALATED,  STATUS_OPEN].includes(issue.status)
+                      [ STATUS_INREVIEW, STATUS_ESCALATED,  STATUS_PENDING].includes(issue.status)
                         ? "bg-green-100 text-green-600"
                         : issue.status === "Pending"
                         ? "bg-yellow-100 text-yellow-600"
                         : issue.status === "Rejected"
                         ? "bg-red-100 text-red-600"
-                        : issue.status === STATUS_OPEN
+                        : issue.status === STATUS_PENDING
                         ? "bg-blue-100 text-blue-600"
                         : issue.status === STATUS_INREVIEW
                         ? "bg-purple-100 text-purple-600"
