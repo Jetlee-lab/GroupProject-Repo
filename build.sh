@@ -6,7 +6,7 @@
 # print ----------+++++++++++++++++++++++++++++++++++++----------------------------
 
 
-if [ ! -d "/app/backend/staticfiles/frontend" ]; then
+if [ ! -f "/app/backend/staticfiles/frontend/index.html" ]; then
 
     echo RUNNING MIGRATIONS... && python manage.py makemigrations &&  python manage.py migrate && \
     echo POPULATING DATABASE... && python manage.py loaddata data && \
