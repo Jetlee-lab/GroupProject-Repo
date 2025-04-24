@@ -32,9 +32,8 @@ class IssueViewSet(
     # permission_classes = (AllowAny,)
     serializer_class = IssueSerializer
 
-    def create(self, request, *args, **kwargs):
-        print({"data":self.request.data, "files":self.request.FILES})
-        return super().create(request,*args, **kwargs)
+    # def create(self, request, *args, **kwargs):
+    #     return super().create(request,*args, **kwargs)
     #     serializer = self.get_serializer(data=request.data) #, many=True
     #     # print("testinhgf", data)
 
