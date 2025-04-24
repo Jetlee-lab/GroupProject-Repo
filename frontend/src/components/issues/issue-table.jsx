@@ -36,6 +36,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useNavigate } from "react-router-dom";
 import {
   CheckCircle2Icon,
   ChevronDownIcon,
@@ -57,6 +58,7 @@ import {
   Lock,
   Trash2,
   Ellipsis,
+  ListCheck
 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
@@ -249,6 +251,7 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
   // const users = queryClient.getQueryData(["users"])
   // const [isEditorOpen, setIsEditorOpen] = React.useState(undefined);
   const [{ name: activeRole }] = useActiveRole();
+  const navigate = useNavigate();
   let toSplice = [];
 
   switch (activeRole) {
@@ -439,6 +442,12 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
             >
               <Trash2 className="text-red-500" /> Delete
             </DropdownMenuItem>
+            { activeRole === ROLE_LECTURER && <DropdownMenuItem
+              className="text-blue-500"
+              onClick={() => navigate(`/dashboard/resolve-issue/${row.original.id}`)}
+            >
+              <ListCheck className="text-blue-500" /> Review
+            </DropdownMenuItem>}
           </DropdownMenuContent>
         </DropdownMenu>
       ),

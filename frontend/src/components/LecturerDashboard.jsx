@@ -49,7 +49,7 @@ const LecturerDashboard = ({ stats, issues, users }) => {
       <div className="text-xl mb-2">
         <h4 className="font-bold w-full pb-4 text-center">Assigned Issues</h4>
         <IssueTable />
-        <CreateIssue />
+        {/* <CreateIssue /> */}
       </div>
       <div className="mt-4 text-left ">
         <Link to="/dashboard/student-reports">
