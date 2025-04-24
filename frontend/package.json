@@ -4,10 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite",
+    "start": "vite start",
+    "build": "vite build --base=/static/",
+    "test": "vite test",
+    "eject": "vite eject",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -62,7 +65,6 @@
     "lightningcss": "latest",
     "lucide-react": "^0.454.0",
     "motion": "^12.7.4",
-    "next": "15.2.4",
     "next-themes": "^0.4.4",
     "path": "latest",
     "react": "^19",
