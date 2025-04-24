@@ -143,7 +143,7 @@ export function DashboardLayout() {
       <AppSidebar userRoles={roles} onRoleChange={() => void 0} />
       <SidebarInset>
         {/* <div className="sticky top-0 bg-gradient-to-r from-blue-100 to-green-200"> */}
-        <header className="flex sticky top-0 z-11 min-h-14 p-4 mb-2 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 backdrop-blur-3xl">
+        <header className="flex sticky top-0 z-11 min-h-14 p-4  backdrop-blur-3xl  bg-blue-600">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -170,7 +170,7 @@ export function DashboardLayout() {
         <div>
           <div className="flex flex-col lg:fixed lg:flex-row h-full pb-16">
             <div className="flex flex-3 flex-col gap-5 p-2 pt-0 lg:overflow-auto h-full">
-              <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+              <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 bg-gradient-to-r from-blue-100 to-blue-300  md:min-h-min">
                 <Outlet />
               </div>
               <footer>
