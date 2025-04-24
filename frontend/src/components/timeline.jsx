@@ -67,10 +67,10 @@ export default function Timeline({ className, ...props }) {
       }),
   });
 
-  const old = [...(issuesMetaRes?.data.owner[user.id].issues || [])];
+  const old = [...(issuesMetaRes?.data.owner[user.id]?.issues || [])];
 
   const sortedIssues =
-    issuesMetaRes?.data.owner[user.id].issues.sort((a, b) => {
+    issuesMetaRes?.data.owner[user.id]?.issues.sort((a, b) => {
       let dateA = new Date(a.updated_at);
       let dateB = new Date(b.updated_at);
 
@@ -100,12 +100,12 @@ export default function Timeline({ className, ...props }) {
       break;
   }
 
-  console.log({
-    activeRole,
-    old,
-    issuesMetaRes: issuesMetaRes?.data.owner[user.id].issues,
-    sortedIssues,
-  });
+  // console.log({
+  //   activeRole,
+  //   old,
+  //   issuesMetaRes: issuesMetaRes?.data.owner[user.id].issues,
+  //   sortedIssues,
+  // });
 
   return (
     <Card className={cn("", className)} {...props}>

@@ -20,9 +20,9 @@ export const paginate = (page, size = 10) => ({
  *  Issues API
  */
 export const fetchIssues = async ({ id, params } = {}) => {
-  const url = id === undefined ? "/issues" : `/issuses/${id}`;
+  const url = id === undefined ? "/issues" : `/issues/${id}`;
   return await apiClient.get(url, { params }).then((response) => {
-    console.log({...params,data:response.data.data})
+    // console.log({...params,data:response.data.data})
     return response.data;
   });
 };
@@ -49,8 +49,8 @@ export const createIssue = async (issue) => {
     });
 };
 
-export const updateIssue = async (issue) => {
-  return await apiClient.put(`/issues/${issue.id}`, issue).then((response) => {
+export const updateIssue = async ({id, issue}) => {
+  return await apiClient.put(`/issues/${id === undefined ? issue.id : id}`, issue).then((response) => {
     return response.data;
   });
 };

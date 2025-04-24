@@ -47,7 +47,7 @@ export function Search() {
         <div className="ml-8">
           <Button
             variant="outline"
-            className="font-normal shadow-none px-4 w-[260px] rounded-lg text-gray-500 border border-blue-300 bg-transparent"
+            className="font-normal shadow-none px-4 w-[280px] h-10 text-md rounded-lg text-gray-50 border border-blue-300 bg-transparent"
           >
             <span className="flex items-center gap-2">
             <SearchIcon strokeWidth={3} />

@@ -36,11 +36,11 @@ export const TitleInput = React.memo(({dataRef, ...props}) => {
 
   return <>
     <Label htmlFor="title" className="font-semibold">Title</Label>
-    <Input placeholder="Your title here..." name="title" id="title" value={title} onChange={handleChange} {...props}/>
+    <Input placeholder="Your title here..." name="title" id="title" value={title} onChange={handleChange} {...props} />
   </>
 })
 
-export const DescriptionInput = React.memo(({dataRef}) => {
+export const DescriptionInput = React.memo(({dataRef, ...props}) => {
   const [description, setDescription] = React.useState(dataRef.current.description)
   const handleChange = (e) => {
     const value = e.target.value
@@ -52,11 +52,11 @@ export const DescriptionInput = React.memo(({dataRef}) => {
 
   return <>
     <Label htmlFor="description" className="font-semibold">Description</Label>
-    <Textarea placeholder="Add description here..." className="resize-none" name="description" id="description" value={description} onChange={handleChange} />
+    <Textarea placeholder="Add description here..." className="resize-none" name="description" id="description" value={description} onChange={handleChange} {...props} />
   </>
 })
 
-export const CreatorInput = React.memo(({creators, dataRef}) => {
+export const CreatorInput = React.memo(({creators, dataRef, ...props}) => {
   const [owner, setOwner] = React.useState(dataRef.current.owner)
   const handleChange = (value) => {
     setOwner(value)
@@ -67,7 +67,7 @@ export const CreatorInput = React.memo(({creators, dataRef}) => {
 
   return <>
     <Label htmlFor="owner" className="font-semibold">Creator</Label>
-    <Select name="owner" value={String(owner)} onValueChange={handleChange}>
+    <Select name="owner" value={String(owner)} onValueChange={handleChange} {...props}>
       <SelectTrigger id="owner" className="w-full">
         <SelectValue placeholder="Select a reviewer" />
       </SelectTrigger>
@@ -81,7 +81,7 @@ export const CreatorInput = React.memo(({creators, dataRef}) => {
   </>
 })
 
-export const AssigneeInput = React.memo(({assignees, item, dataRef}) => {
+export const AssigneeInput = React.memo(({assignees, item, dataRef, ...props}) => {
   const [assignee, setAssignee] = React.useState(dataRef.current.assignee)
   const handleChange = (value) => {
     setAssignee(value === "null" ? null : value)
@@ -92,7 +92,7 @@ export const AssigneeInput = React.memo(({assignees, item, dataRef}) => {
 
   return <>
     <Label htmlFor="reviewer" className="font-semibold">Assignee</Label>
-    <Select name="assignee" value={String(assignee === null ? "null" : assignee)} onValueChange={handleChange}>
+    <Select name="assignee" value={String(assignee === null ? "null" : assignee)} onValueChange={handleChange} {...props} >
       <SelectTrigger id="assignee" className="w-full">
         <SelectValue placeholder="Select a assignee" />
       </SelectTrigger>
@@ -108,7 +108,7 @@ export const AssigneeInput = React.memo(({assignees, item, dataRef}) => {
   </>
 })
 
-export const StatusInput = React.memo(({statuses, dataRef}) => {
+export const StatusInput = React.memo(({statuses, dataRef, ...props}) => {
   const [status, setStatus] = React.useState(dataRef.current.status)
   const handleChange = (value) => {
     setStatus(value)
@@ -119,7 +119,7 @@ export const StatusInput = React.memo(({statuses, dataRef}) => {
 
   return <>
     <Label htmlFor="status" className="font-semibold">Status</Label>
-    <Select name="status" value={String(status)} onValueChange={handleChange}>
+    <Select name="status" value={String(status)} onValueChange={handleChange} {...props} >
       <SelectTrigger id="status" className="w-full">
         <SelectValue placeholder="Select a status" />
       </SelectTrigger>
@@ -130,7 +130,7 @@ export const StatusInput = React.memo(({statuses, dataRef}) => {
   </>
 })
 
-export const PriorityInput = React.memo(({priorities, dataRef}) => {
+export const PriorityInput = React.memo(({priorities, dataRef, ...props}) => {
   const [priority, setPriority] = React.useState(dataRef.current.priority)
   const handleChange = (value) => {
     setPriority(value)
@@ -141,7 +141,7 @@ export const PriorityInput = React.memo(({priorities, dataRef}) => {
 
   return <>
     <Label htmlFor="priority" className="font-semibold">Priority</Label>
-    <Select name="priority" value={String(priority)} onValueChange={handleChange}>
+    <Select name="priority" value={String(priority)} onValueChange={handleChange} {...props} >
       <SelectTrigger id="priority" className="w-full">
         <SelectValue placeholder="Select a status" />
       </SelectTrigger>
@@ -153,7 +153,7 @@ export const PriorityInput = React.memo(({priorities, dataRef}) => {
 
 })
 
-export const EscalationInput = React.memo(({escalationLevels, dataRef}) => {
+export const EscalationInput = React.memo(({escalationLevels, dataRef, ...props}) => {
   const [escalationLevel, setEscalationLevel] = React.useState(dataRef.current.escalation_level)
   const handleChange = (value) => {
     setEscalationLevel(value)
@@ -164,7 +164,7 @@ export const EscalationInput = React.memo(({escalationLevels, dataRef}) => {
 
   return <>
     <Label htmlFor="escalation" className="font-semibold">Escalation Level</Label>
-    <Select name="escalation_level" value={String(escalationLevel)} onValueChange={handleChange}>
+    <Select name="escalation_level" value={String(escalationLevel)} onValueChange={handleChange} {...props} >
       <SelectTrigger id="escalation" className="w-full">
         <SelectValue placeholder="Select a status" />
       </SelectTrigger>
@@ -175,7 +175,7 @@ export const EscalationInput = React.memo(({escalationLevels, dataRef}) => {
   </>
 })
 
-export const CategoriesInput = React.memo(({categories, dataRef}) => {
+export const CategoriesInput = React.memo(({categories, dataRef, ...props}) => {
   const [cats, setCategories] = React.useState(dataRef.current.categories)
   const handleChange = (value) => {
     setCategories(prev => prev === null && value.length === 0 ? null : value)
@@ -198,12 +198,13 @@ export const CategoriesInput = React.memo(({categories, dataRef}) => {
       variant="inverted"
       animation={2}
       maxCount={3}
+      {...props}
     />
     <input hidden value={cats || []} name="categories" onChange={handleChange}/>
   </>
 })
 
-export const NotesInput = React.memo(({dataRef}) => {
+export const NotesInput = React.memo(({dataRef, ...props}) => {
   const [notes, setNotes] = React.useState(dataRef.current.notes)
   const handleChange = (e) => {
     const value = e.target.value
@@ -215,7 +216,7 @@ export const NotesInput = React.memo(({dataRef}) => {
 
   return <>
     <Label htmlFor="notes" className="font-semibold">Additional Notes</Label>
-    <Textarea placeholder="Add notes here..." className="resize-none" name="notes" id="notes" value={notes === null ? "" : notes} onChange={handleChange} />
+    <Textarea placeholder="Add notes here..." className="resize-none" name="notes" id="notes" value={notes === null ? "" : notes} onChange={handleChange} {...props} />
   </>
 })
 

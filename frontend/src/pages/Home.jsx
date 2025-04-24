@@ -7,8 +7,8 @@ import Footer from "../components/common/Footer";
 import { Link } from "react-router-dom";
 import issueTrackingImage from "../components/images/issuetracking.jpg";
 import notificationsImage from "../components/images/notifications.png";
-import reportsImage from "../components/images/reports.png";
-import userImage from "../components/images/user.png";
+import reportsImage from "../components/images/reports.jpg";
+import userImage from "../components/images/user.jpg";
 
 
 const HomePage = () => {

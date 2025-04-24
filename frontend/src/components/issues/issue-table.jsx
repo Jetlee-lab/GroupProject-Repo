@@ -841,7 +841,7 @@ function TableCellViewer({ item }) {
     const data = dataRef.current;
 
     console.log({ data });
-    issueMutation.mutate({ ...data, id: item.id });
+    issueMutation.mutate({ issue: data, id: item.id });
   };
 
   return (

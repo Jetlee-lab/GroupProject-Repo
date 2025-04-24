@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/popover";
 import { Component, Outdent, CircleUserRound } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { ROLE_STUDENT, ROLE_LECTURER, ROLE_REGISTRAR } from "@/lib/constants"
+import { ROLE_STUDENT, ROLE_LECTURER, ROLE_REGISTRAR } from "@/lib/constants";
 
 // const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const LecturerDashboard = lazy(() => import("@/components/LecturerDashboard"));
@@ -68,7 +68,7 @@ import { Search } from "@/components/search";
 import { useDispatch } from "react-redux";
 import { setMeta as setIssuesMeta } from "@/redux/features/issuesSilce";
 import { DashboardFooter } from "@/components/footer";
-import Timeline from "@/components/timeline"
+import Timeline from "@/components/timeline";
 
 const dashboardRoutes = [
   {
@@ -101,7 +101,7 @@ const dashboardRoutes = [
         Component: AcademicRegistrarReportsPage,
       },
       {
-        path: "/edit-issue-lecturer",
+        path: "/resolve-issue/:issueId",
         Component: LecturerEditIssueForm,
       },
 
@@ -131,19 +131,35 @@ export default function DashboardRoutes() {
 }
 
 export function DashboardLayout() {
-  // TODO: Show progress when switching roles
-
+  const {
+    error: issuesMetaError,
+    data: issuesMetaRes,
+    isFetching: issuesMetaFetching,
+  } = useQuery({
+    queryKey: ["issues", "meta"],
+    queryFn: () => fetchIssuesMeta(),
+  });
+  const dispatch = useDispatch();
   const roles = useRoles();
   const [{ name: role }, setActiveRole] = useActiveRole();
   // const { pathname } = useLocation();
   const switchRole = (role) => setActiveRole(role);
+
+  if (issuesMetaFetching) {
+    return null;
+  }
+  if (issuesMetaError) {
+    return <UnknownError error="Failed Loading resource." />;
+  } else if (issuesMetaRes) {
+    dispatch(setIssuesMeta(issuesMetaRes.data));
+  }
 
   return (
     <SidebarProvider defaultOpen={false}>
       <AppSidebar userRoles={roles} onRoleChange={() => void 0} />
       <SidebarInset>
         {/* <div className="sticky top-0 bg-gradient-to-r from-blue-100 to-green-200"> */}
-        <header className="flex sticky top-0 z-11 min-h-14 p-4  backdrop-blur-3xl  bg-blue-600">
+        <header className="flex sticky top-0 z-11 min-h-14 p-4 backdrop-blur-3xl  bg-gradient-to-r from-blue-400 to-blue-600">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -170,7 +186,7 @@ export function DashboardLayout() {
         <div>
           <div className="flex flex-col lg:fixed lg:flex-row h-full pb-16">
             <div className="flex flex-3 flex-col gap-5 p-2 pt-0 lg:overflow-auto h-full">
-              <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 bg-gradient-to-r from-blue-100 to-blue-300  md:min-h-min">
+              <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 bg-gradient-to-r from-blue-100 to-blue-300 md:min-h-min">
                 <Outlet />
               </div>
               <footer>
@@ -205,7 +221,6 @@ export function CalendarDemo() {
 export function Dashboard() {
   const [{ name: role }, setRole] = useActiveRole();
   const [statsParams, setStatParams] = useState({}); // ({ priority: '' });
-  const dispatch = useDispatch();
   const {
     isPending: statsPending,
     error: statsError,
@@ -233,17 +248,9 @@ export function Dashboard() {
     queryKey: ["users"],
     queryFn: () => fetchUsers(),
   });
-  const {
-    error: issuesMetaError,
-    data: issuesMetaRes,
-    isFetching: issuesMetaFetching,
-  } = useQuery({
-    queryKey: ["issues", "meta"],
-    queryFn: () => fetchIssuesMeta(),
-  });
 
-  if (statsError || issuesMetaError || usersError || issuesMetaError) {
-    console.log({ statsError, issuesError, usersError, issuesMetaError });
+  if (statsError || usersError) {
+    console.log({ statsError, issuesError, usersError });
     return <UnknownError error="Failed Loading resource." />;
   } else if (statsFetching) {
     // return <>Fetching issues...</>;
@@ -253,8 +260,6 @@ export function Dashboard() {
 
   if (issuesFetching) {
     return null;
-  } else if (issuesMetaRes) {
-    dispatch(setIssuesMeta(issuesMetaRes.data));
   }
 
   const stats = {

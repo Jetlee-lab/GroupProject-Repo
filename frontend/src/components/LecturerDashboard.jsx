@@ -38,33 +38,30 @@ import {
 import { fetchIssues, paginate } from "@/lib/api";
 import CreateIssue from "@/components/issues/create-issue";
 import IssueTable from "./issues/issue-table"; // Importing Link component from react-router-dom for navigation
+import IssueStats from "./issues/IssueStats";
 
 // import issueData from "./issues/data.json";
 
 const LecturerDashboard = ({ stats, issues, users }) => {
-
   return (
-    <div className="p-4">
-      {/* <h1 className="text-2xl font-bold mb-4">Lecturer Dashboard</h1>{" "} */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> */}
-      <div className="mt-4 text-left">
-        <Link to="/dashboard/lecturer-reports">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            View reports and Edit Issues
+    <div className="flex flex-col gap-14 space-y-6 px-4 py-4 rounded-lg">
+      <LecturerDashboardOld />
+      <div className="text-xl mb-2">
+        <h4 className="font-bold w-full pb-4 text-center">Assigned Issues</h4>
+        <IssueTable />
+        <CreateIssue />
+      </div>
+      <div className="mt-4 text-left ">
+        <Link to="/dashboard/student-reports">
+          <button className="bg-blue-500 text-white px-4 py-2 cursor-pointer rounded hover:bg-blue-600">
+            View reports and Add New Issues
           </button>
         </Link>
       </div>
-      <div className="overflow-x-scroll">
-      {/* <IssueTable data={issueData} /> */}
-      <IssueTable />
-      </div>
-      {/* <LecturerDashboardOld /> */}
-      <CreateIssue />
     </div>
     // </div>
   );
 };
-
 
 const LecturerDashboardOld = () => {
   // State hook to store the mIssues and set them
@@ -163,6 +160,24 @@ const LecturerDashboardOld = () => {
 
   return (
     <>
+      {/* Quick Links Section */}
+      <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
+        <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
+        <div className="flex space-x-4">
+          <Link
+            to="/dashboard/Settings"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Settings
+          </Link>
+          <Link
+            to="/dashboard/notifications"
+            className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition"
+          >
+            Notifications
+          </Link>
+        </div>
+      </div>
       <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
         <h2 className="text-xl font-semibold mb-4">Courses You Teach</h2>
         <button
@@ -223,307 +238,8 @@ const LecturerDashboardOld = () => {
           </tbody>
         </table>
       </div>
-      {/* Quick Links Section */}
-      <div className="bg-white p-6 rounded-lg shadow-md col-span-3">
-        <h2 className="text-xl font-semibold mb-4">Quick Links</h2>
-        <div className="flex space-x-4">
-          <Link
-            to="/dashboard/Settings"
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Settings
-          </Link>
-          <Link
-            to="/dashboard/notifications"
-            className="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition"
-          >
-            Notifications
-          </Link>
-        </div>
-      </div>
     </>
   );
 };
-
-// const data: Payment[] = [
-const data = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@example.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@example.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@example.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@example.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@example.com",
-  },
-];
-
-// export type Payment = {
-//   id: string
-//   amount: number
-//   status: "pending" | "processing" | "success" | "failed"
-//   email: string
-// }
-
-// export const columns: ColumnDef<Payment>[] = [
-const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-export function DataTableDemo() {
-  // const [sorting, setSorting] = React.useState<SortingState>([])
-  const [sorting, setSorting] = React.useState([]);
-  // const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-  const [columnFilters, setColumnFilters] = React.useState([]);
-  const [columnVisibility, setColumnVisibility] =
-    // React.useState<VisibilityState>({})
-    React.useState({});
-  const [rowSelection, setRowSelection] = React.useState({});
-
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
-  return (
-    <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          // value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          value={table.getColumn("email")?.getFilterValue() ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const LecturerDashboardM = DataTableDemo;
 
 export default LecturerDashboard; // Exporting the LecturerDashboard component

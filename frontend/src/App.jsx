@@ -11,7 +11,7 @@ import { useConfig } from "@/features/auth/hooks";
 import Provider from "./provider";
 import { Toaster } from "@/components/ui/sonner";
 
-const Landing = lazy(() => import("@/pages/landing"));
+const Landing = lazy(() => import("@/pages/Home"));
 // const HomePage = lazy(() => import("@/pages/HomePage"));
 const Dashboard = lazy(() => import("@/components/dashboard/Dashboard"));
 const Login = lazy(() => import("@/components/auth/Login"));
