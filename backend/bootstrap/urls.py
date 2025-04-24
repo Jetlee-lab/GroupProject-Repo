@@ -20,6 +20,7 @@ from django.conf import settings
 from django.views.generic import TemplateView
 from core.routers import urlpatterns as core_urls
 from core.viewsets.user import send_sms, send_email
+from django.conf import settings
 
 from rest_framework import routers
 
@@ -36,7 +37,7 @@ FRONTEND_EXCULDES = "|".join([
     'api-auth/',
     'dj-rest-auth/',
     'auth/',
-])
+] + ([settings.MEDIA_URL.lstrip('/')] if settings.MEDIA_URL.lstrip('/') else []))
 
 urlpatterns = core_urls + [
     path('api/', include(("api.urls", "api"), namespace="api")),

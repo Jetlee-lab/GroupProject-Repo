@@ -99,6 +99,9 @@ STATICFILES_DIRS = [
     os.path.join(STATIC_ROOT, "frontend"),
 ]
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'storage')
+MEDIA_URL = 'uploads/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

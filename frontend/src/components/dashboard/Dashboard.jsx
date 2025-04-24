@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/popover";
 import { Component, Outdent, CircleUserRound } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { ROLE_STUDENT, ROLE_LECTURER, ROLE_REGISTRAR } from "@/lib/constants"
 
 // const LandingPage = lazy(() => import("@/pages/LandingPage"));
 const LecturerDashboard = lazy(() => import("@/components/LecturerDashboard"));
@@ -66,6 +67,8 @@ import {
 import { Search } from "@/components/search";
 import { useDispatch } from "react-redux";
 import { setMeta as setIssuesMeta } from "@/redux/features/issuesSilce";
+import { DashboardFooter } from "@/components/footer";
+import Timeline from "@/components/timeline"
 
 const dashboardRoutes = [
   {
@@ -140,7 +143,7 @@ export function DashboardLayout() {
       <AppSidebar userRoles={roles} onRoleChange={() => void 0} />
       <SidebarInset>
         {/* <div className="sticky top-0 bg-gradient-to-r from-blue-100 to-green-200"> */}
-        <header className="flex sticky top-0 min-h-14 p-4 mb-2 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 backdrop-blur-3xl">
+        <header className="flex sticky top-0 z-11 min-h-14 p-4 mb-2 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 backdrop-blur-3xl">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -163,15 +166,19 @@ export function DashboardLayout() {
             <RoleSwitcher role={role} onChange={switchRole} />
           </div>
         </header>
-        {/* <Separator orientation="horizontal" /> */}
+        <Separator orientation="horizontal" />
         <div>
-          <div className="flex flex-col lg:fixed lg:flex-row h-full">
+          <div className="flex flex-col lg:fixed lg:flex-row h-full pb-16">
             <div className="flex flex-3 flex-col gap-5 p-2 pt-0 lg:overflow-auto h-full">
               <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
                 <Outlet />
               </div>
+              <footer>
+                <DashboardFooter />
+              </footer>
             </div>
-            <div className="flex flex-1 p-5 pr-2 overflow-auto h-full">
+            <div className="flex flex-col gap-6 flex-1 p-5 pr-2 overflow-auto h-full">
+              <Timeline />
               <CalendarDemo />
             </div>
           </div>
@@ -269,11 +276,11 @@ export function Dashboard() {
     error: usersError,
   };
   switch (role) {
-    case "student":
+    case ROLE_STUDENT:
       return <StudentDashboard stats={stats} issues={issues} users={users} />;
-    case "lecturer":
+    case ROLE_LECTURER:
       return <LecturerDashboard stats={stats} issues={issues} users={users} />;
-    case "registrar":
+    case ROLE_REGISTRAR:
       return (
         <AcademicRegistrarDashboard
           stats={stats}

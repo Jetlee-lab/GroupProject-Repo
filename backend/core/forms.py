@@ -6,10 +6,10 @@ from .models import ReferenceToken
 
 class CustomSignupForm(forms.Form):
 	def signup(self, request, user, *args, **kwargs):
-		print("---CustomForm.signup()", {'request': request, 'user': user, 'post': request.POST,'data': request.body, 
-		'get': request.GET,
-		'args': args, 'kwargs': kwargs
-		})
+		# print("---CustomForm.signup()", {'request': request, 'user': user, 'post': request.POST,'data': request.body, 
+		# 'get': request.GET,
+		# 'args': args, 'kwargs': kwargs
+		# })
 		
 		fields = request.POST.dict()
 		if not fields:

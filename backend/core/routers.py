@@ -4,7 +4,6 @@
 #     ActiveSessionViewSet,
 #     LogoutViewSet,
 # )
-import os
 from django.urls import path
 from django.conf import settings
 from rest_framework import routers
@@ -24,7 +23,7 @@ router = routers.SimpleRouter(trailing_slash=False)
 #
 # router.register(r"logout", LogoutViewSet, basename="logout")
 
-attachment_url = os.path.join(settings.MEDIA_URL.strip('/'), 'attachments/<uuid:file>')
+attachment_url = settings.MEDIA_URL.lstrip('/') + 'attachments/<uuid:file>'
 
 urlpatterns = [
     *router.urls,

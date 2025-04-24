@@ -4,6 +4,9 @@ from rest_framework import serializers
 from ..models import Issue, IssueLog, Category, Attachment, Issue, Role
 from .common import DynamicFieldsModelSerializer
 from django.core.serializers.json import DjangoJSONEncoder
+from django.utils import timezone
+import json
+
 # from django.core.serializers import serialize
 
 # class CategoriesListingField(serializers.RelatedField):
@@ -26,7 +29,7 @@ class IssueSerializer(serializers.ModelSerializer):
     
     @transaction.atomic
     def create(self, validated_data):
-        attachments = validated_data.pop('attachments', None)
+        print({"validated_data":validated_data, "context":self.context})
         categories = validated_data.pop('categories', None)
 
         issue = Issue.objects.create(**validated_data)
@@ -34,23 +37,22 @@ class IssueSerializer(serializers.ModelSerializer):
         if categories is not None:
             issue.categories.set(categories)
         
-        if attachments is not None:
-            if not isinstance(attachments, list):
-                attachments = [attachments]
+        for attachment in self.context['request'].FILES.getlist('attachments'):
+            Attachment.objects.create(
+                issue=issue,
+                file=attachment,
+                name=attachment.name,
+                size=attachment.size,
+                type=attachment.content_type,
+            )
 
-            objs = []
-            for attachment in attachmets:
-                objs.append(
-                    Attachment.objects.create(issue=issue, **attachment)
-                )
-            # issue.attachments.add(*objs)
-            issue.attachments.set(objs)
         return issue
 
     def update(self, instance, validated_data):
 
         log_kwargs = {
-            k: tuple(getattr(instance, k).values()) if k == 'attachments' else getattr(instance, k)
+            k: json.loads(DjangoJSONEncoder().encode([*getattr(instance, k).values()]))
+            if k == 'attachments' else getattr(instance, k)
             for k in ['assignee', 'status', 'priority', 'attachments', 'categories', 'escalation_level']
         } 
 
@@ -59,6 +61,7 @@ class IssueSerializer(serializers.ModelSerializer):
 
         for field, value in validated_data.items():
             setattr(instance, field, value)
+        instance.updated_at = timezone.now()
         instance.save()
 
         actor = self.context['request'].user

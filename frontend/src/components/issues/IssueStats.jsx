@@ -4,7 +4,7 @@ import { useQuery } from "@/hooks";
 import { fetchIssues } from "@/lib/api";
 import {
   STATUS_CLOSED,
-  STATUS_OPEN,
+  STATUS_PENDING,
   STATUS_ESCALATED,
   STATUS_RESOLVED,
   STATUS_INREVIEW,
@@ -31,7 +31,7 @@ const config = {
     // titleClasses: "text-blue-400",
     countClasses: "text-blue-400",
   },
-  [STATUS_OPEN]: {
+  [STATUS_PENDING]: {
     title: "Open",
     // cardClasses: "bg-gray-40 border-gray-200",
     // titleClasses: "text-gray-400",

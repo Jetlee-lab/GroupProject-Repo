@@ -13,7 +13,7 @@ class LoginViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print('\nCOOKIES:', request.COOKIES)
+        # print('\nCOOKIES:', request.COOKIES)
 
         serializer.is_valid(raise_exception=True)
         #login(request, user)

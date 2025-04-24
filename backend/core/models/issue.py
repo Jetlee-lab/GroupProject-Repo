@@ -18,14 +18,14 @@ class Issue(models.Model):
         ordering = ('-created_at', )
     
     # TODO: Can be open and inreview
-    STATUS_OPEN = 1
+    STATUS_PENDING = 1
     STATUS_INREVIEW = 2
     STATUS_ESCALATED = 4
     STATUS_RESOLVED = 8
     STATUS_REJECTED = 16
     STATUS_CLOSED = 32
     STATUS_CHOICES = {
-        STATUS_OPEN: 'open',
+        STATUS_PENDING: 'pending',
         STATUS_INREVIEW: 'in_review',
         STATUS_ESCALATED: 'escalated',
         STATUS_RESOLVED: 'resolved',
@@ -57,10 +57,10 @@ class Issue(models.Model):
     assignee = models.ForeignKey(Staff,
         related_name='assigned_issues', null=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=128, blank=False)
-    description = models.CharField(max_length=256, null=True, blank=False, default='')
+    description = models.CharField(max_length=256, null=True, blank=False)
     categories = models.ManyToManyField(Category, blank=False)
     status = models.PositiveSmallIntegerField(
-        choices=STATUS_CHOICES, default=STATUS_OPEN
+        choices=STATUS_CHOICES, default=STATUS_PENDING
     )
     priority = models.PositiveSmallIntegerField(
         choices=PRIORITY_CHOICES, default=PRIOTITY_LOW
@@ -68,7 +68,7 @@ class Issue(models.Model):
     escalation_level = models.PositiveSmallIntegerField(
         choices=ESCALATION_CHOICES, default=ESCALATION_L0
     )
-    notes = models.TextField(max_length=4096, null=True, blank=False, default='')
+    notes = models.TextField(max_length=4096, null=True, blank=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)
 
@@ -121,12 +121,12 @@ class Attachment(models.Model):
     type = models.CharField(max_length=128, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
-        # TODO: Check for filetype (python-magic)
-        if self.file:
-            self.name = self.file.name
-            self.size = self.file.size
-            super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     # TODO: Check for filetype (python-magic)
+    #     if self.file:
+    #         self.name = self.file.name
+    #         self.size = self.file.size
+    #         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
@@ -146,7 +146,7 @@ class IssueLog(models.Model):
     )
     categories = models.ManyToManyField(Category, related_name='+', blank=False)
     status = models.PositiveSmallIntegerField(
-        choices=Issue.STATUS_CHOICES, default=Issue.STATUS_OPEN
+        choices=Issue.STATUS_CHOICES, default=Issue.STATUS_PENDING
     )
     priority = models.PositiveSmallIntegerField(
         choices=Issue.PRIORITY_CHOICES, default=Issue.PRIOTITY_LOW

@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
+import { format } from "date-fns";
 import {
   DndContext,
   KeyboardSensor,
@@ -11,10 +12,15 @@ import {
   useSensors,
   // type DragEndEvent,
   // type UniqueIdentifier,
-} from "@dnd-kit/core"
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
-import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
+} from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   // type ColumnDef,
   // type ColumnFiltersState,
@@ -29,7 +35,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 import {
   CheckCircle2Icon,
   ChevronDownIcon,
@@ -49,17 +55,23 @@ import {
   Loader,
   CircleEllipsis,
   Lock,
-} from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-import { toast } from "sonner"
-import { z } from "zod"
-import { useQuery, useMutation } from "@tanstack/react-query"
+  Trash2,
+  Ellipsis,
+} from "lucide-react";
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { toast } from "sonner";
+import { z } from "zod";
+import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
 
-import { useIsMobile } from "@/hooks/use-mobile"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Checkbox } from "@/components/ui/checkbox"
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -67,11 +79,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetClose,
@@ -81,15 +99,66 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 import { useIssuesMeta } from "@/hooks";
-import { queryClient } from "@/lib/client"
-import { fetchUsers, paginate, updateIssue, deleteIssue } from "@/lib/api"
-import { fromTheme } from "tailwind-merge"
-import { MultiSelect } from "@/components/muti-select"
+import { queryClient } from "@/lib/client";
+import {
+  fetchUsers,
+  fetchIssues,
+  paginate,
+  updateIssue,
+  deleteIssue,
+} from "@/lib/api";
+import { fromTheme, twMerge } from "tailwind-merge";
+import { MultiSelect } from "@/components/muti-select";
+import { Description } from "@radix-ui/react-dialog";
+import {
+  TitleInput,
+  DescriptionInput,
+  CreatorInput,
+  AssigneeInput,
+  StatusInput,
+  PriorityInput,
+  EscalationInput,
+  CategoriesInput,
+  NotesInput,
+} from "./issue-fields";
+import { useActiveRole } from "@/hooks";
+import { statusMap, priorityMap } from "@/lib/constants";
+import { ROLE_STUDENT, ROLE_LECTURER } from "@/lib/constants";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
+
+const CreateIssueForm = React.lazy(() =>
+  import("@/components/issues/create-issue")
+);
+
+export function DialogDemo() {
+  return <></>;
+}
 
 // export const schema = z.object({
 //   id: z.number(),
@@ -105,7 +174,7 @@ import { MultiSelect } from "@/components/muti-select"
 function DragHandle({ id }) {
   const { attributes, listeners } = useSortable({
     id,
-  })
+  });
 
   return (
     <Button
@@ -118,40 +187,14 @@ function DragHandle({ id }) {
       <GripVerticalIcon className="size-3 text-muted-foreground" />
       <span className="sr-only">Drag to reorder</span>
     </Button>
-  )
-}
-
-const statusMap = {
-  resolved: {
-    icon: CheckCircle2Icon,
-    color: 'green',
-  },
-  open: {
-    icon: Loader,
-  },
-  escalated: {
-    icon: ArrowUp,
-    color: 'orange',
-  },
-  rejected: {
-    icon: CircleX,
-    color: 'red',
-  },
-  in_review: {
-    icon: CircleEllipsis,
-    color: 'blue',
-  },
-  closed: {
-    icon: Lock,
-    color: 'gray',
-  },
+  );
 }
 
 function DraggableRow({ row, ...others }, ...args) {
   // console.log("DragbleRow",{row, others, args})
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.id,
-  })
+  });
 
   return (
     <TableRow
@@ -165,30 +208,61 @@ function DraggableRow({ row, ...others }, ...args) {
       }}
     >
       {row.getVisibleCells().map((cell) => (
-        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+        <TableCell key={cell.id}>
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </TableCell>
       ))}
     </TableRow>
-  )
+  );
 }
 
-export function DataTable({
-  data: initialData,
-}) {
-  const [data, setData] = React.useState(() => initialData)
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [columnVisibility, setColumnVisibility] = React.useState({})
-  const [columnFilters, setColumnFilters] = React.useState([])
-  const [sorting, setSorting] = React.useState([])
-  const [pagination, setPagination] = React.useState({
+export function DataTable({ data: initialData, onLoadMore, count }) {
+  const [data, setData] = React.useState(() => initialData);
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [columnVisibility, setColumnVisibility] = React.useState({});
+  const [columnFilters, setColumnFilters] = React.useState([]);
+  const [sorting, setSorting] = React.useState([]);
+  const [pagination, setPagination] = React.useState(() => ({
     pageIndex: 0,
     pageSize: 10,
-  })
-  const sortableId = React.useId()
-  const sensors = useSensors(useSensor(MouseSensor, {}), useSensor(TouchSensor, {}), useSensor(KeyboardSensor, {}))
+  }));
+  const sortableId = React.useId();
+  const sensors = useSensors(
+    useSensor(MouseSensor, {}),
+    useSensor(TouchSensor, {}),
+    useSensor(KeyboardSensor, {})
+  );
+  const issueDeleteMutation = useMutation({
+    mutationFn: deleteIssue,
+    onSuccess: (data) => {
+      // queryClient.invalidateQueries({ queryKey: ['issues'] })
+      toast.success("Issue Deleted successfully");
+      // queryClient.invalidateQueries(["issues"])
+    },
+    onError: (error) => {
+      toast.error("Error deleting issue");
+      console.error("Error deleting issue", error);
+    },
+  });
 
-  const dataIds = React.useMemo(() => data?.map(({ id }) => id) || [], [data])
+  const dataIds = React.useMemo(() => data?.map(({ id }) => id) || [], [data]);
   // const users = queryClient.getQueryData(["users"])
   // const [isEditorOpen, setIsEditorOpen] = React.useState(undefined);
+  const [{ name: activeRole }] = useActiveRole();
+  let toSplice = [];
+
+  switch (activeRole) {
+    case ROLE_STUDENT:
+      toSplice = ["creator"];
+      break;
+    case ROLE_LECTURER:
+      toSplice = ["assignee"];
+      break;
+    default:
+      break;
+  }
+  // console.log({ initialData, data });
+
   const columns = [
     {
       id: "drag",
@@ -200,8 +274,13 @@ export function DataTable({
       header: ({ table }) => (
         <div className="flex items-center justify-center">
           <Checkbox
-            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")
+            }
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
             aria-label="Select all"
           />
         </div>
@@ -222,7 +301,7 @@ export function DataTable({
       accessorKey: "title",
       header: "Title",
       cell: ({ row }) => {
-        return <TableCellViewer item={row.original} />
+        return <TableCellViewer item={row.original} />;
       },
       enableHiding: false,
     },
@@ -231,7 +310,8 @@ export function DataTable({
       header: "Creator",
       cell: ({ row }) => (
         <div className="">
-            {"@"}{row.original.owner.username}
+          {"@"}
+          {row.original.owner.username}
         </div>
       ),
     },
@@ -239,13 +319,9 @@ export function DataTable({
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
-  
-        const status = statusMap[row.original.status]
-        
-        return <Badge variant="outline" className="flex gap-1 px-1.5 text-muted-foreground [&_svg]:size-3">
-          { status?.icon && <status.icon className={cn(status.color ? `text-${status.color}-500 dark:text-${status.color}-400` : null)} /> || <LoaderIcon />}
-          {row.original.status}
-        </Badge>
+        const status = statusMap[row.original.status];
+
+        return <StatusBadge status={row.original.status} className="text-xs" />;
       },
     },
     {
@@ -254,12 +330,12 @@ export function DataTable({
       cell: ({ row }) => (
         <form
           onSubmit={(e) => {
-            e.preventDefault()
+            e.preventDefault();
             toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
               loading: `Saving ${row.original.title}`,
               success: "Done",
               error: "Error",
-            })
+            });
           }}
         >
           <Label htmlFor={`${row.original.id}-target`} className="sr-only">
@@ -270,9 +346,7 @@ export function DataTable({
             defaultValue={row.original.target}
             id={`${row.original.id}-target`}
           /> */}
-          <Badge variant="outline" className="px-1.5 text-muted-foreground">
-            {row.original.priority}
-          </Badge>
+          <PriorityBadge priority={row.original.priority} className="text-xs" />
         </form>
       ),
     },
@@ -282,12 +356,12 @@ export function DataTable({
       cell: ({ row }) => (
         <form
           onSubmit={(e) => {
-            e.preventDefault()
+            e.preventDefault();
             toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
               loading: `Saving ${row.original.title}`,
               success: "Done",
               error: "Error",
-            })
+            });
           }}
         >
           <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
@@ -298,7 +372,7 @@ export function DataTable({
             defaultValue={row.original.priority}
             id={`${row.original.id}-limit`}
           /> */}
-          <Badge variant="outline" className="px-1.5 text-muted-foreground" >
+          <Badge variant="outline" className="px-1.5 text-muted-foreground">
             {row.original.escalation_level}
           </Badge>
         </form>
@@ -309,38 +383,47 @@ export function DataTable({
       header: "Assigned to",
       cell: ({ row, ...others }, ...args) => {
         // console.log("Assignee",{row, others, args})
-        const isAssigned = row.original.assignee !== null
-  
+        const isAssigned = row.original.assignee !== null;
+
         if (isAssigned) {
-          return `@${row.original.assignee.username}`
+          return `@${row.original.assignee.username}`;
         }
 
-        return <div className="font-display">N/A</div>
-  
+        return <div className="font-display text-xs">{"<"}Unassigned{">"}</div>;
+
         return (
           <>
             <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
               Reviewer
             </Label>
             <Select>
-              <SelectTrigger className="h-8 w-40" id={`${row.original.id}-reviewer`}>
+              <SelectTrigger
+                className="h-8 w-40"
+                id={`${row.original.id}-reviewer`}
+              >
                 <SelectValue placeholder="Assign reviewer" />
               </SelectTrigger>
               <SelectContent align="end">
                 <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                <SelectItem value="Jamik Tashpulatov">Jamik Tashpulatov</SelectItem>
+                <SelectItem value="Jamik Tashpulatov">
+                  Jamik Tashpulatov
+                </SelectItem>
               </SelectContent>
             </Select>
           </>
-        )
+        );
       },
     },
     {
       id: "actions",
-      cell: () => (
+      cell: ({ row, ...others }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex size-8 text-muted-foreground data-[state=open]:bg-muted" size="icon">
+            <Button
+              variant="ghost"
+              className="flex size-8 text-muted-foreground data-[state=open]:bg-muted"
+              size="icon"
+            >
               <MoreVerticalIcon />
               <span className="sr-only">Open menu</span>
             </Button>
@@ -350,16 +433,28 @@ export function DataTable({
             <DropdownMenuItem>Make a copy</DropdownMenuItem>
             <DropdownMenuItem>Favorite</DropdownMenuItem>
             <DropdownMenuSeparator /> */}
-            <DropdownMenuItem onClick={() => {}}>Delete</DropdownMenuItem>
+            <DropdownMenuItem
+              className="text-red-500"
+              onClick={() => handleDelete(row.original)}
+            >
+              <Trash2 className="text-red-500" /> Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
     },
-  ]
-  
+  ];
+
+  // console.log({
+  //   toSplice,
+  //   activeRole,
+  //   ...columns.map((c) => ({
+  //     [c.accessorKey]: !toSplice.includes(c.accessorKey),
+  //   })),
+  // });
   const table = useReactTable({
     data,
-    columns,
+    columns: columns.filter((c) => !toSplice.includes(c.accessorKey)),
     state: {
       sorting,
       columnVisibility,
@@ -380,26 +475,41 @@ export function DataTable({
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-  })
+    autoResetPageIndex: false,
+  });
+
+  // console.log({ data, initialData, ...pagination });
+  React.useEffect(() => {
+    if (data === initialData) return;
+    setData([...data, ...initialData]);
+  }, [initialData]);
 
   function handleDragEnd(event) {
-    const { active, over } = event
+    const { active, over } = event;
     if (active && over && active.id !== over.id) {
       setData((data) => {
-        const oldIndex = dataIds.indexOf(active.id)
-        const newIndex = dataIds.indexOf(over.id)
-        return arrayMove(data, oldIndex, newIndex)
-      })
+        const oldIndex = dataIds.indexOf(active.id);
+        const newIndex = dataIds.indexOf(over.id);
+        return arrayMove(data, oldIndex, newIndex);
+      });
     }
   }
 
+  const handleDelete = (issue) => {
+    console.log({ issue });
+    issueDeleteMutation.mutate(issue.id);
+  };
+
   return (
-    <Tabs defaultValue="outline" className="flex w-full flex-col justify-start gap-6">
+    <Tabs
+      defaultValue="outline"
+      className="bg-white rounded-lg flex w-full flex-col justify-start gap-6 p-2"
+    >
       <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <Select defaultValue="outline">
+        {/* <Select defaultValue="outline">
           <SelectTrigger className="@4xl/main:hidden flex w-fit" id="view-selector">
             <SelectValue placeholder="Select a view" />
           </SelectTrigger>
@@ -409,10 +519,10 @@ export function DataTable({
             <SelectItem value="key-personnel">Key Personnel</SelectItem>
             <SelectItem value="focus-documents">Focus Documents</SelectItem>
           </SelectContent>
-        </Select>
-        <TabsList className="@4xl/main:flex hidden">
-          <TabsTrigger value="outline">Outline</TabsTrigger>
-          <TabsTrigger value="past-performance" className="gap-1">
+        </Select> */}
+        <TabsList className="@4xl/main:flex">
+          <TabsTrigger value="outline">Overview</TabsTrigger>
+          {/* <TabsTrigger value="past-performance" className="gap-1">
             Past Performance{" "}
             <Badge
               variant="secondary"
@@ -430,7 +540,7 @@ export function DataTable({
               2
             </Badge>
           </TabsTrigger>
-          <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
+          <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger> */}
         </TabsList>
         <div className="flex items-center gap-2">
           <DropdownMenu>
@@ -445,28 +555,53 @@ export function DataTable({
             <DropdownMenuContent align="end" className="w-56">
               {table
                 .getAllColumns()
-                .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
+                .filter(
+                  (column) =>
+                    typeof column.accessorFn !== "undefined" &&
+                    column.getCanHide()
+                )
                 .map((column) => {
                   return (
                     <DropdownMenuCheckboxItem
                       key={column.id}
                       className="capitalize"
                       checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant="outline" size="sm">
-            <PlusIcon />
-            <span className="hidden lg:inline">Add Section</span>
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <PlusIcon />
+                <span className="hidden lg:inline">New Issue</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="md:min-w-[756px] md:max-h-[552px] m-4 overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="font-bold">Create Issue</DialogTitle>
+                <DialogDescription />
+              </DialogHeader>
+              <div className="grid gap-4">
+                <CreateIssueForm />
+              </div>
+              <DialogFooter>
+                {/* <Button type="submit">Save changes</Button> */}
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-      <TabsContent value="outline" className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6">
+      <TabsContent
+        value="outline"
+        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+      >
         <div className="overflow-hidden rounded-lg border">
           <DndContext
             collisionDetection={closestCenter}
@@ -484,23 +619,32 @@ export function DataTable({
                         <TableHead key={header.id} colSpan={header.colSpan}>
                           {header.isPlaceholder
                             ? null
-                            : flexRender(header.column.columnDef.header, header.getContext())}
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
                         </TableHead>
-                      )
+                      );
                     })}
                   </TableRow>
                 ))}
               </TableHeader>
               <TableBody className="**:data-[slot=table-cell]:first:w-8">
                 {table.getRowModel().rows?.length ? (
-                  <SortableContext items={dataIds} strategy={verticalListSortingStrategy}>
+                  <SortableContext
+                    items={dataIds}
+                    strategy={verticalListSortingStrategy}
+                  >
                     {table.getRowModel().rows.map((row) => (
                       <DraggableRow key={row.id} row={row} />
                     ))}
                   </SortableContext>
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center text-semibold"
+                    >
                       No results.
                     </TableCell>
                   </TableRow>
@@ -511,8 +655,8 @@ export function DataTable({
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">
-            {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-            selected.
+            {table.getFilteredSelectedRowModel().rows.length} of{" "}
+            {table.getFilteredRowModel().rows.length} row(s) selected.
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
@@ -522,14 +666,16 @@ export function DataTable({
               <Select
                 value={`${table.getState().pagination.pageSize}`}
                 onValueChange={(value) => {
-                  table.setPageSize(Number(value))
+                  table.setPageSize(Number(value));
                 }}
               >
                 <SelectTrigger className="w-20" id="rows-per-page">
-                  <SelectValue placeholder={table.getState().pagination.pageSize} />
+                  <SelectValue
+                    placeholder={table.getState().pagination.pageSize}
+                  />
                 </SelectTrigger>
                 <SelectContent side="top">
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
+                  {[5, 10, 20, 30, 40, 50].map((pageSize) => (
                     <SelectItem key={pageSize} value={`${pageSize}`}>
                       {pageSize}
                     </SelectItem>
@@ -537,10 +683,34 @@ export function DataTable({
                 </SelectContent>
               </Select>
             </div>
+            {/* <div className="flex w-fit items-center justify-center text-sm font-medium"> */}
+            {/* </div> */}
             <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
             </div>
             <div className="ml-auto flex items-center gap-2 lg:ml-0">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="size-8"
+                    onClick={() => {
+                      const hasMore = onLoadMore()
+                      if (!hasMore){
+                        toast.info("No more data to load!")
+                      }
+                    }}
+                  >
+                    <span className="sr-only">Load more {`${data.length} of ${count}`} results</span>
+                    <Ellipsis />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className="bg-blue-500 p-1 text-white text-xs rounded-md">
+                  Load More {`${data.length} of ${count}`} results
+                </TooltipContent>
+              </Tooltip>
+
               <Button
                 variant="outline"
                 className="hidden h-8 w-8 p-0 lg:flex"
@@ -584,17 +754,23 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="past-performance" className="flex flex-col px-4 lg:px-6">
+      <TabsContent
+        value="past-performance"
+        className="flex flex-col px-4 lg:px-6"
+      >
         <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
       </TabsContent>
       <TabsContent value="key-personnel" className="flex flex-col px-4 lg:px-6">
         <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
       </TabsContent>
-      <TabsContent value="focus-documents" className="flex flex-col px-4 lg:px-6">
+      <TabsContent
+        value="focus-documents"
+        className="flex flex-col px-4 lg:px-6"
+      >
         <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
       </TabsContent>
     </Tabs>
-  )
+  );
 }
 
 const chartData = [
@@ -604,7 +780,7 @@ const chartData = [
   { month: "April", desktop: 73, mobile: 190 },
   { month: "May", desktop: 209, mobile: 130 },
   { month: "June", desktop: 214, mobile: 140 },
-]
+];
 
 const chartConfig = {
   desktop: {
@@ -615,105 +791,73 @@ const chartConfig = {
     label: "Mobile",
     color: "var(--primary)",
   },
-}
+};
 
 function TableCellViewer({ item }) {
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile();
   // const [open, setOpen] = React.useState(undefined);
-  const issuesMeta = useIssuesMeta()
-  const {
-    error: studentsError,
-    data: studentsRes,
-    isFetching: studentsFetching,
-  } = useQuery({
-    queryKey: ["users", "students"],
-    queryFn: () => fetchUsers({endpoint: "students", params: paginate(0, 100)}),
-  });
-  const {
-    error: lecturersError,
-    data: lecturersRes,
-    isFetching: lecturersFetching,
-  } = useQuery({
-    queryKey: ["users", "lectures"],
-    queryFn: () => fetchUsers({endpoint: 'lecturers', params: paginate(0, 100)}),
-  });
+  const studentsRes = queryClient.getQueryData(["users", "students"]);
+  const lecturersRes = queryClient.getQueryData(["users", "lecturers"]);
+  const issuesMeta = useIssuesMeta();
   const issueMutation = useMutation({
-      mutationFn: updateIssue,
-      onSuccess: (data) => {
-        // queryClient.invalidateQueries({ queryKey: ['issues'] })
-        toast.success("Issue updated successfully")
-        // queryClient.invalidateQueries(["issues"])
-      },
-      onError: (error) => {
-        toast.error("Error updating issue")
-        console.error("Error updating issue", error)
-      },
+    mutationFn: updateIssue,
+    onSuccess: (data) => {
+      // queryClient.invalidateQueries({ queryKey: ['issues'] })
+      toast.success("Issue updated successfully");
+      queryClient.invalidateQueries(["issues"])
+      // item = data.data
+      console.log({item,data: data.data})
+    },
+    onError: (error) => {
+      toast.error("Error updating issue");
+      console.error("Error updating issue", error);
+    },
   });
+  // console.log({
+  //   item,
+  //   issuesMeta,
+  //   get: issuesMeta.statuses.find((s) => s.name === item.status),
+  // });
+  const [{ name: activeRole }] = useActiveRole();
 
-  // const [cellData, setCellData] = React.useState({
-  //   title: item.title,
-  //   description: item.description,
-  //   owner: item.owner.id,
-  //   assignee: item.assignee?.id,
-  //   status: item.status,
-  //   priority: item.priority,
-  //   escalation_level: item.escalation_level,
-  //   notes: item.notes
-  //   // categories:
-  // })
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target
-  //   console.log({name, value})
-  //   setCellData({...cellData, [name]: value})
-  //   // cellData[name] = value
-  // }
-
-  // const formRef = React.useRef(null)
+  const dataRef = React.useRef({
+    title: item.title,
+    description: item.description,
+    owner: item.owner.id,
+    assignee: item.assignee?.id || null,
+    status: issuesMeta.statuses.find((s) => s.name === item.status).id,
+    priority: issuesMeta.priorities.find((p) => p.name === item.priority).id,
+    escalation_level: issuesMeta.escalation_levels.find(
+      (l) => l.name === item.escalation_level
+    ).id,
+    categories: item.categories.map((c) => String(c.id)),
+    notes: item.notes,
+  });
 
   const handleSubmit = (formData) => {
     // e.preventDefault()
     // e.stopPropagation()
     // const formData = new FormData(e.target)
-    const data = Object.fromEntries(formData.entries())
-    data.id = item.id
-    if (data.assignee === 'null') {
-      data.assignee = null
-    }
-    if (data.owner === 'null') {
-      data.owner = null
-    }
-    // console.log({categories: data.categories})
-    data.categories = data.categories.split(',')
+    const data = dataRef.current;
 
-    if (data.description === "" && item.description === null) {
-      data.description = null
-    }
-    if (data.notes === "" && item.notes === null) {
-      data.notes = null
-    }
+    console.log({ data });
+    issueMutation.mutate({ ...data, id: item.id });
+  };
 
-    issueMutation.mutate(data)
-  }
-  const [selectedCategotries, setSelectedCategories] = React.useState(item.categories.map((category) => String(category.id)));
-
-  const frameworksList = issuesMeta.categories.map((category) => ({
-    value: String(category.id),
-    label: category.name,
-    icon: LoaderIcon,
-  }))
-  
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="link" className="w-fit px-0 text-left text-foreground whitespace-break-spaces line-clamp-1 h-8">
+        <Button
+          variant="link"
+          className="w-fit px-0 text-left text-foreground whitespace-break-spaces line-clamp-1 h-8"
+        >
           {item.title}
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="flex flex-col">
         <SheetHeader className="gap-1">
-          <SheetTitle>{item.header}</SheetTitle>
-          <SheetDescription>Issue editor.</SheetDescription>
+          <SheetTitle>Issue Details</SheetTitle>
+          <SheetDescription>You can edit this issue here.</SheetDescription>
         </SheetHeader>
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto py-2 px-4 text-sm">
           {!isMobile && (
@@ -757,122 +901,124 @@ function TableCellViewer({ item }) {
               </ChartContainer>
               <Separator /> */}
               <div className="grid gap-2">
-                <div className="flex gap-2 font-medium leading-none justify-center">
-                  View / Edit Issue
+                <div className="flex flex-col gap-2 font-medium leading-none justify-center">
+                  <div className="flex gap-4">
+                    <span>Created on:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span className="font-normal text-xs">
+                      {format(
+                        new Date(item.created_at),
+                        "MMM, do yyyy - H:m:s aa"
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex gap-4">
+                    <span>Last Updated:</span>
+                    <span className="font-normal text-xs">
+                      {item.updated_at
+                        ? format(
+                            new Date(item.created_at),
+                            "MMM, do yyyy - H:m:s aa"
+                          )
+                        : "Never"}
+                    </span>
+                  </div>
                 </div>
               </div>
               <Separator />
             </>
           )}
-          <form id="issue-form" className="flex flex-col gap-4" action={handleSubmit}>
+          <form
+            id="issue-update-form"
+            className="flex flex-col gap-6"
+            action={handleSubmit}
+          >
             <div className="flex flex-col gap-3">
-              <Label htmlFor="title">Title</Label>
-              <Input name="title" id="title" defaultValue={item.title} />
+              <TitleInput dataRef={dataRef} />
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="description">Description</Label>
-              <Input name="description" id="description" type="textarea" defaultValue={String(item.description)} />
+              <DescriptionInput dataRef={dataRef} />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="owner">Creator</Label>
-                  <Select name="owner" defaultValue={String(item.owner.id)}>
-                    <SelectTrigger id="owner" className="w-full">
-                      <SelectValue placeholder="Select a reviewer" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      { studentsRes?.data.length > 0
-                        && studentsRes.data.map((creator, i) => <SelectItem value={String(creator.id)} key={i}>@{creator.username}</SelectItem>)
-                        || <p>No Students</p>
-                      }
-                    </SelectContent>
-                  </Select>
-              </div>
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="reviewer">Assignee</Label>
-                <Select name="assignee" defaultValue={String(item.assignee ? item.assignee.id  : 'null')}>
-                  <SelectTrigger id="assignee" className="w-full">
-                    <SelectValue placeholder="Select a assignee" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {/* <SelectItem value="null">{"<"}{ Unassigned }{">"}</SelectItem> */}
-                    {item.status === "escalated" ? <SelectItem value={String(item.assignee.id)}>{"<"}Registrar{">"}</SelectItem> : <SelectItem value="null">{"<"}Unassigned{">"}</SelectItem> }
-                    { lecturersRes?.data.length > 0
-                        && lecturersRes.data.map((assignee, i) => <SelectItem value={String(assignee.id)} key={i}>@{assignee.username}</SelectItem>)
-                        || <p>No Lecturers</p>
-                    }
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="status">Status</Label>
-                <Select name="status" defaultValue={String(issuesMeta.statuses.find(s => s.name === item.status)?.id)}>
-                  <SelectTrigger id="status" className="w-full">
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    { issuesMeta.statuses.map((status, i) => <SelectItem value={String(status.id)} key={i}>{status.name}</SelectItem>) }
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="priority">Priority</Label>
-                <Select name="priority" defaultValue={String(issuesMeta.priorities.find(p => p.name === item.priority)?.id)} >
-                  <SelectTrigger id="priority" className="w-full">
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    { issuesMeta.priorities.map((priority, i) => <SelectItem value={String(priority.id)} key={i}>{priority.name}</SelectItem>) }
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="escalation">Escalation Level</Label>
-                <Select name="escalation_level" defaultValue={String(issuesMeta.escalation_levels.find(l => l.name === item.escalation_level)?.id)} >
-                  <SelectTrigger id="escalation" className="w-full">
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    { issuesMeta.escalation_levels.map((l, i) => <SelectItem value={String(l.id)} key={i}>{l.name}</SelectItem>) }
-                  </SelectContent>
-                </Select>
-              </div>
-              </div>
-              {/* <div className="grid grid-cols-2 gap-4"> */}
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="type">Categories</Label>
-                {/* <div className="p-4 max-w-xl"> */}
-                  <MultiSelect
-                    options={issuesMeta.categories.map((category) => ({
-                      value: String(category.id),
-                      label: category.name,
-                      // icon: LoaderIcon,
-                    }))}
-                    onValueChange={setSelectedCategories}
-                    defaultValue={selectedCategotries}
-                    placeholder="Select categories"
-                    variant="inverted"
-                    animation={2}
-                    maxCount={3}
+            {(activeRole !== ROLE_STUDENT && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3">
+                  <CreatorInput
+                    creators={studentsRes?.data}
+                    dataRef={dataRef}
                   />
-                  <input hidden defaultValue={selectedCategotries} name="categories" />
-              {/* </div> */}
+                </div>
+                <div className="flex flex-col gap-3">
+                  <AssigneeInput
+                    assignees={lecturersRes?.data}
+                    item={item}
+                    dataRef={dataRef}
+                  />
+                </div>
               </div>
-            {/* </div> */}
-            
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="notes">Notes</Label>
-              <Input name="notes" id="notes" type="textarea" defaultValue={(item.notes || '') + ''} />
+            )) ||
+              null}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-3">
+                {(activeRole === ROLE_STUDENT && (
+                  <>
+                    <Label htmlFor="status" className="font-semibold">
+                      Status
+                    </Label>
+                    <StatusBadge status={item.status} className="p-2" />
+                  </>
+                )) || (
+                  <StatusInput
+                    statuses={issuesMeta.statuses}
+                    dataRef={dataRef}
+                  />
+                )}
+              </div>
+              <div className="flex flex-col gap-3">
+                {(activeRole === ROLE_STUDENT && (
+                  <>
+                    <Label htmlFor="status" className="font-semibold">
+                      Priority
+                    </Label>
+                    <PriorityBadge priority={item.priority} className="p-2" />
+                  </>
+                )) || (
+                  <PriorityInput
+                    priorities={issuesMeta.priorities}
+                    dataRef={dataRef}
+                  />
+                )}
+              </div>
             </div>
-            {/* <Button className="w-full" type="submit" form="issue-form">Submit sdhdg</Button> */}
+            {(activeRole !== ROLE_STUDENT && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3">
+                  <EscalationInput
+                    escalationLevels={issuesMeta.escalation_levels}
+                    dataRef={dataRef}
+                  />
+                </div>
+              </div>
+            )) ||
+              null}
+            {/* <div className="grid grid-cols-2 gap-4"> */}
+            <div className="flex flex-col gap-3">
+              {/* <div className="p-4 max-w-xl"> */}
+              <CategoriesInput
+                categories={issuesMeta.categories}
+                dataRef={dataRef}
+              />
+              {/* </div> */}
+            </div>
+            {/* </div> */}
+
+            <div className="flex flex-col gap-3">
+              <NotesInput notes={item.notes} dataRef={dataRef} />
+            </div>
           </form>
         </div>
         <SheetFooter className="mt-auto flex gap-2 sm:flex-col sm:space-x-0">
-          <Button className="w-full" type="submit" form="issue-form">Submit</Button>
+          <Button className="w-full" type="submit" form="issue-update-form">
+            Submit
+          </Button>
           <SheetClose asChild>
             <Button variant="outline" className="w-full">
               Done
@@ -881,7 +1027,136 @@ function TableCellViewer({ item }) {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
 
-export default DataTable;
+export function StatusBadge({
+  status,
+  className,
+  variant = "outline",
+  ...props
+}) {
+  const statusObj = statusMap[status];
+
+  return (
+    <Badge
+      variant="outline"
+      className={twMerge(
+        "flex gap-1 px-1.5 text-muted-foreground [&_svg]:size-3 font-semibold text-sm",
+        `bg-${statusObj.color}-100 text-${statusObj.color}-600`,
+        className
+      )}
+      {...props}
+    >
+      {(statusObj?.icon && (
+        <statusObj.icon
+          className={cn(
+            statusObj.color
+              ? `text-${statusObj.color}-500 dark:text-${statusObj.color}-400`
+              : null
+          )}
+        />
+      )) || <LoaderIcon />}
+      {status}
+    </Badge>
+  );
+}
+
+export function PriorityBadge({
+  priority,
+  className,
+  variant = "outline",
+  ...props
+}) {
+  const priorityObj = priorityMap[priority];
+
+  return (
+    <Badge
+      variant={variant}
+      className={twMerge(
+        "flex gap-1 px-1.5 text-muted-foreground [&_svg]:size-3 font-semibold text-sm",
+        className
+      )}
+    >
+      {(priorityObj?.icon && (
+        <priorityObj.icon
+          className={cn(
+            priorityObj.color
+              ? `text-${priorityObj.color}-500 dark:text-${priorityObj.color}-400`
+              : null
+          )}
+        />
+      )) || <LoaderIcon />}
+      {priority}
+    </Badge>
+  );
+}
+
+export default function IssuesTable() {
+  const [page, setPage] = React.useState(0);
+  const [size,] =React.useState(100)
+  const { status, data, error, isFetching, isPlaceholderData, isSuccess } =
+    useQuery({
+      queryKey: ["issues", page],
+      queryFn: () => fetchIssues({ params: paginate(page, size) }),
+      placeholderData: keepPreviousData,
+      keepPreviousData:true,
+      // staleTime: 5000,
+    });
+  queryClient.prefetchQuery({
+    queryKey: ["users", "students"],
+    queryFn: () =>
+      fetchUsers({ endpoint: "students", params: paginate(0, 100) }),
+  });
+  queryClient.prefetchQuery({
+    queryKey: ["users", "lectures"],
+    queryFn: () =>
+      fetchUsers({ endpoint: "lecturers", params: paginate(0, 100) }),
+  });
+  const deferredData = React.useDeferredValue(data, data)
+
+  // console.log({ status, data, error });
+  const hasMore = !!deferredData?.meta.pagination.next;
+  // console.log({ page, ...paginate(page, 1), hasMore, data: data?.data });
+
+  // Prefetch the next page!
+  React.useEffect(() => {
+    // console.log({ isPlaceholderData, hasMore, meta: data?.meta.pagination });
+    if (!isPlaceholderData && hasMore) {
+      queryClient.prefetchQuery({
+        queryKey: ["issues", page + 1],
+        queryFn: () => fetchIssues({ params: paginate(page + 1, size) }),
+      });
+    }
+  }, [deferredData, isPlaceholderData, page]);
+
+  const handleLoadMore = () => {
+    setPage((old) => (hasMore ? old + 1 : old));
+
+    return hasMore;
+  };
+
+  if (!deferredData)
+    return null
+  console.log({data, deferredData})
+  return (
+    <>
+      {/* <div>Current Page: {page + 1}</div>
+      <Button
+        onClick={() => setPage((old) => Math.max(old - 1, 0))}
+        disabled={page === 0}
+      >
+        Previous Page
+      </Button>{" "}
+      <Button
+        onClick={() => {
+          setPage((old) => (hasMore ? old + 1 : old));
+        }}
+        disabled={isPlaceholderData || !hasMore}
+      >
+        Next Page
+      </Button> */}
+      {isSuccess && <DataTable data={deferredData.data} onLoadMore={handleLoadMore} count={deferredData.meta.pagination.count} />}
+    </>
+  );
+}

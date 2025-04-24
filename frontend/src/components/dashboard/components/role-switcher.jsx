@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { ChevronsUpDown, Plus, GalleryVerticalEnd } from "lucide-react";
+import { ChevronsUpDown, Plus, GalleryVerticalEnd, UserRound } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -56,7 +56,6 @@ export function RoleSwitcher({ roles, /*onRoleChange*/ }) {
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                 {/* <activeTeam.logo className="size-4" /> */}
                 <GalleryVerticalEnd />
-
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
@@ -90,7 +89,7 @@ export function RoleSwitcher({ roles, /*onRoleChange*/ }) {
               >
                 <div className={cn("flex size-6 items-center justify-center rounded-sm border", activeRole === role ? "border-2 border-sidebar-primary" : null)}>
                   {/* <team.logo className="size-4 shrink-0" /> */}
-                  <GalleryVerticalEnd />
+                  <UserRound />
                 </div>
                 {role.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>

@@ -74,7 +74,7 @@ export default function RegistrarDashboard({ stats, issues, users }) {
           <div>
             <GenerateToken />
           </div>
-          <Link to="dregistrar-reports">
+          <Link to="registrar-reports">
             <Button
               variant="outline"
               className="bg-blue-500 text-white px-2 py-4 rounded hover:bg-blue-600"

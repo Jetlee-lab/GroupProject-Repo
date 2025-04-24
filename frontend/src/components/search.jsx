@@ -17,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { searchIssue } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Command } from "lucide-react";
+import { useDebouncedCallback } from "use-debounce"
 
 export function Search() {
   const [q, setQ] = useState("");
@@ -38,7 +39,8 @@ export function Search() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const debouncedSearch = (value) => setQ(value);
+  const debouncedSearch = useDebouncedCallback(value => setQ(value), 500);
+
   return (
     <Dialog open={open} onOpenChange={() => setOpen(open => !open)}>
       <DialogTrigger asChild>
@@ -72,7 +74,7 @@ export function Search() {
                 type="search"
                 placeholder="Search Issues..."
                 name="q"
-                onChange={(e) => debouncedSearch(e.target.value)}
+                onChange={e => debouncedSearch(e.target.value)}
               />
             </form>
         </div>

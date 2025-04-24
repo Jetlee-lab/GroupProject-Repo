@@ -256,6 +256,7 @@ class IssueStat():
     }
     meta_map = {
         # key: (serializer, queryset-gettter)
+        'meta': Issue,
         'attachments': Attachment,
         'categories': Category,
         'owner': Student,
@@ -310,6 +311,9 @@ class IssueStat():
 
             # Separate fields from field meta to be annoted per field at response
             field, _, end = k.lower().rpartition('meta')
+            if k.lower() == "meta":
+                field = "meta"
+            print([field,_,end])
 
             vv = set()
             for x in v:
@@ -319,7 +323,7 @@ class IssueStat():
                 kw[k] = vv
             # elif field in self.meta_serializers:
             elif field in self.meta_map:
-                meta_fields[field] = vv
+                meta_fields[field.lower()] = vv
 
         # print({'kwargs':kwargs, 'kw':kw})
 
@@ -335,7 +339,10 @@ class IssueStat():
             annotations = {
                 # f'{k}_count': Count('id'),
                 'count': Count('id', distinct=True),
-                'issues': ArrayAgg('id', distinct=True),
+                'issues': ArrayAgg(
+                    JSONObject(**{mv: mv for mv in meta_fields["meta"]}) if meta_fields.get("meta") else "id",
+                    distinct=True
+                ),
             }
             
             key, key_getter = self.fields_keys.get(k, (k, self.key_getter))
@@ -354,7 +361,7 @@ class IssueStat():
                 })
 
             query_k = query.filter(**filter_kw).values(key).annotate(**annotations)
-            print(len(query_k),)
+            # print(len(query_k),)
 
             result[k] = {
                 key_getter(q[key]): {

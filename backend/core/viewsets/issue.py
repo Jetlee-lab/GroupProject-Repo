@@ -32,7 +32,9 @@ class IssueViewSet(
     # permission_classes = (AllowAny,)
     serializer_class = IssueSerializer
 
-    # def create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
+        print({"data":self.request.data, "files":self.request.FILES})
+        return super().create(request,*args, **kwargs)
     #     serializer = self.get_serializer(data=request.data) #, many=True
     #     # print("testinhgf", data)
 
@@ -86,26 +88,33 @@ class IssueViewSet(
         from django.db.models import Case, When, Value
         from django.contrib.postgres.aggregates import ArrayAgg
 
-        priority_annotation = [
-            When(priority=k, then=JSONObject(id=k, name=Value(v)))
-            for k, v in Issue.PRIORITY_CHOICES.items()
-        ]
-        status_annotation = [
-            When(priority=k, then=JSONObject(id=k, name=Value(v)))
-            for k, v in Issue.STATUS_CHOICES.items()
-        ]
-        escalation_annotation = [
-            When(priority=k, then=JSONObject(id=k, name=Value(v)))
-            for k, v in Issue.ESCALATION_CHOICES.items()
-        ]
+        # priority_annotation = [
+        #     When(priority=k, then=JSONObject(id=k, name=Value(v)))
+        #     for k, v in Issue.PRIORITY_CHOICES.items()
+        # ]
+        # status_annotation = [
+        #     When(priority=k, then=JSONObject(id=k, name=Value(v)))
+        #     for k, v in Issue.STATUS_CHOICES.items()
+        # ]
+        # escalation_annotation = [
+        #     When(priority=k, then=JSONObject(id=k, name=Value(v)))
+        #     for k, v in Issue.ESCALATION_CHOICES.items()
+        # ]
         categories = Category.objects.values()
 
-        metas = Issue.objects.aggregate(
-            priorities=ArrayAgg(Case(*priority_annotation), distinct=True),
-            statuses=ArrayAgg(Case(*status_annotation), distinct=True),
-            escalation_levels=ArrayAgg(Case(*escalation_annotation), distinct=True),
-        ) | {
+        # metas = Issue.objects.aggregate(
+        #     priorities=ArrayAgg(Case(*priority_annotation), distinct=True),
+        #     statuses=ArrayAgg(Case(*status_annotation), distinct=True),
+        #     escalation_levels=ArrayAgg(Case(*escalation_annotation), distinct=True),
+        # ) | {
+        #     'categories': categories,
+        # }
+
+        metas = {
             'categories': categories,
+            'priorities': [ {'id': k, 'name': v} for k, v in Issue.PRIORITY_CHOICES.items() ],
+            'statuses': [ {'id': k, 'name': v} for k, v in Issue.STATUS_CHOICES.items() ],
+            'escalation_levels': [ {'id': k, 'name': v} for k, v in Issue.ESCALATION_CHOICES.items() ],
         }
 
         return Response(metas, status=status.HTTP_200_OK)

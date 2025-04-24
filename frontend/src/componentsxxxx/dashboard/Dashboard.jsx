@@ -58,6 +58,7 @@ const UnknownError = lazy(() => import("@/pages/unknown-error"));
 import { useQuery } from "@tanstack/react-query";
 import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
 import { Search } from "@/components/search";
+import { ROLE_LECTURER, ROLE_REGISTRAR, ROLE_STUDENT } from "@/lib/constants";
 
 const dashboardRoutes = [
   {
@@ -175,9 +176,7 @@ export function DashboardLayout() {
   };
 
   const switchRole = (role) => setRole(role)
-  // const role = "student";
-  // const role = "lecturer";
-  // const role = "registrar"
+  
   return (
     <SidebarProvider defaultOpen={false}>
       <AppSidebar userRole={role} />
@@ -214,15 +213,15 @@ export function DashboardLayout() {
           </div> */}
           <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 md:min-h-min">
             {(pathname == "/dashboard" &&
-              (role === "student" ? (
+              (role === ROLE_STUDENT ? (
                 <StudentDashboard stats={stats} issues={issues} users={users} />
-              ) : role === "lecturer" ? (
+              ) : role === ROLE_LECTURER ? (
                 <LecturerDashboard
                   stats={stats}
                   issues={issues}
                   users={users}
                 />
-              ) : role === "registrar" ? (
+              ) : role === ROLE_REGISTRAR ? (
                 <AcademicRegistrarDashboard
                   stats={stats}
                   issues={issues}

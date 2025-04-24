@@ -13,46 +13,53 @@ import { API_URL } from "./constants";
 
 export const paginate = (page, size = 10) => ({
   limit: size,
-  offset: page * size + (page < 1 ? 0 : 1),
+  offset: page * size,
 });
 
 /*
  *  Issues API
  */
-export const fetchIssues = async ({id, params} = {}) => {
+export const fetchIssues = async ({ id, params } = {}) => {
   const url = id === undefined ? "/issues" : `/issuses/${id}`;
   return await apiClient.get(url, { params }).then((response) => {
+    console.log({...params,data:response.data.data})
     return response.data;
   });
 };
 
-export const fetchIssuesMeta = async ({params} = {}) => {
+export const fetchIssuesMeta = async ({ params } = {}) => {
   return await apiClient.get("/issues/meta", { params }).then((response) => {
     return response.data;
   });
 };
 
 export const fetchIssue = async (id) => {
-  return fetchIssues({id});
+  return fetchIssues({ id });
 };
 
 export const createIssue = async (issue) => {
-  return await apiClient.post("/issues", issue).then((response) => {
-    return response.data;
-  });
+  return await apiClient
+    .post("/issues", issue, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => {
+      return response.data;
+    });
 };
 
 export const updateIssue = async (issue) => {
   return await apiClient.put(`/issues/${issue.id}`, issue).then((response) => {
     return response.data;
   });
-}
+};
 
 export const deleteIssue = async (id) => {
   return await apiClient.delete(`/issues/${id}`).then((response) => {
     return response.data;
   });
-}
+};
 
 export const searchIssue = async (search) => {
   const searchParams = new URLSearchParams(search).toString();

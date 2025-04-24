@@ -1,6 +1,5 @@
 import React, { useState } from "react"; // Importing React and the useState hook for state management
 import { Link } from "react-router-dom";
-import IssueTable from "./issues/issue-table"; // Importing Link component from react-router-dom for navigation
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import {
   // ColumnDef,
@@ -37,27 +36,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { fetchIssues, paginate } from "@/lib/api";
+import CreateIssue from "@/components/issues/create-issue";
+import IssueTable from "./issues/issue-table"; // Importing Link component from react-router-dom for navigation
 
-import issueData from "./issues/data.json";
+// import issueData from "./issues/data.json";
 
 const LecturerDashboard = ({ stats, issues, users }) => {
-  const [page, setPage] = React.useState(0);
-  const { status, data, error, isFetching, isPlaceholderData, isSuccess } = useQuery({
-    queryKey: ["issues", page],
-    queryFn: () => fetchIssues({ params: paginate(page, 4) }),
-    placeholderData: keepPreviousData,
-    // staleTime: 5000,
-  });
-  // console.log({ status, data, error });
-  // Prefetch the next page!
-  React.useEffect(() => {
-    if (!isPlaceholderData && data?.hasMore) {
-      queryClient.prefetchQuery({
-        queryKey: ["issues", page + 1],
-        queryFn: () => fetchIssues({ params: paginate(page + 1, 4) }),
-      });
-    }
-  }, [data, isPlaceholderData, page]);
 
   return (
     <div className="p-4">
@@ -72,9 +56,10 @@ const LecturerDashboard = ({ stats, issues, users }) => {
       </div>
       <div className="overflow-x-scroll">
       {/* <IssueTable data={issueData} /> */}
-      { isSuccess && <IssueTable data={data.data} /> }
+      <IssueTable />
       </div>
       {/* <LecturerDashboardOld /> */}
+      <CreateIssue />
     </div>
     // </div>
   );
