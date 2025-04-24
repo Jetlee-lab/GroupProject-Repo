@@ -313,7 +313,6 @@ class IssueStat():
             field, _, end = k.lower().rpartition('meta')
             if k.lower() == "meta":
                 field = "meta"
-            print([field,_,end])
 
             vv = set()
             for x in v:
