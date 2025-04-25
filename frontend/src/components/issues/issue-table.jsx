@@ -849,9 +849,10 @@ function TableCellViewer({ item }) {
     // const formData = new FormData(e.target)
     const data = dataRef.current;
 
-    console.log({ data });
+    // console.log({ data });
     issueMutation.mutate({ issue: data, id: item.id });
   };
+  // console.log({lecturersRes,studentsRes,issuesMeta})
 
   return (
     <Sheet>
@@ -1118,7 +1119,7 @@ export default function IssuesTable() {
       fetchUsers({ endpoint: "students", params: paginate(0, 100) }),
   });
   queryClient.prefetchQuery({
-    queryKey: ["users", "lectures"],
+    queryKey: ["users", "lecturers"],
     queryFn: () =>
       fetchUsers({ endpoint: "lecturers", params: paginate(0, 100) }),
   });
