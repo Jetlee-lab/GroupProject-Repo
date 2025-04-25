@@ -35,7 +35,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 export default function ResolveIssue() {
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: ["reference-tokens"],
-    queryFn: () => fetchTokens(paginate(0, 1000)),
+    queryFn: () => fetchTokens({params: paginate(0, 1000)}),
   });
 
   if (isPending || isFetching) {
