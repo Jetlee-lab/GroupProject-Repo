@@ -31,6 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { use } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
+import IssueTable from "./issues/issue-table"; // Importing Link component from react-router-dom for navigation
 // import { useQuery } from "@/hooks"
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
@@ -58,7 +59,7 @@ export default function RegistrarDashboard({ stats, issues, users }) {
   // const users = usersRes.data;
 
   return (
-    <div className="flex flex-col gap-y-8 p-4  bg-blue-200  rounded-lg">
+    <div className="flex flex-col gap-y-8 p-4 bg-blue-200  rounded-lg">
       {/* Overview section */}
       <div className="">
         <IssueStats stats={stats} />
@@ -83,12 +84,21 @@ export default function RegistrarDashboard({ stats, issues, users }) {
               View & Assign Issues
             </Button>
           </Link>
+          <Link to="generated-tokens">
+            <Button
+              variant="outline"
+              className="bg-blue-500 text-white px-2 py-4 rounded hover:bg-blue-600"
+            >
+              View Generated Tokens
+            </Button>
+          </Link>
         </div>
       </div>
 
-      {/* Activity Feed */}
-      <div>
-        <h3 className="text-xl text-center font-bold mb-4">RECENT ACTIVITY</h3>
+      <div className="flex flex-col gap-y-8 p-4 rounded-lg">
+        <div>
+          <IssueTable />
+        </div>
         <ActivityFeed />
       </div>
     </div>

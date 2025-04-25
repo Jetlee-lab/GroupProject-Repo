@@ -57,6 +57,7 @@ const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 // const LogoutPage = lazy(() => import("@/pages/LogoutPage"));
 const NotFound = lazy(() => import("@/pages/404"));
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
+const GeneratedTokensPage = lazy(() => import("@/pages/generated-tokens"));
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchIssues,
@@ -112,6 +113,10 @@ const dashboardRoutes = [
       {
         path: "/assign-issue",
         Component: AssignIssue,
+      },
+      {
+        path: "/generated-tokens",
+        Component: GeneratedTokensPage,
       },
       // {
       //   path: "/account/logout",

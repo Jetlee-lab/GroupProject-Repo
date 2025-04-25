@@ -107,8 +107,8 @@ export const createToken = async (data) => {
 //   return await request('POST', "/reference-token", data)
 // }
 
-export const fetchTokens = async () => {
-  return await apiClient.get("/reference-token").then((response) => {
+export const fetchTokens = async ({ params } = {}) => {
+  return await apiClient.get("/reference-token", { params }).then((response) => {
     return response.data;
   });
 };

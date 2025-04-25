@@ -173,7 +173,7 @@ export default function ReplyIssueForm({ issue }) {
   };
 
   return (
-    <Card className="">
+    <Card className="m-4">
       <CardHeader>
         <CardTitle>Review Issue</CardTitle>
         {/* <CardDescription></CardDescription> */}

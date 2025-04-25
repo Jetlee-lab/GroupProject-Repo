@@ -146,7 +146,7 @@ import {
   NotesInput,
 } from "./issue-fields";
 import { useActiveRole } from "@/hooks";
-import { statusMap, priorityMap } from "@/lib/constants";
+import { statusMap, priorityMap, ROLE_REGISTRAR } from "@/lib/constants";
 import { ROLE_STUDENT, ROLE_LECTURER } from "@/lib/constants";
 import {
   Tooltip,
@@ -442,7 +442,7 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
             >
               <Trash2 className="text-red-500" /> Delete
             </DropdownMenuItem>
-            { activeRole === ROLE_LECTURER && <DropdownMenuItem
+            { [ROLE_LECTURER, ROLE_REGISTRAR].includes(activeRole) && <DropdownMenuItem
               className="text-blue-500"
               onClick={() => navigate(`/dashboard/resolve-issue/${row.original.id}`)}
             >
