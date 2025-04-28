@@ -4,7 +4,7 @@ import { useQuery } from "@/hooks"
 import { fetchIssues, fetchUsers } from '@/lib/api';
 import { STATUS_CLOSED, STATUS_PENDING, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_INREVIEW } from '@/lib/constants';
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
-import IssueTable from "@/components/issues/Issue-table";
+import IssueTable from "@/components/issues/issue-table";
 
 export default function AcademicRegistrarReportsPage() {
   return (
