@@ -4,8 +4,20 @@ import { useQuery } from "@/hooks"
 import { fetchIssues, fetchUsers } from '@/lib/api';
 import { STATUS_CLOSED, STATUS_PENDING, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_INREVIEW } from '@/lib/constants';
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
+import IssueTable from "@/components/issues/Issue-table";
 
-const AcademicRegistrarReportsPage = () => {
+export default function AcademicRegistrarReportsPage() {
+  return (
+    <div className="flex flex-col gap-y-8 p-4 rounded-lg">
+            <div>
+              <IssueTable />
+            </div>
+          </div>
+  )
+}
+
+
+const AcademicRegistrarReportsPage2 = () => {
 const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError, data: issuesData } = useQuery(fetchIssues)
   const { isLoading: userssLoading, isFetching: usersFetching, error: usersError, data: usersData } = useQuery(fetchUsers)
 
@@ -103,5 +115,3 @@ const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError
     </div>
   );
 };
-
-export default AcademicRegistrarReportsPage;

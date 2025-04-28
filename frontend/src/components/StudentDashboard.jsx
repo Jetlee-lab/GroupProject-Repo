@@ -53,7 +53,7 @@ const enrolledCourses = [
 
 const StudentDashboard = ({ stats, issues, users }) => {
   return (
-    <div className="flex flex-col gap-14 space-y-6 px-4 py-4 bg-blue-20 rounded-lg">
+    <div className="flex flex-col gap-14 space-y-6 px-4 py-4 rounded-lg">
       <div className="text-xl mb-2">
         <h1 className="font-bold text-3xl mb-6">Student Dashboard</h1>
         <IssueStats stats={stats} />

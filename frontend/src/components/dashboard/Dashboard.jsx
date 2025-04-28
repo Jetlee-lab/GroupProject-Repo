@@ -1,5 +1,13 @@
 import React, { Children, useState, lazy } from "react"; // Importing React and the useState hook for state management
-import { Link, useLocation, Outlet, useRoutes } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
+import {
+  Link,
+  useLocation,
+  Outlet,
+  useRoutes,
+  Navigate,
+  useNavigate,
+  useLoaderData,
+} from "react-router-dom"; // Importing Link component from react-router-dom for navigation
 import { useActiveRole, useRoles } from "@/hooks/use-auth";
 import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
 import { Button } from "@/components/ui/button";
@@ -25,6 +33,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { LoaderIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -102,7 +111,7 @@ const dashboardRoutes = [
         Component: AcademicRegistrarReportsPage,
       },
       {
-        path: "/resolve-issue/:issueId",
+        path: "/issue/:issueId",
         Component: LecturerEditIssueForm,
       },
 
@@ -149,6 +158,14 @@ export function DashboardLayout() {
   const [{ name: role }, setActiveRole] = useActiveRole();
   // const { pathname } = useLocation();
   const switchRole = (role) => setActiveRole(role);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const handleRoleChange = (role) => {
+    // alert()
+    // location.reloa
+    setActiveRole(role);
+    // navigate(`/dashboard`);
+  };
 
   if (issuesMetaFetching) {
     return null;
@@ -161,7 +178,7 @@ export function DashboardLayout() {
 
   return (
     <SidebarProvider defaultOpen={false}>
-      <AppSidebar userRoles={roles} onRoleChange={() => void 0} />
+      <AppSidebar userRoles={roles} onRoleChange={handleRoleChange} />
       <SidebarInset>
         {/* <div className="sticky top-0 bg-gradient-to-r from-blue-100 to-green-200"> */}
         <header className="flex sticky top-0 z-11 min-h-14 p-4 backdrop-blur-3xl  bg-gradient-to-r from-blue-400 to-blue-600">
@@ -264,7 +281,11 @@ export function Dashboard() {
   }
 
   if (issuesFetching) {
-    return null;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoaderIcon size={48} className="animate-spin" />
+      </div>
+    );
   }
 
   const stats = {

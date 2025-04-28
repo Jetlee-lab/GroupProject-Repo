@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 //       plan: string
 //     }[]
 //   }) {
-export function RoleSwitcher({ roles, /*onRoleChange*/ }) {
+export function RoleSwitcher({ roles, onRoleChange }) {
   const { isMobile } = useSidebar();
   // const [activeTeam, setActiveTeam] = React.useState(teams[0]);
   const [activeRole, setActiveRole] = useActiveRole()
@@ -81,8 +81,8 @@ export function RoleSwitcher({ roles, /*onRoleChange*/ }) {
                 key={role.name}
                 onClick={() => {
                   if (activeRole != role) {
-                    // onRoleChange(role);
-                    setActiveRole(role);
+                    // setActiveRole(role);
+                    onRoleChange(role);
                   }
                 }}
                 className="gap-2 p-2"

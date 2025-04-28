@@ -21,3 +21,8 @@ export function useRoles() {
   const user = useUser();
   return useMemo(() => user?.roles || [], [user]);
 }
+
+export const useNextRoute = () => {
+  const next = new URLSearchParams(location.search).get('next')
+  return next || null
+}

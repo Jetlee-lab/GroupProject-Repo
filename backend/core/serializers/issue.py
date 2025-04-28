@@ -18,9 +18,19 @@ import json
 #             "id": instance.id,
 #             "name": instance.name,
 #         }
+class AttachmentSerializer(DynamicFieldsModelSerializer):
+
+    class Meta:
+        model = Attachment
+        fields = '__all__'
+        # exclude = ['id']
+        read_only_fields = ['issue', 'name', 'size', 'type']
+
 
 class IssueSerializer(serializers.ModelSerializer):
     # categories = CategoriesListingField(many=True) #, read_only=True)
+    attachments = AttachmentSerializer(many=True, read_only=True)
+
     class Meta:
         model = Issue
         fields = '__all__'
@@ -131,14 +141,6 @@ class IssueLogSerializer(DynamicFieldsModelSerializer):
             'priority', 'categories', 'attachment', 'created_at'
         ]
 
-
-class AttachmentSerializer(DynamicFieldsModelSerializer):
-
-    class Meta:
-        model = Attachment
-        fields = '__all__'
-        # exclude = ['id']
-        read_only_fields = ['issue', 'name', 'size', 'type']
 
 class CategorySerializer(DynamicFieldsModelSerializer):
     class Meta:

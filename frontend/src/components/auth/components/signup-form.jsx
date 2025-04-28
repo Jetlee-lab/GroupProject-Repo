@@ -10,6 +10,7 @@ import { useConfig } from "@/features/auth";
 import AitsLogo from "@/components/images/logo2.jpg";
 import { cn } from "@/lib/utils";
 import { LoaderIcon, Eye, EyeOff } from "lucide-react";
+import FormErrors from '@/components/form-errors'
 
 // import ProviderList from '../socialaccount/ProviderList'
 // import Button from '../components/Button'
@@ -109,8 +110,8 @@ export function SignupForm({ className, ...props }) {
                   />
                 )}
               </div>
-              <div className="md:flex gap-4 md:items-center">
-                <div>
+              <div className="flex flex-col md:flex-row gap-6 md:items-center">
+                <div className="flex flex-col gap-2 relative">
                   <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"
@@ -125,7 +126,7 @@ export function SignupForm({ className, ...props }) {
                     />
                   )}
                 </div>
-                <div className="relative">
+                <div className="flex flex-col gap-2 relative">
                   <Label htmlFor="password">Repeat Password</Label>
                   <Input
                     id="password2"
@@ -176,25 +177,6 @@ export function SignupForm({ className, ...props }) {
         and <a href="#">Privacy Policy</a>.
       </div>
     </div>
-  );
-}
-
-export function FormErrors(props) {
-  if (!props.errors || !props.errors.length) {
-    return null;
-  }
-  const errors = props.errors.filter((error) =>
-    props.param ? error.param === props.param : error.param == null
-  );
-  if (!errors.length) {
-    return null;
-  }
-  return (
-    <ul className="text-red-600 text-sm">
-      {errors.map((e, i) => (
-        <li key={i}>{e.message}</li>
-      ))}
-    </ul>
   );
 }
 

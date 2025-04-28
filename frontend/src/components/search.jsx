@@ -114,7 +114,7 @@ function SearchResults({ q, result, onResultClick = () => void 0 }) {
         result.map((issue, i) => (
           <ListItem
             key={i}
-            to={`issues?id=${issue.id}`}
+            to={`/dashboard/issue/${issue.id}`}
             title={issue.title}
             onClick={() => onResultClick(issue)}
           >

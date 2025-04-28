@@ -58,7 +58,7 @@ import {
   Lock,
   Trash2,
   Ellipsis,
-  ListCheck
+  ListCheck,
 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
@@ -392,7 +392,11 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
           return `@${row.original.assignee.username}`;
         }
 
-        return <div className="font-display text-xs">{"<"}Unassigned{">"}</div>;
+        return (
+          <div className="font-display text-xs">
+            {"<"}Unassigned{">"}
+          </div>
+        );
 
         return (
           <>
@@ -442,12 +446,14 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
             >
               <Trash2 className="text-red-500" /> Delete
             </DropdownMenuItem>
-            { [ROLE_LECTURER, ROLE_REGISTRAR].includes(activeRole) && <DropdownMenuItem
-              className="text-blue-500"
-              onClick={() => navigate(`/dashboard/resolve-issue/${row.original.id}`)}
-            >
-              <ListCheck className="text-blue-500" /> Review
-            </DropdownMenuItem>}
+            {[ROLE_LECTURER, ROLE_REGISTRAR].includes(activeRole) && (
+              <DropdownMenuItem
+                className="text-blue-500"
+                onClick={() => navigate(`/dashboard/issue/${row.original.id}`)}
+              >
+                <ListCheck className="text-blue-500" /> Review
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       ),
@@ -505,7 +511,6 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
   }
 
   const handleDelete = (issue) => {
-    console.log({ issue });
     issueDeleteMutation.mutate(issue.id);
   };
 
@@ -585,26 +590,29 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
-                <PlusIcon />
-                <span className="hidden lg:inline">New Issue</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="md:min-w-[756px] md:max-h-[552px] m-4 overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="font-bold">Create Issue</DialogTitle>
-                <DialogDescription />
-              </DialogHeader>
-              <div className="grid gap-4">
-                <CreateIssueForm />
-              </div>
-              <DialogFooter>
-                {/* <Button type="submit">Save changes</Button> */}
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          {(activeRole === ROLE_STUDENT && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <PlusIcon />
+                  <span className="hidden lg:inline">New Issue</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="md:min-w-[756px] md:max-h-[552px] m-4 overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="font-bold">Create Issue</DialogTitle>
+                  <DialogDescription />
+                </DialogHeader>
+                <div className="grid gap-4">
+                  <CreateIssueForm />
+                </div>
+                <DialogFooter>
+                  {/* <Button type="submit">Save changes</Button> */}
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )) ||
+            null}
         </div>
       </div>
       <TabsContent
@@ -705,13 +713,15 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
                     variant="outline"
                     className="size-8"
                     onClick={() => {
-                      const hasMore = onLoadMore()
-                      if (!hasMore){
-                        toast.info("No more data to load!")
+                      const hasMore = onLoadMore();
+                      if (!hasMore) {
+                        toast.info("No more data to load!");
                       }
                     }}
                   >
-                    <span className="sr-only">Load more {`${data.length} of ${count}`} results</span>
+                    <span className="sr-only">
+                      Load more {`${data.length} of ${count}`} results
+                    </span>
                     <Ellipsis />
                   </Button>
                 </TooltipTrigger>
@@ -811,11 +821,9 @@ function TableCellViewer({ item }) {
   const issueMutation = useMutation({
     mutationFn: updateIssue,
     onSuccess: (data) => {
-      // queryClient.invalidateQueries({ queryKey: ['issues'] })
       toast.success("Issue updated successfully");
-      queryClient.invalidateQueries(["issues"])
-      // item = data.data
-      console.log({item,data: data.data})
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      // console.log({item,data: data.data})
     },
     onError: (error) => {
       toast.error("Error updating issue");
@@ -859,12 +867,15 @@ function TableCellViewer({ item }) {
       <SheetTrigger asChild>
         <Button
           variant="link"
-          className="w-fit px-0 text-left text-foreground whitespace-break-spaces line-clamp-1 h-8"
+          className="px-0 text-left text-foreground whitespace-break-spaces line-clamp-1 h-8 w-full"
         >
           {item.title}
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="flex flex-col">
+      <SheetContent
+        side="right"
+        className="flex flex-col md:min-w-[512px] md:px-4"
+      >
         <SheetHeader className="gap-1">
           <SheetTitle>Issue Details</SheetTitle>
           <SheetDescription>You can edit this issue here.</SheetDescription>
@@ -1025,12 +1036,16 @@ function TableCellViewer({ item }) {
             </div>
           </form>
         </div>
-        <SheetFooter className="mt-auto flex gap-2 sm:flex-col sm:space-x-0">
-          <Button className="w-full" type="submit" form="issue-update-form">
+        <SheetFooter className="mt-auto flex gap-4 md:flex-row sm:space-x-0">
+          <Button
+            className="w-full md:w-1/2"
+            type="submit"
+            form="issue-update-form"
+          >
             Submit
           </Button>
-          <SheetClose asChild>
-            <Button variant="outline" className="w-full">
+          <SheetClose asChild className="">
+            <Button variant="outline" className="w-full md:w-1/2">
               Done
             </Button>
           </SheetClose>
@@ -1104,13 +1119,13 @@ export function PriorityBadge({
 
 export default function IssuesTable() {
   const [page, setPage] = React.useState(0);
-  const [size,] =React.useState(100)
+  const [size] = React.useState(100);
   const { status, data, error, isFetching, isPlaceholderData, isSuccess } =
     useQuery({
       queryKey: ["issues", page],
       queryFn: () => fetchIssues({ params: paginate(page, size) }),
       placeholderData: keepPreviousData,
-      keepPreviousData:true,
+      keepPreviousData: true,
       // staleTime: 5000,
     });
   queryClient.prefetchQuery({
@@ -1123,7 +1138,7 @@ export default function IssuesTable() {
     queryFn: () =>
       fetchUsers({ endpoint: "lecturers", params: paginate(0, 100) }),
   });
-  const deferredData = React.useDeferredValue(data, data)
+  const deferredData = React.useDeferredValue(data, data);
 
   // console.log({ status, data, error });
   const hasMore = !!deferredData?.meta.pagination.next;
@@ -1146,9 +1161,8 @@ export default function IssuesTable() {
     return hasMore;
   };
 
-  if (!deferredData)
-    return null
-  console.log({data, deferredData})
+  if (!deferredData) return null;
+
   return (
     <>
       {/* <div>Current Page: {page + 1}</div>
@@ -1166,7 +1180,13 @@ export default function IssuesTable() {
       >
         Next Page
       </Button> */}
-      {isSuccess && <DataTable data={deferredData.data} onLoadMore={handleLoadMore} count={deferredData.meta.pagination.count} />}
+      {isSuccess && (
+        <DataTable
+          data={deferredData.data}
+          onLoadMore={handleLoadMore}
+          count={deferredData.meta.pagination.count}
+        />
+      )}
     </>
   );
 }

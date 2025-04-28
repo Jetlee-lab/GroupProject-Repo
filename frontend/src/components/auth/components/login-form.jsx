@@ -34,15 +34,20 @@ export function LoginForm({ className, ...props }) {
         });
         // console.log({ content });
         if (content.status !== 200) {
-          toast(<span className="font-bold text-white">Error Logging In</span>, {
-            description: content.errors?.map((e, i) => <span key={i}>{e.message}</span>),
-            action: {
-              label: "OK",
-            },
-            style: {
-              background: "red",
-            },
-          });
+          toast(
+            <span className="font-bold text-white">Error Logging In</span>,
+            {
+              description: content.errors?.map((e, i) => (
+                <span key={i}>{e.message}</span>
+              )),
+              action: {
+                label: "OK",
+              },
+              style: {
+                background: "red",
+              },
+            }
+          );
         }
       })
       .catch((e) => {
@@ -62,11 +67,11 @@ export function LoginForm({ className, ...props }) {
         <CardContent className="grid p-0 md:grid-cols-2">
           <div className="relative hidden bg-white md:block">
             <Link to="/">
-            <img
-              src={AitsLogo}
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-contain dark:brightness-[0.2] dark:grayscale"
-            />
+              <img
+                src={AitsLogo}
+                alt="Image"
+                className="absolute inset-0 h-full w-full object-contain dark:brightness-[0.2] dark:grayscale"
+              />
             </Link>
           </div>
           <form className="p-6 md:p-8" onSubmit={submit}>
@@ -80,7 +85,6 @@ export function LoginForm({ className, ...props }) {
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
-                name="hello"
                   id="email"
                   type="email"
                   placeholder="email@example.com"
@@ -92,7 +96,7 @@ export function LoginForm({ className, ...props }) {
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <Link
-                    href="#"
+                    to="/account/password/reset"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
                     Forgot your password?
@@ -105,8 +109,15 @@ export function LoginForm({ className, ...props }) {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={response.fetching}>
-              { response.fetching && <LoaderIcon className="animate-spin" /> || "Login" }
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={response.fetching}
+              >
+                {(response.fetching && (
+                  <LoaderIcon className="animate-spin" />
+                )) ||
+                  "Login"}
               </Button>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
@@ -146,7 +157,7 @@ export function LoginForm({ className, ...props }) {
                 Don&apos;t have an account?{" "}
                 <Link
                   to="/account/signup"
-                  className="underline underline-offset-4"
+                  className="underline underline-offset-4 text-blue-400"
                 >
                   Sign up
                 </Link>
@@ -163,4 +174,4 @@ export function LoginForm({ className, ...props }) {
   );
 }
 
-export { LoginForm as default }
+export { LoginForm as default };

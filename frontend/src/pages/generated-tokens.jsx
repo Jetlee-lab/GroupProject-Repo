@@ -13,10 +13,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import UnknownError from "@/pages/unknown-error";
 import { LoaderIcon } from "lucide-react";
+import { cn } from "@/lib/utils"
 import {
   TitleInput,
   DescriptionInput,
@@ -28,6 +37,7 @@ import {
   CategoriesInput,
   EscalationInput,
 } from "@/components/issues/issue-fields";
+import { Badge } from "@/components/ui/badge";
 import { ROLE_STUDENT } from "@/lib/constants";
 import ReplyIssueForm from "@/components/issues/reply-issue";
 import { useCopyToClipboard } from "usehooks-ts";
@@ -35,7 +45,7 @@ import { useCopyToClipboard } from "usehooks-ts";
 export default function ResolveIssue() {
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: ["reference-tokens"],
-    queryFn: () => fetchTokens({params: paginate(0, 1000)}),
+    queryFn: () => fetchTokens({ params: paginate(0, 1000) }),
   });
 
   if (isPending || isFetching) {
@@ -77,93 +87,85 @@ function GeneratedTonkens({ tokens }) {
   // });
 
   const [{ name: activeRole }] = useActiveRole();
-    const [copiedText, copy] = useCopyToClipboard();
-  
+  const [copiedText, copy] = useCopyToClipboard();
+
   // console.log({ issuesMeta });
-   const handleCopy = (text) => () => {
-      copy(text)
-        .then(() => {
-          toast.info("Copied!");
-        })
-        .catch((error) => {
-          toast.error("Failed to copy!");
-        });
-    };
+  const handleCopy = (text) => {
+    copy(text)
+      .then(() => {
+        toast.info("Token copied to clipboard!");
+      })
+      .catch((error) => {
+        toast.error("Failed to copy token!");
+      });
+  };
 
   return (
-    <div className="flex flex-col gap-14 space-y-6 px-4 m-4 rounded-lg">
-      <Card className="">
-        <CardHeader>
-          <CardTitle className="font-bold text-2xl">Generated Tokens</CardTitle>
-          {/* <CardDescription></CardDescription> */}
-        </CardHeader>
-        <CardContent>
-          {(tokens.length > 0 && (
-            <div>
-              {/* <h1 className="mt-4 text-2xl font-bold tracking-tight text-center p-4 h-full text-balance text-gray-900">
-                <p>Generated Tokens</p>
-              </h1> */}
-              <div className="flex flex-col space-y-6">
-                {tokens.map((token) => (
-                  <div key={token.id} className="flex flex-col space-y-6">
-                    <h1 className="flex flex-row gap-8 mt-4 text-lg font-bold tracking-tight text-gray-900">
-                      <p>{token.token}</p>
-                      <Button
-                        onClick={handleCopy(token.token)}
-                      >
-                        Copy
-                      </Button>
-                    </h1>
-                    <div className="flex flex-col space-y-2">
-                      <p className="font-semibold">
-                        Email:{" "}
-                        <span className="font-normal">
-                          {/* {format(
-                            new Date(token.created_at),
-                            "MMM, do yyyy - H:m:s aa"
-                          )} */}
-                          {token.email}
-                        </span>
-                      </p>
-                      <p className="font-semibold">
-                        Used:&nbsp;&nbsp;&nbsp;
-                        <span className="pl-4 font-normal">
-                          {token.is_used ? "Yes" : "No"}
-                        </span>
-                      </p>
-                      <p className="font-semibold">
-                        Active:{" "}
-                        <span
-                          className={`pl-4 font-normal bg-${
-                            token.active ? "red" : "blue"
-                          }-200`}
-                        >
-                          {token.active ? "Yes" : "No"}
-                        </span>
-                      </p>
+    <div className="flex flex-col gap-4 space-y-6 px-4 m-4 rounded-lg">
+      <p className="w-full bg-white rounded-sm font-bold text-center py-4">
+        Generated Tokens List
+      </p>
+      <Command>
+        <CommandInput placeholder="Find token by email ..." />
+        <CommandList className="max-h-[auto]">
+          <CommandEmpty>No Tokens Found.</CommandEmpty>
+          <CommandGroup className="mt-4">
+            <div className="grid grid-cols md:grid-cols-2 gap-x-2 gap-y-8">
+              {tokens.map((token) => {
+                return (
+                  <CommandItem
+                    key={token.token}
+                    value={token.email}
+                    onSelect={(value, ...args) => {
+                      handleCopy(token.token)
+                    }}
+                    className="flex flex-col border"
+                  >
+                    <div className="flex flex-row justify-between w-full">
+                      <span className={cn("font-semibold", token.active && !token.is_used ? 'text-blue-500' : '')}>{token.token}</span>
+                      {/* <Button onClick={handleCopy(token.token)}>Copy</Button> */}
                     </div>
-                  </div>
-                ))}
-              </div>
+                    <div className="mt-2 w-full flex flex-row justify-between">
+                      <span>{token.email}</span>
+                      <div className=""></div>
+                      {(token.active && (
+                        <Badge
+                          variant="outlined"
+                          className="border-2 text-blue-600"
+                        >
+                          Active
+                        </Badge>
+                      )) || (
+                        <Badge
+                          variant="outlined"
+                          className="border-2 text-red-600"
+                        >
+                          Inactive
+                        </Badge>
+                      )}
+                      {(token.is_used && (
+                        <Badge
+                          variant="outlined"
+                          className="border-2 text-red-600"
+                        >
+                          Already used
+                        </Badge>
+                      )) || (
+                        <Badge
+                          variant="outlined"
+                          className="border-2 text-blue-600"
+                        >
+                        Unused
+                        </Badge>
+                      )}
+                    </div>
+                  </CommandItem>
+                );
+              })}
             </div>
-          )) || (
-            <div className="flex flex-col space-y-6 text-center">
-              <h1 className="mt-4 text-2xl font-bold tracking-tight text-center p-4 h-full text-balance text-gray-900">
-                <p>You haven't Generated tokens</p>
-              </h1>
-            </div>
-          )}
-        </CardContent>
-        <CardFooter className="flex justify-around">
-          {/* <Button form="issue-create-form" className="md:min-w-[160px]">
-            {(fetchTokens.length > 0 && (
-              <LoaderIcon className="animate-spin" />
-            )) ||
-              "Submit"}
-          </Button> */}
-          {/* <FileUpload /> */}
-        </CardFooter>
-      </Card>
+          </CommandGroup>
+        </CommandList>
+      </Command>
     </div>
   );
 }

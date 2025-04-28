@@ -5,6 +5,14 @@ import {
   AnonymousRoute,
   AuthenticatedRoute,
 } from "@/features/auth";
+import RequestPasswordReset from "@/account/RequestPasswordReset";
+import ConfirmPasswordResetCode from "@/account/ConfirmPasswordResetCode";
+import ChangePassword from "@/account/ChangePassword";
+import {
+  resetPasswordByLinkLoader,
+  ResetPasswordByCode,
+  ResetPasswordByLink,
+} from "@/account/ResetPassword";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useConfig } from "@/features/auth/hooks";
@@ -20,6 +28,7 @@ const AppLayout = lazy(() => import("@/components/common/AppLayout"));
 const HelpPage = lazy(() => import("@/pages/HelpPage"));
 const LogoutPage = lazy(() => import("./pages/LogoutPage"));
 const NotFound = lazy(() => import("@/pages/404"));
+const AccountLayout = lazy(() => import("@/account/account-layout"));
 
 function createRouter(config) {
   return createBrowserRouter([
@@ -35,54 +44,86 @@ function createRouter(config) {
           path: "",
           Component: Landing,
         },
-    //     // {
-    //     //   path: "/landing",
-    //     //   element: <LandingPage />,
-    //     // },
-    //     // {
-    //     //   path: "/login",
-    //     //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
-    //     // },
-      ],
-    },
-    // {
-    //   path: "/account/logout",
-    //   Component: LogoutPage,
-    // },
-    {
-      path: "/account/*",
-      element: <AnonymousRoute />,
-      children: [
+        // {
+        //   path: "/landing",
+        //   element: <LandingPage />,
+        // },
+        // {
+        //   path: "/login",
+        //   element: <AnonymousRoute><LoginPage /></AnonymousRoute>,
+        // },
+        // {
+        //   path: "/account/logout",
+        //   Component: LogoutPage,
+        // },
         {
-          path: "signup",
-          Component: SignUp,
+          path: "/account/*",
+          element: (
+            <AnonymousRoute>
+              <AccountLayout />
+            </AnonymousRoute>
+          ),
+          children: [
+            {
+              path: "signup",
+              Component: SignUp,
+            },
+            {
+              path: "login",
+              Component: Login,
+            },
+            {
+              path: "password/reset",
+              Component: RequestPasswordReset,
+            },
+            {
+              path: "password/reset/confirm",
+              Component: ConfirmPasswordResetCode,
+            },
+            {
+              path: "password/reset/complete",
+              Component: ResetPasswordByCode,
+            },
+            {
+              path: "password/reset/key/:key",
+              Component: ResetPasswordByLink,
+              loader: resetPasswordByLinkLoader,
+            },
+          ],
         },
         {
-          path: "login",
-          Component: Login,
+          path: "account/password/change",
+          element: (
+            <AuthenticatedRoute>
+              <AccountLayout>
+                <ChangePassword />
+              </AccountLayout>
+            </AuthenticatedRoute>
+          ),
         },
-      ],
-    },
-    {
-      path: "/dashboard/*",
-      element: (
-        <AuthenticatedRoute>
-          <Dashboard />
-        </AuthenticatedRoute>
-      ),
-    },
 
-    // {
-    //   path: "/dashboard",
-    //   element: <Dashboard />
-    // },
-    // {
-    //   path: "/help",
-    //   Component: HelpPage,
-    // },
-    {
-      path: "*",
-      Component: NotFound,
+        {
+          path: "/dashboard/*",
+          element: (
+            <AuthenticatedRoute>
+              <Dashboard />
+            </AuthenticatedRoute>
+          ),
+        },
+
+        // {
+        //   path: "/dashboard",
+        //   element: <Dashboard />
+        // },
+        // {
+        //   path: "/help",
+        //   Component: HelpPage,
+        // },
+        {
+          path: "*",
+          Component: NotFound,
+        },
+      ],
     },
   ]);
 }

@@ -2,7 +2,6 @@ import React, { useState, useEffect, lazy } from "react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import IssueStats from "./issues/IssueStats";
-import IssuesTable from "./issues/IssueTable";
 import ActivityFeed from "./issues/ActivityFeed";
 import { Button } from "@/components/ui/button";
 import { Terminal } from "lucide-react";
@@ -31,7 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { use } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
-import IssueTable from "./issues/issue-table"; // Importing Link component from react-router-dom for navigation
+import IssueTable from "./issues/issue-table";
 // import { useQuery } from "@/hooks"
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
@@ -59,7 +58,7 @@ export default function RegistrarDashboard({ stats, issues, users }) {
   // const users = usersRes.data;
 
   return (
-    <div className="flex flex-col gap-y-8 p-4 bg-blue-200  rounded-lg">
+    <div className="flex flex-col gap-y-8 p-4 rounded-lg">
       {/* Overview section */}
       <div className="">
         <IssueStats stats={stats} />

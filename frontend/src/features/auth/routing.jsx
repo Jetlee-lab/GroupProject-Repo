@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom'
 import { useAuthChange, AuthChangeEvent, useAuthStatus } from './hooks'
 import { Flows, AuthenticatorType } from './lib/allauth'
+import { useNextRoute } from '@/hooks/use-auth'
 
 export const URLs = Object.freeze({
   LOGIN_URL: '/account/login',
@@ -61,7 +62,7 @@ export function AuthenticatedRoute ({ children }) {
   const location = useLocation()
   const [, status] = useAuthStatus()
   const next = `next=${encodeURIComponent(location.pathname + location.search)}`
-  // console.log("<AuthenticatedRoute/>", { status, next, location })
+  // console.log("<AuthenticatedRoute/>", { isAuthenticated:status.isAuthenticated, next, location, date: new Date() - new Date("2025/04/27") })
   if (status.isAuthenticated) {
     return children || <Outlet />
   } else {
@@ -71,32 +72,37 @@ export function AuthenticatedRoute ({ children }) {
 
 export function AnonymousRoute ({ children }) {
   const [, status] = useAuthStatus()
-  // console.log("<AnonymousRoute/>", { status })
+  const next = useNextRoute()
+  // console.log("<AnonymousRoute/>", { isAuthenticated:status.isAuthenticated, date: new Date() - new Date("2025/04/27") })
   if (!status.isAuthenticated) {
     return children || <Outlet />
   } else {
-    return <Navigate to={URLs.LOGIN_REDIRECT_URL} />
+    return <Navigate to={next || URLs.LOGIN_REDIRECT_URL} />
   }
 }
 
 export function AuthChangeRedirector ({ children }) {
   const [auth, event] = useAuthChange()
   const location = useLocation()
-  // console.log("<AuthChangeRedirector/>", { auth, event, location })
+  const next = useNextRoute()
+  // console.log("<AuthChangeRedirector/>", { is_authenticated:auth.meta.is_authenticated, event, location, date: new Date() - new Date("2025/04/27") })
   switch (event) {
     case AuthChangeEvent.LOGGED_OUT:
       return <Navigate to={URLs.LOGOUT_REDIRECT_URL} />
-    case AuthChangeEvent.LOGGED_IN:
-      return <Navigate to={URLs.LOGIN_REDIRECT_URL} />
+    case AuthChangeEvent.LOGGED_IN: {
+      // const next = new URLSearchParams(location.search).get('next') || URLs.LOGIN_REDIRECT_URL
+      // console.log({imaAftaLOGIN: next})
+      return <Navigate to={next || URLs.LOGIN_REDIRECT_URL} />
+    }
     case AuthChangeEvent.REAUTHENTICATED:
     {
-      const next = new URLSearchParams(location.search).get('next') || '/'
-      return <Navigate to={next} />
+      // const next = new URLSearchParams(location.search).get('next') || '/'
+      return <Navigate to={next || '/'} />
     }
     case AuthChangeEvent.REAUTHENTICATION_REQUIRED: {
-      const next = `next=${encodeURIComponent(location.pathname + location.search)}`
+      const nextPath = `next=${encodeURIComponent(location.pathname + location.search)}`
       const path = pathForFlow(auth.data.flows[0])
-      return <Navigate to={`${path}?${next}`} state={{ reauth: auth }} />
+      return <Navigate to={`${path}?${nextPath}`} state={{ reauth: auth }} />
     }
     case AuthChangeEvent.FLOW_UPDATED: {
       const pendingFlow = navigateToPendingFlow(auth)
@@ -108,6 +114,7 @@ export function AuthChangeRedirector ({ children }) {
     default:
       break
   }
+  // console.log("<DEFAULT:AuthChangeRedirector/>", { is_authenticated:auth.meta.is_authenticated, event, location, date: new Date() - new Date("2025/04/27") })
   // ...stay where we are
   return children
 }
