@@ -29,6 +29,8 @@ const HelpPage = lazy(() => import("@/pages/HelpPage"));
 const LogoutPage = lazy(() => import("./pages/LogoutPage"));
 const NotFound = lazy(() => import("@/pages/404"));
 const AccountLayout = lazy(() => import("@/account/account-layout"));
+const ProviderCallback = lazy(() => import("@/socialaccount/ProviderCallback"));
+const ProviderSignup = lazy(() => import("@/socialaccount/ProviderSignup"));
 
 function createRouter(config) {
   return createBrowserRouter([
@@ -101,7 +103,14 @@ function createRouter(config) {
             </AuthenticatedRoute>
           ),
         },
-
+        {
+          path: '/account/provider/callback',
+          Component: ProviderCallback
+        },
+        {
+          path: '/account/provider/signup',
+          element: <AnonymousRoute><ProviderSignup /></AnonymousRoute>
+        },
         {
           path: "/dashboard/*",
           element: (
