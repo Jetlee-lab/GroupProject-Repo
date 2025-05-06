@@ -15,7 +15,11 @@ let BACKEND_URL;
 if (import.meta.env.DEV) {
   BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 } else {
-  BACKEND_URL = "https://groupproject-repo.onrender.com";
+  BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  if (!BACKEND_URL) {
+    throw new Error("VITE_BACKEND_URL environment variable is not defined");
+  }
 }
 
 export { BACKEND_URL };

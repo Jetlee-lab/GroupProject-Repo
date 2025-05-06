@@ -5,8 +5,6 @@
 
 # print ----------+++++++++++++++++++++++++++++++++++++----------------------------
 
-echo "---------------------------------FROM BUILD.SH ${PORT}:$PORT------------------------------------------"
-
 
 if [ ! -f "/app/backend/staticfiles/frontend/index.html" ]; then
 
@@ -20,6 +18,7 @@ fi
 
 echo SPINING UP SERVER...
 
+# Dynamically assigned by heroku
 python manage.py runserver 0.0.0.0:${PORT}
 
 
