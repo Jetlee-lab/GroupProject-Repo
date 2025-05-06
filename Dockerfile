@@ -56,7 +56,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose the Django port
 EXPOSE 8000
-
+RUN echo "---------------------------------FROM DOCKERFILE ${PORT}------------------------------------------"
 RUN chmod +x /app/build.sh
 # Run Django’s development server
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

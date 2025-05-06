@@ -5,6 +5,8 @@
 
 # print ----------+++++++++++++++++++++++++++++++++++++----------------------------
 
+echo "---------------------------------FROM BUILD.SH ${PORT}:$PORT------------------------------------------"
+
 
 if [ ! -f "/app/backend/staticfiles/frontend/index.html" ]; then
 
@@ -18,7 +20,7 @@ fi
 
 echo SPINING UP SERVER...
 
-python manage.py runserver 0.0.0.0:8000
+python manage.py runserver 0.0.0.0:${PORT}
 
 
 
