@@ -30,3 +30,9 @@ class ReferenceToken(models.Model):
         indexes = [
             models.Index(fields=["is_used", "active"]),  # Composite index
         ]
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(expiry_date__gt=timezone.now()),
+                name="expiry_date_in_future",
+            ),
+        ]
