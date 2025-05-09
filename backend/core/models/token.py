@@ -8,12 +8,12 @@ from .user import Role
 class ReferenceToken(models.Model):
     email = models.EmailField(_("email address"), db_index=True, unique=True)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True)
-    token = models.UUIDField(unique=True, editable=False)
+    token = models.UUIDField(unique=True, editable=False, db_index=True)
     is_used = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    expiry_date = models.DateTimeField(null=True, blank=True)
+    expiry_date = models.DateTimeField(null=True, blank=True, db_index=True)
 
     objects = models.Manager()  # Default manager
     active_objects = ReferenceTokenManager()  # Custom manager
@@ -25,3 +25,8 @@ class ReferenceToken(models.Model):
 
     def __str__(self):
         return f"Token for {self.email} - Active: {self.active}"
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["is_used", "active"]),  # Composite index
+        ]
