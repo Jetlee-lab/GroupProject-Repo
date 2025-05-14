@@ -40,7 +40,7 @@ import {
 const LecturerDashboard = ({ stats, issues, users }) => {
   // State hook to store the mIssues and set them
   const [mIssues, setIssues] = useState([
-    { id: 1, title: "Missing course unit marks", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },
+    { id: 1, title: "Missing course unit marks from students", description: "Marks for MAT101 missing.", status: "Pending", student: "Mulungi Martha", comment: "" },
     { id: 2, title: "Technical issue with AITS platform", description: "System crash during exam upload.", status: "Resolved", student: "Mukisa John", comment: "" },
     { id: 3, title: "Conflicting exam schedule", description: "Two exams scheduled at the same time.", status: "On Hold", student: "Nakato Mary", comment: "" },
   ]);
