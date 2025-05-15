@@ -23,6 +23,7 @@ export function SignupForm({ className, ...props }) {
   const hasProviders = config.data.socialaccount?.providers?.length > 0;
 
   // Function to validate passwords
+  // Ensures the password meets the minimum length requirement and matches the confirmation password
   function validatePasswords(password1, password2) {
     if (password1.length < 8) {
       return { param: "password1", message: "Password must be at least 8 characters long." };
@@ -34,6 +35,7 @@ export function SignupForm({ className, ...props }) {
   }
 
   // Submit handler
+  // Handles form submission, validates passwords, and sends the signup request
   function submit(e) {
     e.preventDefault();
 
