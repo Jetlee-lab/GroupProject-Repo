@@ -100,43 +100,44 @@ export function SignupForm({ className, ...props }) {
                 <FormErrors param="email" errors={response.content?.errors || []} />
               </div>
               <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="email@example.com"
+                  required
+                  onChange={(e) => setEmail(e.target.value)}
+                  aria-label="Email"
+                />
+                <FormErrors param="email" errors={response.content?.errors || []} />
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
                   type="text"
                   required
                   onChange={(e) => setUsername(e.target.value)}
+                  aria-label="Username"
                 />
                 <FormErrors param="username" errors={response.content?.errors || []} />
               </div>
-              <div className="md:flex gap-4 md:items-center">
-                <div>
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type={passwordVisible ? "text" : "password"}
-                    required
-                    onChange={(e) => setPassword2(e.target.value)}
-                  />
-                  <FormErrors param="password" errors={response.content?.errors || []} />
-                </div>
-                <div className="relative">
-                  <Label htmlFor="password2">Repeat Password</Label>
-                  <Input
-                    id="password2"
-                    type={passwordVisible ? "text" : "password"}
-                    required
-                    onChange={(e) => setPassword1(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-1 top-4 right-3 flex items-center text-muted-foreground"
-                    onClick={() => setPasswordVisible(!passwordVisible)}
-                  >
-                    {passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                  <FormErrors param="password2" errors={password2Errors} />
-                </div>
+              <div className="relative">
+                <Label htmlFor="password2">Repeat Password</Label>
+                <Input
+                  id="password2"
+                  type={passwordVisible ? "text" : "password"}
+                  required
+                  onChange={(e) => setPassword1(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-1 top-4 right-3 flex items-center text-muted-foreground"
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                >
+                  {passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+                <FormErrors param="password2" errors={password2Errors} />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="token">Reference Token</Label>
