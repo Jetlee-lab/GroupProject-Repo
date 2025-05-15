@@ -1,5 +1,6 @@
-import React, { Children, useState, lazy } from "react"; // Importing React and the useState hook for state management
-import { Link, useLocation, Outlet, useRoutes } from "react-router-dom"; // Importing Link component from react-router-dom for navigation
+// Importing necessary libraries and components
+import React, { Children, useState, lazy } from "react";
+import { Link, useLocation, Outlet, useRoutes } from "react-router-dom";
 import { useActiveRole, useRoles } from "@/hooks/use-auth";
 import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,7 @@ import { Component, Outdent, CircleUserRound } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { ROLE_STUDENT, ROLE_LECTURER, ROLE_REGISTRAR } from "@/lib/constants"
 
-// const LandingPage = lazy(() => import("@/pages/LandingPage"));
+// Lazy-loaded components for better performance
 const LecturerDashboard = lazy(() => import("@/components/LecturerDashboard"));
 const LecturerReportsPage = lazy(() => import("@/pages/LecturerReportsPage"));
 const LecturerEditIssueForm = lazy(() =>
