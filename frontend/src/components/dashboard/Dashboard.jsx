@@ -4,6 +4,15 @@ import { Link, useLocation, Outlet, useRoutes } from "react-router-dom";
 import { useActiveRole, useRoles } from "@/hooks/use-auth";
 import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
 import { Button } from "@/components/ui/button";
+import React, { useState, lazy } from "react";
+import { Link, useRoutes } from "react-router-dom";
+import { useActiveRole, useRoles } from "@/hooks/use-auth";
+import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
+import { Button } from "@/components/ui/button";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@/components/ui/breadcrumb";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Calendar } from "@/components/ui/calendar";
+import { ROLE_STUDENT, ROLE_LECTURER, ROLE_REGISTRAR } from "@/lib/constants";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,7 +20,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+}
+
+from "@/components/ui/breadcrumb";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RoleSwitcher } from "./Dashboard";
 
