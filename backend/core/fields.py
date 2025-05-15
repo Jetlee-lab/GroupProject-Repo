@@ -1,5 +1,17 @@
+from typing import Any, List, Type, Union
 from rest_framework import serializers
 
+class MultiTypeField(serializers.Field):
+    def __init__(self, types: List[Union[Type, serializers.Field]], **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self.types = types
+        self.typ: Union[Type, serializers.Field, None] = None
+
+    def to_internal_value(self, data: Any) -> Any:
+        ...
+    
+    def to_representation(self, value: Any) -> Any:
+        ...
 class MultiTypeField(serializers.Field):
     def __init__(self, types, **kwargs):
         super().__init__(**kwargs)
