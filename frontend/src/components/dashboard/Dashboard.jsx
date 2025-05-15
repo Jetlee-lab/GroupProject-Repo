@@ -12,6 +12,19 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { RoleSwitcher } from "./Dashboard";
+
+test("renders RoleSwitcher with roles", () => {
+  const roles = [{ id: 1, name: "Student" }, { id: 2, name: "Lecturer" }];
+  const onChange = jest.fn();
+
+  render(<RoleSwitcher role="Student" onChange={onChange} />);
+
+  fireEvent.click(screen.getByRole("button"));
+  expect(screen.getByText("Student")).toBeInTheDocument();
+  expect(screen.getByText("Lecturer")).toBeInTheDocument();
+});
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -398,3 +411,6 @@ export function RoleSwitcher({ role, onChange }) {
 if (!roles || roles.length === 0) {
   return <div>No roles available</div>;
 }
+<BreadcrumbPage>
+  {role ? `${role.charAt(0).toUpperCase()}${role.slice(1)}` : "Unknown Role"}
+</BreadcrumbPage>
