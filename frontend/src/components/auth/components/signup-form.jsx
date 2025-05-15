@@ -25,22 +25,15 @@ export function SignupForm({ className, ...props }) {
   function submit(e) {
     e.preventDefault();
 
-    // Check if passwords match
-    if (password2 !== password1) {
-      setPassword2Errors([
-        { param: "password2", message: "Passwords do not match." },
-      ]);
-      return;
+    function validatePasswords(password1, password2) {
+      if (password1.length < 8) {
+        return { param: "password1", message: "Password must be at least 8 characters long." };
+      }
+      if (password1 !== password2) {
+        return { param: "password2", message: "Passwords do not match." };
+      }
+      return null;
     }
-
-    // Check if password meets minimum length
-    if (password1.length < 8) {
-      setPassword2Errors([
-        { param: "password1", message: "Password must be at least 8 characters long." },
-      ]);
-      return;
-    }
-
     setPassword2Errors([]);
     setResponse({ ...response, fetching: true });
 
