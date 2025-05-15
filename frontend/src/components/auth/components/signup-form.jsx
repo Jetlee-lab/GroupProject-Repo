@@ -22,18 +22,28 @@ export function SignupForm({ className, ...props }) {
   const config = useConfig();
   const hasProviders = config.data.socialaccount?.providers?.length > 0;
 
+  // Function to validate passwords
+  function validatePasswords(password1, password2) {
+    if (password1.length < 8) {
+      return { param: "password1", message: "Password must be at least 8 characters long." };
+    }
+    if (password1 !== password2) {
+      return { param: "password2", message: "Passwords do not match." };
+    }
+    return null;
+  }
+
+  // Submit handler
   function submit(e) {
     e.preventDefault();
 
-    function validatePasswords(password1, password2) {
-      if (password1.length < 8) {
-        return { param: "password1", message: "Password must be at least 8 characters long." };
-      }
-      if (password1 !== password2) {
-        return { param: "password2", message: "Passwords do not match." };
-      }
-      return null;
+    // Validate passwords
+    const validationError = validatePasswords(password1, password2);
+    if (validationError) {
+      setPassword2Errors([validationError]);
+      return;
     }
+
     setPassword2Errors([]);
     setResponse({ ...response, fetching: true });
 
