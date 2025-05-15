@@ -1,5 +1,4 @@
 import { useState } from "react";
-// import FormErrors from '../components/FormErrors'
 import { signUp } from "@/features/auth/lib/allauth";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -10,9 +9,6 @@ import { useConfig } from "@/features/auth";
 import AitsLogo from "@/components/images/logo2.jpg";
 import { cn } from "@/lib/utils";
 import { LoaderIcon, Eye, EyeOff } from "lucide-react";
-
-// import ProviderList from '../socialaccount/ProviderList'
-// import Button from '../components/Button'
 
 export function SignupForm({ className, ...props }) {
   const [email, setEmail] = useState("");
@@ -28,29 +24,26 @@ export function SignupForm({ className, ...props }) {
 
   function submit(e) {
     e.preventDefault();
+
     if (password2 !== password1) {
       setPassword2Errors([
         { param: "password2", message: "Passwords do not match." },
       ]);
       return;
     }
-    // console.log({ password1, password2 });
+
     setPassword2Errors([]);
     setResponse({ ...response, fetching: true });
+
     signUp({ email, username, token, password: password1 })
       .then((content) => {
-        setResponse((r) => {
-          return { ...r, content };
-        });
+        setResponse((r) => ({ ...r, content }));
       })
       .catch((e) => {
-        console.error(e);
-        // window.alert(e);
+        console.error("Signup Error:", e);
       })
-      .then(() => {
-        setResponse((r) => {
-          return { ...r, fetching: false };
-        });
+      .finally(() => {
+        setResponse((r) => ({ ...r, fetching: false }));
       });
   }
 
@@ -62,7 +55,7 @@ export function SignupForm({ className, ...props }) {
             <Link to="/">
               <img
                 src={AitsLogo}
-                alt="Image"
+                alt="AITS Logo"
                 className="absolute inset-0 h-full w-full object-contain dark:brightness-[0.2] dark:grayscale"
               />
             </Link>
@@ -90,9 +83,8 @@ export function SignupForm({ className, ...props }) {
                   required
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                {response.fetching || (
-                  <FormErrors param="email" errors={response.content?.errors} />
-                )}
+                {/* Added fallback for response.content?.errors */}
+                <FormErrors param="email" errors={response.content?.errors || []} />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="username">Username</Label>
@@ -102,12 +94,7 @@ export function SignupForm({ className, ...props }) {
                   required
                   onChange={(e) => setUsername(e.target.value)}
                 />
-                {response.fetching || (
-                  <FormErrors
-                    param="username"
-                    errors={response.content?.errors}
-                  />
-                )}
+                <FormErrors param="username" errors={response.content?.errors || []} />
               </div>
               <div className="md:flex gap-4 md:items-center">
                 <div>
@@ -118,15 +105,10 @@ export function SignupForm({ className, ...props }) {
                     required
                     onChange={(e) => setPassword2(e.target.value)}
                   />
-                  {response.fetching || (
-                    <FormErrors
-                      param="password"
-                      errors={response.content?.errors}
-                    />
-                  )}
+                  <FormErrors param="password" errors={response.content?.errors || []} />
                 </div>
                 <div className="relative">
-                  <Label htmlFor="password">Repeat Password</Label>
+                  <Label htmlFor="password2">Repeat Password</Label>
                   <Input
                     id="password2"
                     type={passwordVisible ? "text" : "password"}
@@ -140,9 +122,7 @@ export function SignupForm({ className, ...props }) {
                   >
                     {passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
-                  {response.fetching || (
-                    <FormErrors param="password2" errors={password2Errors} />
-                  )}
+                  <FormErrors param="password2" errors={password2Errors} />
                 </div>
               </div>
               <div className="grid gap-2">
@@ -153,19 +133,14 @@ export function SignupForm({ className, ...props }) {
                   required
                   onChange={(e) => setToken(e.target.value)}
                 />
-                {response.fetching || (
-                  <FormErrors param="token" errors={response.content?.errors} />
-                )}
+                <FormErrors param="token" errors={response.content?.errors || []} />
               </div>
               <Button
                 type="submit"
                 className="w-full"
                 disabled={response.fetching}
               >
-                {(response.fetching && (
-                  <LoaderIcon className="animate-spin" />
-                )) ||
-                  "Sign Up"}
+                {response.fetching ? <LoaderIcon className="animate-spin" /> : "Sign Up"}
               </Button>
             </div>
           </form>
@@ -179,19 +154,18 @@ export function SignupForm({ className, ...props }) {
   );
 }
 
-export function FormErrors(props) {
-  if (!props.errors || !props.errors.length) {
-    return null;
-  }
-  const errors = props.errors.filter((error) =>
-    props.param ? error.param === props.param : error.param == null
+export function FormErrors({ param, errors }) {
+  if (!errors || !errors.length) return null;
+
+  const filteredErrors = errors.filter((error) =>
+    param ? error.param === param : error.param == null
   );
-  if (!errors.length) {
-    return null;
-  }
+
+  if (!filteredErrors.length) return null;
+
   return (
     <ul className="text-red-600 text-sm">
-      {errors.map((e, i) => (
+      {filteredErrors.map((e, i) => (
         <li key={i}>{e.message}</li>
       ))}
     </ul>
