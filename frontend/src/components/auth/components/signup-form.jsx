@@ -25,9 +25,18 @@ export function SignupForm({ className, ...props }) {
   function submit(e) {
     e.preventDefault();
 
+    // Check if passwords match
     if (password2 !== password1) {
       setPassword2Errors([
         { param: "password2", message: "Passwords do not match." },
+      ]);
+      return;
+    }
+
+    // Check if password meets minimum length
+    if (password1.length < 8) {
+      setPassword2Errors([
+        { param: "password1", message: "Password must be at least 8 characters long." },
       ]);
       return;
     }
@@ -83,7 +92,6 @@ export function SignupForm({ className, ...props }) {
                   required
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                {/* Added fallback for response.content?.errors */}
                 <FormErrors param="email" errors={response.content?.errors || []} />
               </div>
               <div className="grid gap-2">
