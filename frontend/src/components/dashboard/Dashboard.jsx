@@ -395,3 +395,6 @@ export function RoleSwitcher({ role, onChange }) {
     </div>
   );
 }
+if (!roles || roles.length === 0) {
+  return <div>No roles available</div>;
+}
