@@ -304,22 +304,22 @@ export function Dashboard() {
   }
 }
 
+function getRoleByName(roles, name) {
+  return roles.find((role) => role.name === name) || null;
+}
+
 export function RoleSwitcher({ role, onChange }) {
   const [open, setOpen] = React.useState(false);
-  // const [selectedRole, setSelectedRole] = React.useState(null);
   const roles = useRoles();
-  // console.log("RoleSwitcher", { role, roles, onChange });
 
   return (
     <div className="flex items-center space-x-4 mr-3">
-      {/* <p className="text-sm text-muted-foreground">Status</p> */}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className="w-[32px] h-[32px] justify-center overflow-clip rounded-2xl"
           >
-            {/* {role ? <>{role}</> : null} */}
             <CircleUserRound size={24} />
           </Button>
         </PopoverTrigger>
@@ -334,11 +334,54 @@ export function RoleSwitcher({ role, onChange }) {
                     key={role.id}
                     value={role.name}
                     onSelect={(value) => {
-                      onChange(
-                        roles.find((role) => role.name === value) || null
-                      );
+                      onChange(getRoleByName(roles, value));
                       setOpen(false);
-                      // onChange(role);
+                    }}
+                  >
+                    {role.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}// Function to get a role by its name from the list of roles
+function getRoleByName(roles, name) {
+  return roles.find((role) => role.name === name) || null;
+}
+
+// RoleSwitcher component allows users to switch between roles
+export function RoleSwitcher({ role, onChange }) {
+  const [open, setOpen] = React.useState(false); // State to manage the popover's open/close state
+  const roles = useRoles(); // Fetch available roles
+
+  return (
+    <div className="flex items-center space-x-4 mr-3">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-[32px] h-[32px] justify-center overflow-clip rounded-2xl"
+          >
+            <CircleUserRound size={24} />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-0" side="left" align="start">
+          <Command>
+            <CommandInput placeholder="Change status..." />
+            <CommandList>
+              <CommandEmpty>No Roles Found.</CommandEmpty>
+              <CommandGroup>
+                {roles.map((role) => (
+                  <CommandItem
+                    key={role.id}
+                    value={role.name}
+                    onSelect={(value) => {
+                      onChange(getRoleByName(roles, value)); // Update the active role
+                      setOpen(false); // Close the popover
                     }}
                   >
                     {role.name}
