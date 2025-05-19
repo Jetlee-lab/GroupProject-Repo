@@ -1,6 +1,8 @@
-from django.apps import AppConfig
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import ReferenceToken
 
-
-class CoreConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'core'
+@receiver(post_save, sender=ReferenceToken)
+def handle_reference_token_save(sender, instance, created, **kwargs):
+    if created:
+        print(f"New ReferenceToken created: {instance.token}")
