@@ -13,7 +13,7 @@ export default function Header() {
       <Link to="/about" style={{color: 'white', marginRight: '10px'}}>About</Link>
       <Link to="/contact" style={{color: 'white', marginRight: '10px'}}>Contact</Link>
       <Link to="/colleges" style={{color: 'white', marginRight: '10px'}}>Colleges</Link>
-      <Link to="/issue" style={{color: 'white', marginRight: '10px'}}>Issue</Link>
+      <Link to="/issue" style={{color: "white", marginRight: '10px'}}>Issue</Link>
     </div>
   )
 }
