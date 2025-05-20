@@ -10,7 +10,7 @@ const FAQ = () => (
       </div>
       <div>
         <dt className="font-bold">Can I track multiple issues at once ?</dt>
-        <dd className="text-gray-700">Yes, all reported issues appear under "Reports".</dd>
+        <dd className="text-gray-700">Yes, all reported issues appear under "Reports and the issues get resolved fast jus".</dd>
       </div>
     </dl>
   </section>
