@@ -12,8 +12,8 @@ from django.utils.translation import gettext_lazy as _  # Updated import
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from .department import Department  # Ensure this import is correct
-
+from .department import Department
+from .course import Course, CourseUnit
 
 class UserManager(UserManager):
     def create_user(self, username, email, password=None, **kwargs):
@@ -142,11 +142,9 @@ class Student(User):
     #     on_delete=models.CASCADE,
     # )
     student_no = models.CharField(max_length=32, blank=False)
-
+    courses = models.ManyToManyField(Course, related_name='students')
     # def __str__(self):
     #     return "Student Table"
-
-
 
 class Staff(User):
     """
@@ -158,10 +156,8 @@ class Staff(User):
     #     related_name="%(class)s_details",
     #     on_delete=models.CASCADE,
     # )
-    departments = models.ManyToManyField(Department,
-        related_name='staff'
-    )
-
+    departments = models.ManyToManyField(Department, related_name='staff')
+    course_units = models.ManyToManyField(CourseUnit, related_name='staff')
 
     # def __str__(self):
     #     return "Staff Table"

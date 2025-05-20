@@ -91,6 +91,15 @@ export default function RegistrarDashboard({ stats, issues, users }) {
               View Generated Tokens
             </Button>
           </Link>
+          <Link to="management/courses">
+            <Button
+              variant="outline"
+              className="bg-blue-500 text-white px-2 py-4 rounded hover:bg-blue-600"
+            >
+              Course Management
+            </Button>
+          </Link>
+
         </div>
       </div>
 

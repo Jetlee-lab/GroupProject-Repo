@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectGroup, SelectLabel, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { MultiSelect } from "@/components/muti-select"
 import { Description } from "@radix-ui/react-dialog"
@@ -37,6 +37,31 @@ export const TitleInput = React.memo(({dataRef, ...props}) => {
   return <>
     <Label htmlFor="title" className="font-semibold">Title</Label>
     <Input placeholder="Your title here..." name="title" id="title" value={title} onChange={handleChange} {...props} />
+  </>
+})
+
+export const CourseUnitInput = React.memo(({courseUnits, dataRef, ...props}) => {
+  const [courseUnit, setCourseUnit] = React.useState(dataRef.current.courseUnit)
+  const handleChange = (value) => {
+    setCourseUnit(value)
+  }
+  React.useEffect(() => {
+    dataRef.current.course_unit = courseUnit
+  }, [courseUnit])
+
+  return <>
+    <Label htmlFor="course-unit" className="font-semibold">Course Unit</Label>
+    <Select name="course-unit" onValueChange={handleChange} {...props}>
+      <SelectTrigger id="course-unit" className="w-full">
+        <SelectValue placeholder="Select Course Unit" />
+      </SelectTrigger>
+      <SelectContent>
+        { courseUnits?.length > 0
+          && courseUnits.map((c, i) => <SelectItem value={String(c.id)} key={i}>{c.name}</SelectItem>)
+          || <p className="ml-8">No Course Units</p>
+        }
+      </SelectContent>
+    </Select>
   </>
 })
 

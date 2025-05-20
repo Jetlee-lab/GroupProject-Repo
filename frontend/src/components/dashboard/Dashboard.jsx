@@ -67,6 +67,7 @@ const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 const NotFound = lazy(() => import("@/pages/404"));
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
 const GeneratedTokensPage = lazy(() => import("@/pages/generated-tokens"));
+const CoursesManagementPage = lazy(() => import("@/pages/manage-courses"));
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchIssues,
@@ -127,6 +128,10 @@ const dashboardRoutes = [
         path: "/generated-tokens",
         Component: GeneratedTokensPage,
       },
+      {
+        path: "/management/courses",
+        Component: CoursesManagementPage,
+      },
       // {
       //   path: "/account/logout",
       //   Component: LogoutPage,
@@ -181,7 +186,7 @@ export function DashboardLayout() {
       <AppSidebar userRoles={roles} onRoleChange={handleRoleChange} />
       <SidebarInset>
         {/* <div className="sticky top-0 bg-gradient-to-r from-blue-100 to-green-200"> */}
-        <header className="flex sticky top-0 z-11 min-h-14 p-4 backdrop-blur-3xl  bg-gradient-to-r from-blue-400 to-blue-600">
+        <header className="flex sticky top-0 z-11 min-h-14 p-4 backdrop-blur-3xl bg-gradient-to-r from-blue-400 to-blue-600">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
@@ -200,7 +205,7 @@ export function DashboardLayout() {
             </Breadcrumb>
             <Search />
           </div>
-          <div className="flex flex-row gap-x-4 ml-auto">
+          <div className="hidden flex flex-row gap-x-4 ml-auto">
             <RoleSwitcher role={role} onChange={switchRole} />
           </div>
         </header>

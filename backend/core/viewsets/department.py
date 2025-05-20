@@ -30,5 +30,15 @@ class DepartmentViewSet(IOMixin, viewsets.ModelViewSet):
     serializer_class = DepartmentSerializer
     permission_classes = (IsAuthenticated,)
 
+    @action(methods=["get"], detail=True, url_path="courses", url_name="courses")
+    def courses(self, request, *args, pk=None, **kwargs):
+        try:
+            department = self.get_queryset().get(pk=pk)
+        except Department.DoesNotExist:
+            raise ValidationError({'message': 'Department not found'})
+
+        courses = department.courses.all()
+        return paginate_response(self, courses, CourseSerializer)
+
     def get_queryset(self):
         return Department.objects.all()

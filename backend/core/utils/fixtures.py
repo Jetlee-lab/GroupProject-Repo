@@ -4,10 +4,11 @@ from random import randint, random, sample
 from django.utils.lorem_ipsum import paragraphs, sentence, words
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
+import string
 
 import json, sys, uuid
 
-from core.models import Issue
+from core.models import Issue, Course
 
 
 FACULTY_DATA = {
@@ -15,14 +16,14 @@ FACULTY_DATA = {
         "Physics",
         "Chemistry",
         "Biology",
-        "Computer Science",
         "Mathematics",
     ),
     "Engineering": (
         "Mechanical Engineering",
         "Electrical Engineering",
         "Civil Engineering",
-        "Computer Engineering",
+        "Computer Science",
+        # "Computer Engineering",
     ),
     "Arts and Humanities": (
         "History",
@@ -395,15 +396,20 @@ class StaffFixture:
         departments = sample(departments, num_departments)
         return departments # or None
 
-    def generate_staff(self, staff_ids, faculties):
+    def generate_course_units(self, course_unit_ids):
+        return sample(course_unit_ids, randint(1, 5) if random() > 0.5 else 2)
+
+    def generate_staff(self, staff_ids, faculties, course_unit_ids):
         staff = {
             # 'user': self.generate_user(staff_ids),
             'departments': self.generate_departments(faculties),
+            'course_units': self.generate_course_units(course_unit_ids)
         }
         return staff
 
-    def generate(self, *, users, departments):
+    def generate(self, *, users, departments, course_units):
         staff_ids = [u['pk'] for u in users if u['fields']['is_staff']]
+        course_unit_ids = [x['pk'] for x in course_units]
         faculties = {}
     
         for department in departments:
@@ -416,7 +422,7 @@ class StaffFixture:
             ret.append({
                 'model': self.model,
                 'pk': pk,
-                'fields': self.generate_staff(staff_ids, faculties),
+                'fields': self.generate_staff(staff_ids, faculties, course_unit_ids),
             })
         return ret
     
@@ -453,23 +459,28 @@ class StudentFixture:
 
         self.registry['student_nos'].append(student_no)
         return student_no
-    
-    def generate_student(self, user_ids):
+
+    def generate_courses(self, course_ids):
+        return sample(course_ids, randint(2, 3) if random() > 0.8 else 1)
+
+    def generate_student(self, user_ids, course_ids):
         student = {
             # 'user': self.generate_user(user_ids),
             'student_no': self.generate_student_no(),
+            'courses': self.generate_courses(course_ids)
         }
         return student
 
-    def generate(self, *, users):
+    def generate(self, *, users, courses):
         student_ids = [u['pk'] for u in users if not u['fields']['is_staff'] and not u['fields']['is_superuser']]
+        course_ids = [x['pk'] for x in courses]
         ret = []
         # for pk in range(1, len(student_ids)+1):
         for pk in student_ids:
             ret.append({
                 'model': self.model,
                 'pk': pk,
-                'fields': self.generate_student(student_ids),
+                'fields': self.generate_student(student_ids, course_ids),
             })
         return ret
     
@@ -523,8 +534,8 @@ class CategoryFixture:
 class IssueFixture:
     model = 'core.issue'
 
-    def generate_owner(self, student_ids):
-        return sample(student_ids, 1)[0]
+    def generate_owner(self, students):
+        return sample(students, 1)[0]['pk']
 
     def generate_assignee(self, staff_ids):
         return sample(staff_ids, 1)[0] if random() >= 0.45 else None
@@ -558,13 +569,22 @@ class IssueFixture:
     def generate_categories(self, category_ids):
         cats = [c for c in sample(category_ids, randint(0, len(category_ids)))]
         return cats
+    
+    def generate_course_unit_id(self, course_units, owner, students):
+        course_unit_ids = []
+        for s in students:
+            if s['pk'] == owner:
+                course_unit_ids = [x['pk'] for x in course_units if x['fields']['course_id'] in s['fields']['courses']]
+                break
+        return sample(course_unit_ids, 1)[0]
 
-    def generate_issue(self, student_ids, staff_ids, categories):
+    def generate_issue(self, students, staff_ids, categories, course_units):
+        owner = self.generate_owner(students)
         category_ids = [c['pk'] for c in categories]
         created_at, updated_at = generate_datetime()
 
         issue = {
-            'owner': self.generate_owner(student_ids),
+            'owner': owner,
             'assignee': self.generate_assignee(staff_ids),
             'title': self.generate_title(),
             'description': self.generate_description(),
@@ -573,26 +593,27 @@ class IssueFixture:
             'priority': self.generate_priority(),
             'escalation_level': self.generate_escalation_level(),
             'notes': self.generate_notes(),
+            'course_unit_id': self.generate_course_unit_id(course_units, owner, students),
             'created_at': created_at,
             'updated_at': updated_at,
         }
         return issue
 
-    def generate(self, *, students, staff, categories, count=-1):
+    def generate(self, *, students, staff, categories, course_units, count=-1):
         if count < 0:
             count = randint(15, 30)
 
         # student_ids = [s['fields']['user'] for s in students]
         # staff_ids = [s['fields']['user'] for s in staff]
-        student_ids = [s['pk'] for s in students]
+        # student_ids = [s['pk'] for s in students]
         staff_ids = [s['pk'] for s in staff]
     
         ret = []
-        for pk in range(1, len(student_ids)+1):
+        for pk in range(1, len(students)+1):
             ret.append({
                 'model': self.model,
                 'pk': pk,
-                'fields': self.generate_issue(student_ids, staff_ids, categories),
+                'fields': self.generate_issue(students, staff_ids, categories, course_units),
             })
         return ret
     
@@ -919,7 +940,146 @@ class DepartmentFixture:
                 })
                 pk += 1
         return ret
-    
+
+
+# ************************************************
+# Course Fixture
+# ************************************************
+
+class CourseFixture:
+    model = 'core.course'
+
+    def __init__(self):
+        self.registry = REGISTRY.setdefault(self.__class__, {
+            'names': [],
+            'codes': []
+        }) 
+
+    def generate_name(self):
+        name_sz = randint(2, 5) if random() > 0.7 else 2
+        while (name := words(name_sz, common=False)) in self.registry['names']:
+            pass
+        self.registry['names'].append(name)
+        return name.title()
+
+    def generate_code(self, course_name):
+        prefix = "".join(x[0] for x in course_name.split(maxsplit=3))
+        while (code := f"{prefix}{generate_id(3, string.digits)}") in self.registry['codes']:
+            pass
+        self.registry['codes'].append(code)
+        return code
+
+    def generate_description(self):
+        return generate_description(randint(1, 2), 256) # or None
+
+    def generate_department(self, department_ids):
+       return sample(department_ids, 1)[0]
+
+    def generate_credits(self):
+        return randint(1, 5) if random() > 0.5 else 4
+
+    def generate_duration(self):
+        """
+        The duration in weeks
+        """
+        years = randint(1, 5)
+        quarter_nweeks = [13, 26, 39, 52] # 1/4, 1/2, 3/4, 1
+        return years * sample(quarter_nweeks, 1)[0]
+
+    def generate_level(self):
+        choices = tuple(Course.LEVEL_CHOICES.keys())
+        return choices[randint(0, len(choices)-1)]
+
+    def generate_course(self, department_ids):
+        name = self.generate_name()
+        created_at, updated_at = generate_datetime()
+
+        course = {
+            'name': name,
+            'code': self.generate_code(name),
+            'description': self.generate_description(),
+            'department_id': self.generate_department(department_ids),
+            'duration': self.generate_duration(),
+            'credits': self.generate_credits(),
+            'level': self.generate_level(),
+            'created_at': created_at,
+            'updated_at': updated_at,
+        }
+        return course
+
+    def generate(self, *, departments, count=-1):
+        if count < 0:
+            count = randint(len(departments), len(departments) * 5)
+
+        department_ids = [i['pk'] for i in departments]
+        ret = []
+        last_pk = len(self.registry['names'])
+
+        for i in range(last_pk, last_pk + count):
+            course = self.generate_course(department_ids)
+            ret.append({
+                'model': self.model,
+                'pk': i+1,
+                'fields': course,
+            })
+            # self.registry['pks'].append(i+1)
+        return ret
+
+
+# ************************************************
+# CourseUnit Fixture
+# ************************************************
+
+class CourseUnitFixture:
+    model = 'core.courseunit'
+
+    def __init__(self):
+        self.registry = REGISTRY.setdefault(self.__class__, {
+            'names': [],
+        }) 
+
+    def generate_name(self):
+        name_sz = randint(2, 5) if random() > 0.7 else 2
+        while (name := words(name_sz, common=False)) in self.registry['names']:
+            pass
+        self.registry['names'].append(name)
+        return name.title()
+
+    def generate_description(self):
+        return generate_description(randint(1, 2), 256) # or None
+
+    def generate_course_id(self, course_ids):
+        return sample(course_ids, 1)[0]
+
+    def generate_course_unit(self, course_ids):
+        created_at, updated_at = generate_datetime()
+
+        course_unit = {
+            'name': self.generate_name(),
+            'description': self.generate_description(),
+            'course_id': self.generate_course_id(course_ids),
+            'created_at': created_at,
+            'updated_at': updated_at,
+        }
+        return course_unit
+
+    def generate(self, *, courses, count=-1):
+        if count < 0:
+            count = randint(len(courses), len(courses) * 5)
+
+        course_ids = [i['pk'] for i in courses]
+        ret = []
+        last_pk = len(self.registry['names'])
+
+        for i in range(last_pk, last_pk + count):
+            course_unit = self.generate_course_unit(course_ids)
+            ret.append({
+                'model': self.model,
+                'pk': i+1,
+                'fields': course_unit,
+            })
+            # self.registry['pks'].append(i+1)
+        return ret
 
 
 # *****************************************************
@@ -930,17 +1090,19 @@ def main():
     users = UserFixture().generate(roles=roles)
     faculties = FacultyFixture().generate()
     departments = DepartmentFixture().generate(faculties=faculties)
-    staff = StaffFixture().generate(users=users, departments=departments)
-    students = StudentFixture().generate(users=users)
+    courses = CourseFixture().generate(departments=departments)
+    course_units = CourseUnitFixture().generate(courses=courses)
+    staff = StaffFixture().generate(users=users, departments=departments, course_units=course_units)
+    students = StudentFixture().generate(users=users, courses=courses)
     categories = CategoryFixture().generate()
-    issues = IssueFixture().generate(students=students, staff=staff, categories=categories)
+    issues = IssueFixture().generate(students=students, staff=staff, categories=categories, course_units=course_units)
     attachments = AttachmentFixture().generate(issues=issues)
     issuelogs = IssueLogFixture().generate(issues=issues, users=users, attachments=attachments)
 
     data = [
         *roles, *users, *faculties, *departments,
-        *staff, *students, *categories, *issues,
-        *attachments, *issuelogs
+        *courses, *course_units, *staff, *students,
+        *categories, *issues, *attachments, *issuelogs
     ]
     json.dump(data, sys.stdout) #, indent=2)
 

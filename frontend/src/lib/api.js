@@ -118,3 +118,60 @@ export const fetchToken = async (id) => {
     return response.data;
   });
 };
+
+
+/*
+ *  Course Units API
+ */
+
+// export const fetchCourses = async ({ params } = {}) => {
+//   return await apiClient.get("/courses", { params }).then((response) => {
+//     return response.data;
+//   });
+// };
+
+export const enrollToCourses = async ({ studentId, courses } = {}) => {
+  return await apiClient.put(`/users/${studentId}/courses`, { courses: courses }).then((response) => {
+    return response.data;
+  });
+};
+
+export const fetchCourses = async () => {
+  return await apiClient.get(`/courses`).then((response) => {
+    return response.data;
+  });
+};
+
+export const createCourse = async (data) => {
+  return await apiClient.post(`/courses`, data).then((response) => {
+    return response.data;
+  });
+};
+
+export const updateCourse = async ({id, ...data}) => {
+  return await apiClient.put(`/courses/${id}`, data).then((response) => {
+    return response.data;
+  });
+};
+
+export const deleteCourse = async (id) => {
+  return await apiClient.delete(`/courses/${id}`).then((response) => {
+    return response.data;
+  });
+};
+
+// export const fetchtCourseUnits = async () => {
+//   return await apiClient.get(`/courses/${courseId}`).then((response) => {
+//     return response.data;
+//   });
+// };
+
+/*
+ *  Course Units API
+ */
+
+export const fetchDepartments = async () => {
+  return await apiClient.get(`/departments`).then((response) => {
+    return response.data;
+  });
+};

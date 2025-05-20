@@ -310,7 +310,7 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
     },
     {
       accessorKey: "creator",
-      header: "Creator",
+      header: "Student",
       cell: ({ row }) => (
         <div className="">
           {"@"}

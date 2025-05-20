@@ -3,6 +3,12 @@ from ..models import User, Role, Staff, Student
 from .common import DynamicFieldsModelSerializer
 
 
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ['id', 'name', 'description']
+        read_only_field = ["id"]
+
 class RoleListingField(serializers.RelatedField):
     def get_queryset(self, *args, **kwargs):
         return Role.objects.all()
@@ -14,7 +20,8 @@ class RoleListingField(serializers.RelatedField):
         }
 
 class UserSerializer(serializers.ModelSerializer):
-    roles = RoleListingField(many=True) #, read_only=True)
+    # roles = RoleListingField(many=True) #, read_only=True)
+    roles = RoleSerializer(many=True)
 
     class Meta:
         model = User
@@ -23,7 +30,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class RoleSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Role
         fields = '__all__'

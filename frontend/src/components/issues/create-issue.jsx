@@ -13,6 +13,7 @@ import {
   CategoriesInput,
   NotesInput,
   AttachmentsInput,
+  CourseUnitInput,
 } from "./issue-fields";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,9 +44,21 @@ import {
   ESCALATION_L0,
   PRIOTITY_MODERATE,
 } from "@/lib/constants";
+import { fetchStats } from "@/lib/api";
 
 export default function CreateIssueForm() {
   const issuesMeta = useIssuesMeta();
+  const user = useUser()
+  const statsParams = { course__students: user.id, meta: ['id', 'name'].join(',') }
+  const {
+    isPending: courseUnitsPending,
+    error: courseUnitsError,
+    data: courseUnitsRes,
+    isFetching: courseUnitsFetching,
+  } = useQuery({
+    queryKey: ["stats", statsParams],
+    queryFn: () => fetchStats({ stat: "course-units", params: statsParams }),
+  });
   // const user = useAuth()
   const studentsRes = queryClient.getQueryData(["users", "students"]);
   const lecturersRes = queryClient.getQueryData(["users", "lecturers"]);
@@ -61,6 +74,9 @@ export default function CreateIssueForm() {
       console.error("Error creating issue", error);
     },
   });
+  const courseUnitsList = courseUnitsRes?.data.course__students[user.id]?.course_units || [];
+    console.log({user, courseUnitsRes, courseUnitsList})
+
   const onUpload = React.useCallback(
     async (files, { onProgress, onSuccess, onError }) => {
       // console.log({files})
@@ -116,8 +132,6 @@ export default function CreateIssueForm() {
     });
   }, []);
 
-  const user = useUser();
-
   const dataRef = React.useRef({
     title: "",
     description: "",
@@ -130,6 +144,7 @@ export default function CreateIssueForm() {
       (l) => l.name === ESCALATION_L0
     ).id,
     categories: [],
+    course_unit: null,
     notes: null,
   });
 
@@ -141,6 +156,8 @@ export default function CreateIssueForm() {
     // const formData = new FormData(e.target)
     const data = dataRef.current;
     const nFormData = new FormData();
+    // console.log({data, nFormData})
+    // return
 
     for (let k in data) {
       if (k === "attachments") {
@@ -187,6 +204,12 @@ export default function CreateIssueForm() {
               <div className="flex flex-col gap-3">
                 <CategoriesInput
                   categories={issuesMeta.categories}
+                  dataRef={dataRef}
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <CourseUnitInput
+                  courseUnits={courseUnitsList}
                   dataRef={dataRef}
                 />
               </div>

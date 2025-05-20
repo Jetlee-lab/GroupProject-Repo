@@ -5,6 +5,7 @@ from django.contrib.postgres.operations import TrigramExtension
 
 
 class Migration(migrations.Migration):
+    # initial = True  # Marks this as the first migration
 
     dependencies = [
         ('core', '0001_initial'),

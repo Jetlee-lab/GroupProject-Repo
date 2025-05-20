@@ -228,6 +228,7 @@ from rest_framework import generics
 from django.db.models import Value, Q, F, Count
 from django.db.models.functions import JSONObject
 from django.core.exceptions import FieldDoesNotExist
+from django.db.models.fields.related import ManyToOneRel, ManyToManyRel
 from core.serializers import (
     IssueSerializer,
     # AttachmentSerializer,
@@ -243,26 +244,13 @@ from core.models import (
     Student,
     Staff,
     IssueLog,
+    Course,
+    CourseUnit,
+    Department,
 )
 from .serializers import IssueQuerySerializer
 
-class IssueStat(): 
-    fields = ['priority', 'status', 'escalation_level', 'assignee', 'owner', 'categories', 'attachments', 'logs']
-    fields_keys = {
-        'attachments': ('attachments__file', None),
-        'priority': (None, lambda x: Issue.PRIORITY_CHOICES[x]),
-        'escalation_level': (None, lambda x: Issue.ESCALATION_CHOICES[x]),
-        'status': (None, lambda x: Issue.STATUS_CHOICES[x]),
-    }
-    meta_map = {
-        # key: (serializer, queryset-gettter)
-        'meta': Issue,
-        'attachments': Attachment,
-        'categories': Category,
-        'owner': Student,
-        'assignee': Staff,
-        'logs': IssueLog,
-    }
+class Stat():
     multi_value_sep = ","
 
     @staticmethod
@@ -290,6 +278,7 @@ class IssueStat():
         #     result = result.union(query) if result else query
 
         def is_prefetchable(instance, field_name):
+            # print(f"is_prefetchable({instance}, {field_name})")
             if not instance:
                 return False
             try:
@@ -316,15 +305,19 @@ class IssueStat():
 
             vv = set()
             for x in v:
-                vv = vv.union(set(x.split(self.multi_value_sep)))
+                vv = vv.union(filter(lambda x: x, set(x.split(self.multi_value_sep))))
 
             if end:
                 kw[k] = vv
             # elif field in self.meta_serializers:
             elif field in self.meta_map:
                 meta_fields[field.lower()] = vv
+        
+        # Just index response by id if the user only specified ?meta=
+        if not kw and kwargs.get("meta"):
+            kw["id"] = set()
 
-        # print({'kwargs':kwargs, 'kw':kw})
+        # print({'kwargs':kwargs, 'kw':kw}, [bool(kwargs), bool(kw)])
 
         result = {}
         for k, v in kw.items():
@@ -338,7 +331,7 @@ class IssueStat():
             annotations = {
                 # f'{k}_count': Count('id'),
                 'count': Count('id', distinct=True),
-                'issues': ArrayAgg(
+                self.name: ArrayAgg(
                     JSONObject(**{mv: mv for mv in meta_fields["meta"]}) if meta_fields.get("meta") else "id",
                     distinct=True
                 ),
@@ -372,3 +365,64 @@ class IssueStat():
             # query.dd
 
         return result
+
+class IssueStat(Stat):
+    name = "issues"
+    fields = ['priority', 'status', 'escalation_level', 'assignee', 'owner', 'categories', 'attachments', 'logs']
+    fields_keys = {
+        'attachments': ('attachments__file', None),
+        'priority': (None, lambda x: Issue.PRIORITY_CHOICES[x]),
+        'escalation_level': (None, lambda x: Issue.ESCALATION_CHOICES[x]),
+        'status': (None, lambda x: Issue.STATUS_CHOICES[x]),
+    }
+    meta_map = {
+        # key: (serializer, queryset-gettter)
+        'meta': Issue,
+        'attachments': Attachment,
+        'categories': Category,
+        'owner': Student,
+        'assignee': Staff,
+        'logs': IssueLog,
+    }
+
+    def stats(self, query, **kwargs):
+        return super().stats(query, **kwargs) 
+class CourseStat(Stat):
+    name = "courses"
+    fields = ['name', 'code', 'description', 'department', 'duration', 'credits', 'level']
+    fields_keys = {
+        # 'department': ('attachments__file', None),
+        # 'priority': (None, lambda x: Issue.PRIORITY_CHOICES[x]),
+        # 'escalation_level': (None, lambda x: Issue.ESCALATION_CHOICES[x]),
+        # 'status': (None, lambda x: Issue.STATUS_CHOICES[x]),
+    }
+    meta_map = {
+        # key: (serializer, queryset-gettter)
+        'meta': Course,
+        'department': Department,
+        'units': CourseUnit,
+        # 'owner': Student,
+        # 'assignee': Staff,
+        # 'logs': IssueLog,
+    }
+
+    def stats(self, query, **kwargs):
+        return super().stats(query, **kwargs)
+
+class CourseUnitStat(Stat):
+    name = "course_units"
+    fields = ['course', 'name', 'description']
+    fields_keys = {
+        # 'department': ('attachments__file', None),
+        # 'priority': (None, lambda x: Issue.PRIORITY_CHOICES[x]),
+        # 'escalation_level': (None, lambda x: Issue.ESCALATION_CHOICES[x]),
+        # 'status': (None, lambda x: Issue.STATUS_CHOICES[x]),
+    }
+    meta_map = {
+        # key: (serializer, queryset-gettter)
+        'meta': Course,
+        'course': Course,
+    }
+
+    def stats(self, query, **kwargs):
+        return super().stats(query, **kwargs)
