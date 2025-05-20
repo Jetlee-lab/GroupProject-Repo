@@ -25,7 +25,7 @@ const IssueForm = () => {
           body: JSON.stringify(issue),
         });
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Network response was not ok at that moment");
         }
       
       alert("Issue submitted successfully!");
