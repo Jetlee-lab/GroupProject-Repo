@@ -3,7 +3,7 @@ import React from "react";
 
 const Notifications = () => {
   const notifications = [
-    "Issue #1 updated to 'Pending'.",
+    "Issue #1 updated to 'Pending now '.",
     "Issue #2 resolved.",
   ];
 
