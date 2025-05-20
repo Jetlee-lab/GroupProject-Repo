@@ -25,7 +25,7 @@ function MyLogin(){
       <label>Enter your name here
 >>>>>>> frontend
 =======
-      <label>Enter your name here
+      <label>Enter your name here and in full
 >>>>>>> a244366d6328ee5ce5e0e169939a959c543f6f4d
       <input type="text"
       name="username"
