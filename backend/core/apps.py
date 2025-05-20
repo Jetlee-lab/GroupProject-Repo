@@ -1,8 +1,12 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .models import ReferenceToken
+from django.apps import AppConfig
 
-@receiver(post_save, sender=ReferenceToken)
-def handle_reference_token_save(sender, instance, created, **kwargs):
-    if created:
-        print(f"New ReferenceToken created: {instance.token}")
+class CoreConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'core'
+
+    def ready(self):
+        """
+        This method is called when the app is ready.
+        You can use it to import signals or perform app-specific initialization.
+        """
+        import core.signals  # Import signals to connect them
