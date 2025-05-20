@@ -9,7 +9,7 @@ const FAQ = () => (
         <dd className="text--700green">Click "Create New Issue" or "+" icon in the main navigation.</dd>
       </div>
       <div>
-        <dt className="font-bold">Can I track multiple issues?</dt>
+        <dt className="font-bold">Can I track multiple issues at once ?</dt>
         <dd className="text-gray-700">Yes, all reported issues appear under "Reports".</dd>
       </div>
     </dl>
