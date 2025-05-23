@@ -1055,7 +1055,7 @@ function TableCellViewer({ item, isEditMenuOpen, onOpenChange }) {
             type="submit"
             form="issue-update-form"
           >
-            Submit
+            {activeRole === ROLE_STUDENT ? "Submit" : "Reply"}
           </Button>
           <SheetClose asChild className="">
             <Button variant="outline" className="w-full md:w-1/2">

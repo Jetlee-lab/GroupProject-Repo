@@ -147,7 +147,7 @@ function TaughtCourses(){
         <div className="space-y-4">
           <div className="text-xl font-medium">Course units you teach</div>
           <div className="grid gap-6">
-            {Object.keys(courseMap).length > 0 ? bObject.entries(courseMap).map(([name, students], i) => (
+            {Object.keys(courseMap).length > 0 ? Object.entries(courseMap).map(([name, students], i) => (
             <div key={i} className="flex items-center justify-between space-x-4">
               <div className="flex items-center space-x-4 w-full">
                 {/* <Avatar>
