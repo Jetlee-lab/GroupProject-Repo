@@ -130,6 +130,7 @@ export default function ReplyIssueForm({ issue }) {
     escalation_level: issuesMeta.escalation_levels.find(
       (l) => l.name === issue.escalation_level
     ).id,
+    course_unit: issue.course_unit,
     categories: issue.categories.map((c) => String(c.id)),
     notes: issue.notes,
   });
