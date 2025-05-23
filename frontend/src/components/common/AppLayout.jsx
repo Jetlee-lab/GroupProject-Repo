@@ -1,5 +1,6 @@
-import React from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useLocation, useNavigation } from 'react-router-dom';
+import nprogress from "nprogress";
 import Header from './Header';
 // import SideBar from './SideBar';
 // import { useUser } from '../context/UserContext';
@@ -34,6 +35,30 @@ import Header from './Header';
 
 
 function AppLayout () {
+  let location = useLocation();
+  const navigation = useNavigation()
+  // const ref = useRef<LoadingBarRef>(null)
+  
+  useEffect(() => {
+    nprogress.start();
+    nprogress.done();
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (navigation.state === "loading" || navigation.state === "submitting") {
+      // ref.current?.continuousStart()
+      // console.log({complete: false})
+      nprogress.start();
+    }
+
+    if (navigation.state === "idle") {
+      // ref.current?.complete()
+      // console.log({complete: true})
+      nprogress.done();
+    }
+  }, [navigation.state])
+  // console.log({navigation: navigation.state})
+
   return <Outlet />
 }
 

@@ -16,7 +16,7 @@ class Faculty(models.Model):
         return "%s" % self.name
 
 class Department(models.Model):
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128)
     description = models.CharField(max_length=256, blank=False, default='')
     # head = models.ForeignKey('core.Staff',
     #     related_name='head_of',
@@ -33,3 +33,5 @@ class Department(models.Model):
 
     def __str__(self):
         return "%s" % self.name
+    class Meta:
+        unique_together = ('faculty', 'name')

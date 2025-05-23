@@ -141,7 +141,7 @@ class Student(User):
     #     related_name="%(class)s_details",
     #     on_delete=models.CASCADE,
     # )
-    student_no = models.CharField(max_length=32, blank=False)
+    student_no = models.UUIDField(unique=True, editable=False)
     courses = models.ManyToManyField(Course, related_name='students')
     # def __str__(self):
     #     return "Student Table"
@@ -156,6 +156,7 @@ class Staff(User):
     #     related_name="%(class)s_details",
     #     on_delete=models.CASCADE,
     # )
+    staff_id = models.UUIDField(unique=True, editable=False)
     departments = models.ManyToManyField(Department, related_name='staff')
     course_units = models.ManyToManyField(CourseUnit, related_name='staff')
 

@@ -43,7 +43,7 @@ const CoursePrompt = ({ userId, isOpen, onCourseEnrolled }) => {
       label: name,
     }
   )) || [];
-  console.log({coursesList})
+  // console.log({coursesList})
 
   function submit(e) {
     e.preventDefault();
@@ -73,11 +73,15 @@ const CoursePrompt = ({ userId, isOpen, onCourseEnrolled }) => {
       });
   }
 
+  function handleOnOpenChange(openState) {
+    toast.error("Sorry, To use AITS as a student you'll need to enroll to a course!");
+  }
+
   return (
     <div
       className="transition-all text-black"
     >
-        <Dialog open={isOpen}>
+        <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
           <DialogTrigger asChild>
             {/* <Link to="/account/password/change"> */}
               <Button variant="outline" className="hidden mb-2 bg-blue-500 text-white p-4 cursor-pointer rounded hover:bg-blue-600"

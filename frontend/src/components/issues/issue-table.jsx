@@ -59,6 +59,7 @@ import {
   Trash2,
   Ellipsis,
   ListCheck,
+  EditIcon,
 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
@@ -239,13 +240,14 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
     onSuccess: (data) => {
       // queryClient.invalidateQueries({ queryKey: ['issues'] })
       toast.success("Issue Deleted successfully");
-      // queryClient.invalidateQueries(["issues"])
+      queryClient.invalidateQueries(["issues"])
     },
     onError: (error) => {
       toast.error("Error deleting issue");
       console.error("Error deleting issue", error);
     },
   });
+  const [edittedRow, setEdittedRow] = React.useState(null)
 
   const dataIds = React.useMemo(() => data?.map(({ id }) => id) || [], [data]);
   // const users = queryClient.getQueryData(["users"])
@@ -264,7 +266,6 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
     default:
       break;
   }
-  // console.log({ initialData, data });
 
   const columns = [
     {
@@ -304,7 +305,8 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
       accessorKey: "title",
       header: "Title",
       cell: ({ row }) => {
-        return <TableCellViewer item={row.original} />;
+        // console.log("---->",row.id, edittedRow ? edittedRow.id == row.id : false)
+        return <TableCellViewer item={row.original} isEditMenuOpen={edittedRow ? (edittedRow.id == row.id) || undefined : undefined} onOpenChange={(state) => {setEdittedRow(state)}} />;
       },
       enableHiding: false,
     },
@@ -398,27 +400,27 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
           </div>
         );
 
-        return (
-          <>
-            <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
-              Reviewer
-            </Label>
-            <Select>
-              <SelectTrigger
-                className="h-8 w-40"
-                id={`${row.original.id}-reviewer`}
-              >
-                <SelectValue placeholder="Assign reviewer" />
-              </SelectTrigger>
-              <SelectContent align="end">
-                <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                <SelectItem value="Jamik Tashpulatov">
-                  Jamik Tashpulatov
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </>
-        );
+        // return (
+        //   <>
+        //     <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
+        //       Reviewer
+        //     </Label>
+        //     <Select>
+        //       <SelectTrigger
+        //         className="h-8 w-40"
+        //         id={`${row.original.id}-reviewer`}
+        //       >
+        //         <SelectValue placeholder="Assign reviewer" />
+        //       </SelectTrigger>
+        //       <SelectContent align="end">
+        //         <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
+        //         <SelectItem value="Jamik Tashpulatov">
+        //           Jamik Tashpulatov
+        //         </SelectItem>
+        //       </SelectContent>
+        //     </Select>
+        //   </>
+        // );
       },
     },
     {
@@ -440,6 +442,12 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
             <DropdownMenuItem>Make a copy</DropdownMenuItem>
             <DropdownMenuItem>Favorite</DropdownMenuItem>
             <DropdownMenuSeparator /> */}
+            <DropdownMenuItem
+              className="text-blue-500"
+              onClick={() => setEdittedRow(row.original)}
+            >
+              <EditIcon className="text-blue-500" /> Edit
+            </DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-500"
               onClick={() => handleDelete(row.original)}
@@ -593,9 +601,9 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
           {(activeRole === ROLE_STUDENT && (
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant={"default"} size="sm">
                   <PlusIcon />
-                  <span className="hidden lg:inline">New Issue</span>
+                  <span className="hidden lg:inline">Create New Issue</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="md:min-w-[756px] md:max-h-[552px] m-4 overflow-y-auto">
@@ -662,7 +670,7 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
                       colSpan={columns.length}
                       className="h-24 text-center text-semibold"
                     >
-                      No results.
+                      No Issues Found.
                     </TableCell>
                   </TableRow>
                 )}
@@ -702,10 +710,12 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
             </div>
             {/* <div className="flex w-fit items-center justify-center text-sm font-medium"> */}
             {/* </div> */}
-            <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </div>
+            {data.length > 0 && (
+              <div className="flex w-fit items-center justify-center text-sm font-medium">
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
+              </div>
+            )}
             <div className="ml-auto flex items-center gap-2 lg:ml-0">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -812,7 +822,7 @@ const chartConfig = {
   },
 };
 
-function TableCellViewer({ item }) {
+function TableCellViewer({ item, isEditMenuOpen, onOpenChange }) {
   const isMobile = useIsMobile();
   // const [open, setOpen] = React.useState(undefined);
   const studentsRes = queryClient.getQueryData(["users", "students"]);
@@ -830,11 +840,13 @@ function TableCellViewer({ item }) {
       console.error("Error updating issue", error);
     },
   });
-  // console.log({
-  //   item,
-  //   issuesMeta,
-  //   get: issuesMeta.statuses.find((s) => s.name === item.status),
-  // });
+  const [isOpen, setIsOpen] = React.useState(isEditMenuOpen)
+
+  React.useEffect(() => {
+    // console.log({isEditMenuOpen})
+    setIsOpen(isEditMenuOpen)
+  }, [isEditMenuOpen])
+
   const [{ name: activeRole }] = useActiveRole();
 
   const dataRef = React.useRef({
@@ -847,6 +859,7 @@ function TableCellViewer({ item }) {
     escalation_level: issuesMeta.escalation_levels.find(
       (l) => l.name === item.escalation_level
     ).id,
+    course_unit: item.course_unit,
     categories: item.categories.map((c) => String(c.id)),
     notes: item.notes,
   });
@@ -856,14 +869,14 @@ function TableCellViewer({ item }) {
     // e.stopPropagation()
     // const formData = new FormData(e.target)
     const data = dataRef.current;
-
-    // console.log({ data });
     issueMutation.mutate({ issue: data, id: item.id });
   };
-  // console.log({lecturersRes,studentsRes,issuesMeta})
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={(state) => {
+      // console.log({state})
+      isOpen ? onOpenChange(state) : void(0)
+      }}>
       <SheetTrigger asChild>
         <Button
           variant="link"

@@ -160,6 +160,12 @@ export const deleteCourse = async (id) => {
   });
 };
 
+export const assignCourse = async (data) => {
+  return await apiClient.put(`/users/staff`, data).then((response) => {
+    return response.data;
+  });
+};
+
 // export const fetchtCourseUnits = async () => {
 //   return await apiClient.get(`/courses/${courseId}`).then((response) => {
 //     return response.data;
@@ -170,8 +176,26 @@ export const deleteCourse = async (id) => {
  *  Course Units API
  */
 
-export const fetchDepartments = async () => {
-  return await apiClient.get(`/departments`).then((response) => {
+export const fetchFaculties = async (config) => {
+  return await apiClient.get(`/faculties`, config).then((response) => {
+    return response.data;
+  });
+};
+
+export const createFaculty = async (data) => {
+  return await apiClient.post(`/faculties`, data).then((response) => {
+    return response.data;
+  });
+};
+
+export const updateFaculty = async ({id, ...data}) => {
+  return await apiClient.put(`/faculties/${id}`, data).then((response) => {
+    return response.data;
+  });
+};
+
+export const fetchDepartments = async (config) => {
+  return await apiClient.get(`/departments`, config).then((response) => {
     return response.data;
   });
 };

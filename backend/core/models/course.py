@@ -46,7 +46,7 @@ class CourseUnit(models.Model):
         on_delete=models.CASCADE
     )
     name = models.CharField(max_length=128)
-    # code = models.CharField(max_length=32, unique=True)
+    code = models.CharField(max_length=32, unique=True)
     description = models.CharField(max_length=1024, blank=False, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(null=True)

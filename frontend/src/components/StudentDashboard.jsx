@@ -36,27 +36,6 @@ const pinnedIssues = [
   { title: "Appeal for Retake", status: "In Progress" },
 ];
 
-const enrolledCoursesX = [
-  {
-    code: "CSC1201",
-    name: "Operating Systems",
-    lecturer: "Dr. Kaggwa",
-    status: "Ongoing",
-  },
-  {
-    code: "CSC1203",
-    name: "Systems Analysis and Design",
-    lecturer: "Ms. Namutebi",
-    status: "Ongoing",
-  },
-  {
-    code: "CSC1215",
-    name: "Computer Networks",
-    lecturer: "Mr. Lutaaya",
-    status: "Completed",
-  },
-];
-
 const StudentDashboard = ({ stats, issues, users }) => {
   const { id } = useUser()
   const statsParams = { students: id, meta: ['name', 'code', 'duration'].join(',') }
@@ -93,7 +72,7 @@ const StudentDashboard = ({ stats, issues, users }) => {
   }
   
   const enrolledCourses = statsRes.data.students[id]?.courses
-  console.log({statsRes, enrolledCourses})
+  // console.log({statsRes, enrolledCourses})
   // return
 
   return (
@@ -107,12 +86,12 @@ const StudentDashboard = ({ stats, issues, users }) => {
         <IssueTable />
       </div>
       <div className="flex flex-row gap-8 mt-4 text-left ">
-        <Link to="/dashboard/student-reports">
+        {/* <Link to="/dashboard/student-reports">
           <button className="bg-blue-500 text-white p-2 cursor-pointer rounded hover:bg-blue-600">
             View reports and Add New Issues
           </button>
-        </Link>
-        <CoursePrompt userId={id} isOpen={!enrolledCourses?.length} onCourseEnrolled={handleCourseEnrollment}/>
+        </Link> */}
+        <CoursePrompt userId={id} isOpen={!enrolledCourses?.length} onCourseEnrolled={handleCourseEnrollment} />
       </div>
 
       {/* My Courses */}

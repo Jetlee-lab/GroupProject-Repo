@@ -225,7 +225,7 @@
 
 from django.contrib.postgres.aggregates import ArrayAgg
 from rest_framework import generics
-from django.db.models import Value, Q, F, Count
+from django.db.models import Value, Q, F, Count, Subquery, OuterRef
 from django.db.models.functions import JSONObject
 from django.core.exceptions import FieldDoesNotExist
 from django.db.models.fields.related import ManyToOneRel, ManyToManyRel
@@ -336,7 +336,36 @@ class Stat():
                     distinct=True
                 ),
             }
-            
+            # annotations = {
+            #     'count': Count('id', distinct=True),
+            #     self.name: ArrayAgg(
+            #         JSONObject(**{
+            #             # Include regular fields directly
+            #             **{mv: F(mv) for mv in meta_fields.get("meta", []) if "__" not in mv},
+                        
+            #             # For related fields, use a different approach
+            #             **{
+            #                 # Create a field for each prefix where we'll put JSON data
+            #                 prefix: JSONObject(
+            #                     subquery=Subquery(
+            #                         query.model.objects.filter(
+            #                             id=OuterRef('id')
+            #                         ).annotate(
+            #                             nested_data=JSONObject(**{
+            #                                 field.split("__")[1]: F(field)
+            #                                 for field in meta_fields.get("meta", [])
+            #                                 if field.startswith(f"{prefix}__")
+            #                             })
+            #                         ).values('nested_data')[:1]
+            #                     )
+            #                 )
+            #                 for prefix in {field.split("__")[0] for field in meta_fields.get("meta", []) if "__" in field}
+            #             }
+            #         }) if meta_fields.get("meta") else "id",
+            #         distinct=True
+            #     ),
+            # }
+
             key, key_getter = self.fields_keys.get(k, (k, self.key_getter))
 
             if key is None:
@@ -345,9 +374,23 @@ class Stat():
                 key_getter = self.key_getter
             
             if mv := meta_fields.get(k, []):  # Add meta info if it was requested
+                # annotations.update({
+                #     'meta': JSONObject(**{
+                #         m: ArrayAgg(f'{k}__{m}', distinct=True, filter=Q(**{f'{k}__{m}__isnull':False})) if is_prefetchable(self.meta_map[k], m) else f'{k}__{m}'
+                #         for m in mv
+                #     })
+                # })
                 annotations.update({
                     'meta': JSONObject(**{
-                        m: ArrayAgg(f'{k}__{m}', distinct=True, filter=Q(**{f'{k}__{m}__isnull':False})) if is_prefetchable(self.meta_map[k], m) else f'{k}__{m}'
+                        m: (
+                            ArrayAgg(
+                                JSONObject(**{m: F(f'{k}__{m}')}),
+                                distinct=True,
+                                filter=Q(**{f'{k}__{m}__isnull': False})
+                            )
+                            if is_prefetchable(self.meta_map[k], m)
+                            else F(f'{k}__{m}')
+                        )
                         for m in mv
                     })
                 })
@@ -362,6 +405,13 @@ class Stat():
                 }
                 for q in query_k
             }
+            # result[k] = [
+            #     {   #"id": key_getter(q[key]),
+            #         a: q[a]
+            #         for a in annotations
+            #     }
+            #     for q in query_k
+            # ]
             # query.dd
 
         return result

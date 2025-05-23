@@ -1,3 +1,4 @@
+import "nprogress/nprogress.css";
 import React, { useState, useEffect, lazy } from "react";
 import {
   // AuthContextProvider,

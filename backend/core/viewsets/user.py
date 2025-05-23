@@ -17,17 +17,19 @@ from ..serializers import (
     CourseSerializer,
 )
 from ..models import User, Role, Student, Staff, Faculty, Issue
-from ..utils.io import IOMixin, paginate_response #format_response
+from ..utils.io import IOMixin, paginate_response, send_email #format_response
 
 
 class UsersViewSet(
     IOMixin,
     # viewsets.GenericViewSet,
     # mixins.CreateModelMixin,
-    # mixins.UpdateModelMixin,
+    mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
 ):
+    # def get_serializer():
+    #     self.request.user.roles
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -89,21 +91,36 @@ class UsersViewSet(
         students = Student.objects.all()
         return paginate_response(self, students, StudentSerializer)
 
-    @action(methods=["GET"], detail=False, url_path="staff", url_name="staff")
+    @action(methods=["GET", "PUT"], detail=False, url_path="staff", url_name="staff")
     def staff(self, request, *args, **kwargs):
         # staff = User.objects.filter(staff__isnull=False)
-        staff = Staff.objects.all()
-        return paginate_response(self, staff, StaffSerializer)
+
+        if request.method == "GET":
+            staff = Staff.objects.all()
+            return paginate_response(self, staff, StaffSerializer)
+        else:
+            if not (units := request.data.get('units')):
+                raise ValidationError({'message': 'Courses Units are required'})
+            elif not (lecturerId := request.data.get('lecturerId')):
+                raise ValidationError({'message': 'lecturerId is required'})
+
+            # print("-----pk", self.request.user.pk, Staff.objects.all())
+            # return Response({})
+            instance = Staff.objects.get(pk=lecturerId)
+            serializer = StaffSerializer(instance, data=request.data, context={"units": units}, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(methods=["GET"], detail=False, url_path="registrars", url_name="registrars")
     def registrars(self, request, *args, **kwargs):
-        registrars = User.objects.filter(roles__name=Role.ROLE_REGISTRAR)
-        return paginate_response(self, registrars, UserSerializer)
+        registrars = Staff.objects.filter(roles__name=Role.ROLE_REGISTRAR)
+        return paginate_response(self, registrars, StaffSerializer)
 
     @action(methods=["GET"], detail=False, url_path="lecturers", url_name="lecturers")
     def lecturers(self, request, *args, **kwargs):
-        lecturers = User.objects.filter(roles__name=Role.ROLE_LECTURER)
-        return paginate_response(self, lecturers, UserSerializer)
+        lecturers = Staff.objects.filter(roles__name=Role.ROLE_LECTURER)
+        return paginate_response(self, lecturers, StaffSerializer)
 
     @action(methods=["GET"], detail=False, url_path="administrators", url_name="administrators")
     def admins(self, request, *args, **kwargs):
@@ -213,25 +230,23 @@ def send_sms(request):
 
 @api_view(['POST'])
 def send_email(request):
-    from django.core.mail import send_mail
-
     data = request.data
 
     to = data.get('to', None)
     if to is None:
         raise ValidationError({'message': 'Recipient email is required'})
 
-    from_email=data.get('from', 'kato.keithpaul@students.mak.ac.ug')
+    from_email=data.get('from', None)
     subject=data.get('subject', 'Subject here')
     message=data.get('message', 'Here is the message.')
 
     # print(request.data, from_email, subject, message)
 
-    send_mail(
+    send_email(
         subject=subject,
-        message=message, 
+        message=message,
+        to=[to],
         from_email=from_email,
-        recipient_list=[to],
-        fail_silently=False
     )
+
     return Response({'message': 'Email sent'}, status=status.HTTP_200_OK)

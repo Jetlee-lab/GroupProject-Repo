@@ -120,8 +120,11 @@ class IssueViewSet(
     
     def get_queryset(self):
         user = self.request.user
+        roles = user.roles.values_list("name", flat=True)
+        # return Issue.objects.all()
         if user.is_staff:
-            if Role.ROLE_REGISTRAR in user.roles.all():
+            # print(user.roles.values_list("name", flat=True))
+            if Role.ROLE_REGISTRAR in roles:
                 return Issue.objects.all()
             return Issue.objects.filter(
                 Q(assignee=user) | Q(owner=user)
