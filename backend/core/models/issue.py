@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 # from collections import namedtuple
 
 from .user import User, Staff, Student
@@ -69,6 +70,7 @@ class Issue(models.Model):
     escalation_level = models.PositiveSmallIntegerField(
         choices=ESCALATION_CHOICES, default=ESCALATION_L0
     )
+    reference_no = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     notes = models.TextField(max_length=4096, null=True, blank=True, default=None)
     course_unit = models.ForeignKey(CourseUnit, related_name='issues', blank=False, null=False, on_delete=models.RESTRICT)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -79,7 +81,6 @@ class Issue(models.Model):
 
 
 def get_attachment_path(instance, filename):
-    import uuid
     # return "attachments/{0}".format(uuid.uuid4()
     return str(uuid.uuid4())
 

@@ -198,7 +198,7 @@ export default function ResolveIssue() {
     <div className="flex flex-col gap-4 space-y-6 px-4 m-4 rounded-lg">
       <div className="w-full bg-white rounded-sm font-bold text-center p-4">
         <p className="text-xl mb-8">Courses Management</p>
-        <div className="flex flex-row w-full items-center justify-center gap-4">
+        <div className="flex flex-col md:flex-row w-full items-center justify-center gap-4">
           <Button variant="outline" className="mb-2 bg-blue-500 text-white p-4 cursor-pointer rounded hover:bg-blue-600"
            onClick={() => {
             setCourseToEdit({

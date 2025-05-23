@@ -46,7 +46,7 @@ import {
 } from "@/lib/constants";
 import { fetchStats } from "@/lib/api";
 
-export default function CreateIssueForm() {
+export default function CreateIssueForm({ onSuccess }) {
   const issuesMeta = useIssuesMeta();
   const user = useUser()
   const statsParams = { course__students: user.id, meta: ['id', 'name'].join(',') }
@@ -68,6 +68,11 @@ export default function CreateIssueForm() {
       // queryClient.invalidateQueries({ queryKey: ['issues'] })
       toast.success("Issue Created successfully");
       // queryClient.invalidateQueries(["issues"])
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['issues'] }),
+        queryClient.invalidateQueries({ queryKey: ['stats'] })
+      ])
+      onSuccess ? onSuccess(data) : void(0);
     },
     onError: (error) => {
       toast.error("Error creating issue");

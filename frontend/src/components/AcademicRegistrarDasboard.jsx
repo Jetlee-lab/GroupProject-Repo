@@ -75,28 +75,20 @@ export default function RegistrarDashboard({ stats, issues, users }) {
           <div>
             <GenerateToken />
           </div>
-          <Link to="generated-tokens">
-            <Button
-              variant="outline"
-              className="bg-blue-500 text-white px-2 py-4 rounded hover:bg-blue-600"
-            >
-              View Generated Tokens
-            </Button>
-          </Link>
-          <Link to="management/courses">
-            <Button
-              variant="outline"
-              className="bg-blue-500 text-white px-2 py-4 rounded hover:bg-blue-600"
-            >
-              Course Management
-            </Button>
-          </Link>
           <Link to="registrar-reports">
             <Button
               variant="outline"
               className="bg-blue-500 text-white px-2 py-4 rounded hover:bg-blue-600"
             >
               View & Assign Issues
+            </Button>
+          </Link>
+          <Link to="generated-tokens">
+            <Button
+              variant="outline"
+              className="bg-blue-500 text-white px-2 py-4 rounded hover:bg-blue-600"
+            >
+              View Generated Tokens
             </Button>
           </Link>
         </div>
@@ -151,7 +143,7 @@ export function GenerateToken() {
         error: { response },
       } = tokenMutation;
       const errors = [
-        ...Object.entries(response?.data?.error || {}).map(([, value]) => {
+        ...Object.entries(response?.data?.error).map(([, value]) => {
           return value;
         }),
       ];
@@ -240,7 +232,7 @@ export function GenerateToken() {
                   <SelectLabel>Roles</SelectLabel>
                   {((rolesError || rolesFetching || rolesPending) && <></>) ||
                     roles.data?.map((role) => (
-                      <SelectItem key={role.id} value={`${role.id}`}>
+                      <SelectItem value={`${role.id}`}>
                         {role.display}
                       </SelectItem>
                     ))}

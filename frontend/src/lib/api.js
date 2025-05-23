@@ -83,6 +83,13 @@ export const fetchUsers = async ({ endpoint, params } = {}) => {
   });
 };
 
+export const updateUser = async ({ id, ...data }) => {
+  const url = `/users/${id}`;
+  return await apiClient.patch(url, data).then((response) => {
+    return response.data;
+  });
+};
+
 export const fetchRoles = async () => {
   return await apiClient.get("/users/roles").then((response) => {
     return response.data;

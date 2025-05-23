@@ -60,6 +60,7 @@ import {
   Ellipsis,
   ListCheck,
   EditIcon,
+  CalendarDaysIcon,
 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
@@ -111,6 +112,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -240,7 +242,11 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
     onSuccess: (data) => {
       // queryClient.invalidateQueries({ queryKey: ['issues'] })
       toast.success("Issue Deleted successfully");
-      queryClient.invalidateQueries(["issues"])
+      // queryClient.invalidateQueries(["issues"])
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['issues'] }),
+        queryClient.invalidateQueries({ queryKey: ['stats'] })
+      ])
     },
     onError: (error) => {
       toast.error("Error deleting issue");
@@ -426,7 +432,8 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
     {
       id: "actions",
       cell: ({ row, ...others }) => (
-        <DropdownMenu>
+        <Dialog>
+          <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
@@ -437,8 +444,18 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-32">
-            {/* <DropdownMenuItem onClick={() => setIsEditorOpen(!isEditorOpen)}>Edit</DropdownMenuItem>
+          <DropdownMenuContent
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              // side={isMobile ? "bottom" : "right"}
+              align="end"
+              sideOffset={4}
+            >
+              {/* <DropdownMenuItem >
+                <DialogTrigger asChild>
+                  <Button>xskjcd</Button>
+                </DialogTrigger>
+              </DropdownMenuItem> */}
+                          {/* <DropdownMenuItem onClick={() => setIsEditorOpen(!isEditorOpen)}>Edit</DropdownMenuItem>
             <DropdownMenuItem>Make a copy</DropdownMenuItem>
             <DropdownMenuItem>Favorite</DropdownMenuItem>
             <DropdownMenuSeparator /> */}
@@ -446,13 +463,15 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
               className="text-blue-500"
               onClick={() => setEdittedRow(row.original)}
             >
-              <EditIcon className="text-blue-500" /> Edit
+              <EditIcon className="text-blue-500" />Quick Edit
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-red-500"
-              onClick={() => handleDelete(row.original)}
+              // onClick={() => handleDelete(row.original)}
             >
-              <Trash2 className="text-red-500" /> Delete
+              <DialogTrigger asChild>
+                <span className="flex gap-2 items-center"><Trash2 className="text-red-500" />Delete</span>
+              </DialogTrigger>
             </DropdownMenuItem>
             {[ROLE_LECTURER, ROLE_REGISTRAR].includes(activeRole) && (
               <DropdownMenuItem
@@ -462,8 +481,28 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
                 <ListCheck className="text-blue-500" /> Review
               </DropdownMenuItem>
             )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DialogContent className="flex flex-col gap-4 items-center sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete Issue</DialogTitle>
+              <DialogDescription>
+                Are you sure?
+              </DialogDescription>
+            </DialogHeader>
+            {/* <LogoutPage /> */}
+            <DialogFooter className="">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="button" variant="default" onClick={() => handleDelete(row.original)}>
+                Yes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       ),
     },
   ];
@@ -500,6 +539,8 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     autoResetPageIndex: false,
   });
+
+  const [isNewIssueOpen, setIsNewIssueOpen] = React.useState(false);
 
   // console.log({ data, initialData, ...pagination });
   React.useEffect(() => {
@@ -599,7 +640,7 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
             </DropdownMenuContent>
           </DropdownMenu>
           {(activeRole === ROLE_STUDENT && (
-            <Dialog>
+            <Dialog open={undefined}>
               <DialogTrigger asChild>
                 <Button variant={"default"} size="sm">
                   <PlusIcon />
@@ -612,7 +653,7 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
                   <DialogDescription />
                 </DialogHeader>
                 <div className="grid gap-4">
-                  <CreateIssueForm />
+                  <CreateIssueForm onSuccess={() => void(0)}/>
                 </div>
                 <DialogFooter>
                   {/* <Button type="submit">Save changes</Button> */}
@@ -936,8 +977,8 @@ function TableCellViewer({ item, isEditMenuOpen, onOpenChange }) {
               <Separator /> */}
               <div className="grid gap-2">
                 <div className="flex flex-col gap-2 font-medium leading-none justify-center">
-                  <div className="flex gap-4">
-                    <span>Created on:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <div className="flex gap-4 items-center">
+                    <span className="flex justify-center items-center gap-2"><CalendarDaysIcon />Created on:&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <span className="font-normal text-xs">
                       {format(
                         new Date(item.created_at),
@@ -945,8 +986,8 @@ function TableCellViewer({ item, isEditMenuOpen, onOpenChange }) {
                       )}
                     </span>
                   </div>
-                  <div className="flex gap-4">
-                    <span>Last Updated:</span>
+                  <div className="flex gap-4 items-center">
+                    <span className="flex justify-center items-center gap-2"><CalendarDaysIcon />Last Updated:</span>
                     <span className="font-normal text-xs">
                       {item.updated_at
                         ? format(

@@ -34,11 +34,11 @@ class ReferenceTokenViewSet(
         reference_token = serializer.save()
         # print("reference_token", reference_token)
 
-        # send_email(
-        #     subject="Reference Token",
-        #     message=f"Your reference token is {reference_token.token}",
-        #     to=[reference_token.email],
-        # )
+        send_email(
+            subject="Reference Token",
+            message=f"Your reference token is {reference_token.token}",
+            to=[reference_token.email],
+        )
 
         return Response(serializer.data, status.HTTP_200_OK)
 

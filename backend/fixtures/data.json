@@ -481,7 +481,7 @@
     "pk": 21,
     "fields": {
       "password": "pbkdf2_sha256$870000$qHJc39tSNB9ZV1wMD01qof$cUcfXLLhAGWEfAXmMgQak5ehY12v9aCNH0LewfpgJtE=",
-      "last_login": "2025-05-23T09:00:06.671Z",
+      "last_login": "2025-05-23T14:06:15.660Z",
       "is_superuser": false,
       "username": "paul",
       "first_name": "",
@@ -557,11 +557,39 @@
     }
   },
   {
+    "model": "core.user",
+    "pk": 25,
+    "fields": {
+      "password": "pbkdf2_sha256$870000$OI2agkIPPsdgmwmK2c8Uu1$6B96OJ9zFhpNV3M2LmIgpDIeWjftjxm+FIiIzIc3kro=",
+      "last_login": "2025-05-23T14:50:14.078Z",
+      "is_superuser": false,
+      "username": "pk460",
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2025-05-23T14:50:12.356Z",
+      "email": "paulkato460@yahoo.co.uk",
+      "updated_at": null,
+      "groups": [],
+      "user_permissions": [],
+      "roles": [1]
+    }
+  },
+  {
     "model": "core.student",
     "pk": 21,
     "fields": {
       "student_no": "9f6336ee-7b05-4e2f-a793-ec566f48309d",
       "courses": [5]
+    }
+  },
+  {
+    "model": "core.student",
+    "pk": 25,
+    "fields": {
+      "student_no": "5f57d594-aa12-49d4-8231-7dcbce3f3e27",
+      "courses": [7, 5]
     }
   },
   {
@@ -600,6 +628,30 @@
     }
   },
   {
+    "model": "core.category",
+    "pk": 2,
+    "fields": {
+      "name": "Enrollment & Registration",
+      "description": "Enrollment & Registration"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 3,
+    "fields": {
+      "name": "Grading & Assessment",
+      "description": "Grading & Assessment"
+    }
+  },
+  {
+    "model": "core.category",
+    "pk": 4,
+    "fields": {
+      "name": "Facilities & Infrastructure",
+      "description": "Facilities & Infrastructure"
+    }
+  },
+  {
     "model": "core.issue",
     "pk": 1,
     "fields": {
@@ -610,6 +662,7 @@
       "status": 1,
       "priority": 2,
       "escalation_level": 1,
+      "reference_no": "1ac633c9-7ecb-4481-9d82-70d1ee7b92ef",
       "notes": null,
       "course_unit": 18,
       "created_at": "2025-05-23T00:34:28.971Z",
@@ -625,14 +678,72 @@
       "assignee": 22,
       "title": "Some title",
       "description": null,
-      "status": 8,
+      "status": 2,
       "priority": 2,
-      "escalation_level": 4,
+      "escalation_level": 1,
+      "reference_no": "2574598b-c7e4-46f4-a7be-c5bdf8836bd9",
       "notes": "Some notes from the registrar and also lecturer",
       "course_unit": 19,
       "created_at": "2025-05-23T09:01:05.912Z",
-      "updated_at": "2025-05-23T09:25:23.526Z",
-      "categories": [1]
+      "updated_at": "2025-05-23T14:06:45.650Z",
+      "categories": [3]
+    }
+  },
+  {
+    "model": "core.issue",
+    "pk": 3,
+    "fields": {
+      "owner": 25,
+      "assignee": null,
+      "title": "Poor Infrastructure",
+      "description": "Poor reading environment around lecture rooms.",
+      "status": 1,
+      "priority": 2,
+      "escalation_level": 1,
+      "reference_no": "6574c481-e574-4d63-9922-cb1c17394db8",
+      "notes": "Exterminators will be required to remove fleas",
+      "course_unit": 19,
+      "created_at": "2025-05-23T14:54:15.965Z",
+      "updated_at": null,
+      "categories": [4]
+    }
+  },
+  {
+    "model": "core.issue",
+    "pk": 4,
+    "fields": {
+      "owner": 25,
+      "assignee": null,
+      "title": "Course Marks",
+      "description": "Dissatisfaction with marks from previous exam",
+      "status": 1,
+      "priority": 2,
+      "escalation_level": 1,
+      "reference_no": "1c04f9a5-e8b5-495f-840b-c6b419585a6a",
+      "notes": "I feel i had adequate content to get a 50 percent from that exam. i need a remark",
+      "course_unit": 18,
+      "created_at": "2025-05-23T14:58:10.614Z",
+      "updated_at": null,
+      "categories": [3]
+    }
+  },
+  {
+    "model": "core.issue",
+    "pk": 5,
+    "fields": {
+      "owner": 25,
+      "assignee": null,
+      "title": "Misquoted Student Number",
+      "description": "Wrongly spelled Registration Number & ID.",
+      "status": 1,
+      "priority": 2,
+      "escalation_level": 1,
+      "reference_no": "99fe94e4-5a90-45a2-bf1e-20ebf9ca7d3e",
+      "notes": "Previous marksheet maps me to a wrong registration number",
+      "course_unit": 11,
+      "created_at": "2025-05-23T15:00:58.064Z",
+      "updated_at": null,
+      "categories": [2]
     }
   },
   {
@@ -645,6 +756,18 @@
       "size": 26658,
       "type": "application/octet-stream",
       "created_at": "2025-05-23T00:34:28.989Z"
+    }
+  },
+  {
+    "model": "core.attachment",
+    "pk": 2,
+    "fields": {
+      "file": "ee8d0a8c-262f-4420-87ff-96348af467c5",
+      "issue": 3,
+      "name": "Figure_11.png",
+      "size": 37181,
+      "type": "image/png",
+      "created_at": "2025-05-23T14:54:15.986Z"
     }
   },
   {
@@ -778,6 +901,211 @@
     }
   },
   {
+    "model": "core.issuelog",
+    "pk": 9,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 8,
+      "priority": 2,
+      "escalation_level": 4,
+      "attachments": [],
+      "created_at": "2025-05-23T13:39:34.511Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 10,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 8,
+      "priority": 2,
+      "escalation_level": 2,
+      "attachments": [],
+      "created_at": "2025-05-23T13:41:58.364Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 11,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 8,
+      "priority": 2,
+      "escalation_level": 2,
+      "attachments": [],
+      "created_at": "2025-05-23T13:42:57.069Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 12,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 8,
+      "priority": 2,
+      "escalation_level": 1,
+      "attachments": [],
+      "created_at": "2025-05-23T13:44:13.095Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 13,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 8,
+      "priority": 2,
+      "escalation_level": 1,
+      "attachments": [],
+      "created_at": "2025-05-23T13:46:25.033Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 14,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 4,
+      "priority": 2,
+      "escalation_level": 1,
+      "attachments": [],
+      "created_at": "2025-05-23T13:49:49.391Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 15,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 4,
+      "priority": 2,
+      "escalation_level": 1,
+      "attachments": [],
+      "created_at": "2025-05-23T13:49:49.401Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 16,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 8,
+      "priority": 2,
+      "escalation_level": 1,
+      "attachments": [],
+      "created_at": "2025-05-23T13:49:49.575Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 17,
+    "fields": {
+      "issue": null,
+      "assignee": 22,
+      "actor": 1,
+      "status": 8,
+      "priority": 2,
+      "escalation_level": 1,
+      "attachments": [],
+      "created_at": "2025-05-23T13:52:27.314Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 18,
+    "fields": {
+      "issue": 1,
+      "assignee": 23,
+      "actor": 1,
+      "status": 1,
+      "priority": 2,
+      "escalation_level": 1,
+      "attachments": [
+        {
+          "id": 1,
+          "file": "487baae0-4774-44f8-affa-6811f5d82edd",
+          "name": "Keith Paul Kato.ipynb",
+          "size": 26658,
+          "type": "application/octet-stream",
+          "issue_id": 1,
+          "created_at": "2025-05-23T00:34:28.989Z"
+        }
+      ],
+      "created_at": "2025-05-23T13:55:45.462Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 19,
+    "fields": {
+      "issue": 2,
+      "assignee": 22,
+      "actor": 1,
+      "status": 8,
+      "priority": 2,
+      "escalation_level": 4,
+      "attachments": [],
+      "created_at": "2025-05-23T13:58:15.717Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 20,
+    "fields": {
+      "issue": 2,
+      "assignee": 22,
+      "actor": 1,
+      "status": 1,
+      "priority": 2,
+      "escalation_level": 2,
+      "attachments": [],
+      "created_at": "2025-05-23T14:00:42.470Z",
+      "categories": [1]
+    }
+  },
+  {
+    "model": "core.issuelog",
+    "pk": 21,
+    "fields": {
+      "issue": 2,
+      "assignee": 22,
+      "actor": 21,
+      "status": 2,
+      "priority": 2,
+      "escalation_level": 1,
+      "attachments": [],
+      "created_at": "2025-05-23T14:06:45.653Z",
+      "categories": [3]
+    }
+  },
+  {
     "model": "core.referencetoken",
     "pk": 17,
     "fields": {
@@ -817,6 +1145,17 @@
       "email": "jane.doe@gmail.com",
       "role": 2,
       "token": "7399f22d-e9e2-4aa1-9a4e-17e618df52db",
+      "is_used": true,
+      "active": false
+    }
+  },
+  {
+    "model": "core.referencetoken",
+    "pk": 21,
+    "fields": {
+      "email": "paulkato460@yahoo.co.uk",
+      "role": 1,
+      "token": "3232cbb7-97c8-4d7b-a633-749cc6207ff7",
       "is_used": true,
       "active": false
     }

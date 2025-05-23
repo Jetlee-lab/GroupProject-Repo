@@ -120,6 +120,7 @@ class User(AbstractUser):
         related_name="users",
         # verbose_name=_("roles"),
     )
+    notifications_enabled = models.BooleanField(default=True)
     updated_at = models.DateTimeField(null=True)
     
     objects = UserManager()

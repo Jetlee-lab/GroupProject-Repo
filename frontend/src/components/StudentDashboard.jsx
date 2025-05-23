@@ -76,7 +76,7 @@ const StudentDashboard = ({ stats, issues, users }) => {
   // return
 
   return (
-    <div className="flex flex-col gap-14 space-y-6 px-4 py-4 rounded-lg">
+    <div className="flex flex-col gap-4 space-y-6 px-4 py-4 rounded-lg">
       <div className="text-xl mb-2">
         <h1 className="font-bold text-3xl mb-6">Student Dashboard</h1>
         <IssueStats stats={stats} />
@@ -85,7 +85,7 @@ const StudentDashboard = ({ stats, issues, users }) => {
         <h4 className="font-bold w-full pb-4 text-center">Your Issues</h4>
         <IssueTable />
       </div>
-      <div className="flex flex-row gap-8 mt-4 text-left ">
+      <div className="text-left">
         {/* <Link to="/dashboard/student-reports">
           <button className="bg-blue-500 text-white p-2 cursor-pointer rounded hover:bg-blue-600">
             View reports and Add New Issues

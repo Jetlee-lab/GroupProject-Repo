@@ -1,5 +1,6 @@
 import { BellRing, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,13 +10,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useActiveRole } from "@/hooks/use-auth";
 import { useUser } from "@/features/auth/hooks";
 import {
   // fetchIssues,
   // fetchUsers,
   fetchStats,
+  updateUser,
   // fetchIssuesMeta,
 } from "@/lib/api";
 import { queryClient } from "@/lib/client";
@@ -65,6 +67,25 @@ export default function Timeline({ className, ...props }) {
           ].join(","),
         },
       }),
+  });
+  const userMutation = useMutation({
+    mutationFn: updateUser,
+    onSuccess: (data) => {
+      // queryClient.invalidateQueries({ queryKey: ['issues'] })
+      toast.success("You will be notified of issues activity");
+      // queryClient.invalidateQueries(["issues"])
+      // Promise.all([
+      //   queryClient.invalidateQueries({ queryKey: ['issues'] }),
+      //   queryClient.invalidateQueries({ queryKey: ['stats'] })
+      // ])
+      // onSuccess ? onSuccess(data) : void(0);
+      // document.dispatchEvent(event)
+      // console.log({data})
+    },
+    onError: (error) => {
+      toast.error("Failed to update settings");
+      console.error("Failed to update settings", error);
+    },
   });
 
   const old = [...(issuesMetaRes?.data.owner[user.id]?.issues || [])];
@@ -118,13 +139,13 @@ export default function Timeline({ className, ...props }) {
           <BellRing />
           <div className="flex-1 space-y-1">
             <p className="text-sm font-medium leading-none">
-              Push Notifications
+              Enable Notifications
             </p>
             <p className="text-sm text-muted-foreground">
-              Send notifications to device.
+              {user.notifications_enabled ? "You'll receive notifications to your email." : "Notifications have been disabled."}
             </p>
           </div>
-          <Switch />
+          <Switch checked={user.notifications_enabled} onCheckedChange={state => userMutation.mutate({id: user.id, notifications_enabled: state})} />
         </div>
         <div>
           {sortedIssues.slice(0, 3).map((issue, index) => (
