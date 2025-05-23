@@ -12,7 +12,7 @@ if [ ! -f "/app/backend/staticfiles/frontend/index.html" ]; then
     echo POPULATING DATABASE... && python manage.py loaddata data && \
     echo COLLECTING STATIC FILES... && python manage.py collectstatic --noinput
     
-    mv /app/frontend/dist /app/backend/staticfiles/frontend
+    mv -p /app/frontend/dist /app/backend/staticfiles/frontend
 
 fi
 
