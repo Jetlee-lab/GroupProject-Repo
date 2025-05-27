@@ -43,21 +43,21 @@ export function Search() {
 
   return (
     <Dialog open={open} onOpenChange={() => setOpen(open => !open)}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild className="flex w-full justify-end">
         <div className="ml-8">
           <Button
             variant="outline"
-            className="font-normal shadow-none px-4 w-[260px] rounded-lg text-gray-500 border border-blue-300 bg-transparent"
+            className="font-normal shadow-none px-4 md:w-[280px] h-10 text-md rounded-lg text-gray-50 border border-blue-300 bg-transparent"
           >
             <span className="flex items-center gap-2">
-            <SearchIcon strokeWidth={3} />
-            Search Issues...
+              <SearchIcon strokeWidth={3} />
+              <span className="hidden sm:inline">Search Issues...</span>
             </span>
-            <span className="ml-auto flex items-center gap-2">
-            <span className="text-xs">
-              <Command />
-            </span>
-            K
+            <span className="ml-auto hidden sm:flex items-center gap-2">
+              <span className="text-xs">
+                <Command />
+              </span>
+              K
             </span>
           </Button>
         </div>
@@ -114,7 +114,7 @@ function SearchResults({ q, result, onResultClick = () => void 0 }) {
         result.map((issue, i) => (
           <ListItem
             key={i}
-            to={`issues?id=${issue.id}`}
+            to={`/dashboard/issue/${issue.id}`}
             title={issue.title}
             onClick={() => onResultClick(issue)}
           >

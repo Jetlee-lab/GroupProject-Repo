@@ -24,8 +24,13 @@ import { toast } from "sonner";
 
 // Import icon for loading spinner
 import { LoaderIcon } from "lucide-react";
+import ProviderList from "@/socialaccount/ProviderList";
 
-// Define the LoginForm component
+// export function LoginForm({
+//     className,
+//     ...props
+//   }: React.ComponentProps<"div">) {
+
 export function LoginForm({ className, ...props }) {
   // State variables for email, password, and response
   const [email, setEmail] = useState("");
@@ -34,7 +39,7 @@ export function LoginForm({ className, ...props }) {
 
   // Fetch configuration for social login providers
   const config = useConfig();
-  const hasProviders = config.data.socialaccount?.providers?.length > 0;
+  const hasProviders = config?.data.socialaccount?.providers?.length > 0;
 
   // Function to handle form submission
   function submit(e) {
@@ -121,7 +126,7 @@ export function LoginForm({ className, ...props }) {
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <Link
-                    href="#"
+                    to="/account/password/reset"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
                     Forgot your password?
@@ -134,14 +139,15 @@ export function LoginForm({ className, ...props }) {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-
-              {/* Submit button */}
               <Button
                 type="submit"
                 className="w-full"
                 disabled={response.fetching}
               >
-                {response.fetching && <LoaderIcon className="animate-spin" /> || "Login"}
+                {(response.fetching && (
+                  <LoaderIcon className="animate-spin" />
+                )) ||
+                  "Login"}
               </Button>
 
               {/* Divider for social login */}
@@ -163,8 +169,7 @@ export function LoginForm({ className, ...props }) {
                   </svg>
                   <span className="sr-only">Login with Apple</span>
                 </Button>
-                <Button variant="outline" className="w-full">
-                  {/* Google login icon */}
+                {/* <Button variant="outline" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187..."
@@ -182,7 +187,13 @@ export function LoginForm({ className, ...props }) {
                     />
                   </svg>
                   <span className="sr-only">Login with Meta</span>
-                </Button>
+                </Button> */}
+                {hasProviders ? (
+                  <>
+                    {/* <h2>Or use a third-party</h2> */}
+                    <ProviderList callbackURL="/account/provider/callback" />
+                  </>
+                ) : null}
               </div>
 
               {/* Sign-up link */}
@@ -190,7 +201,7 @@ export function LoginForm({ className, ...props }) {
                 Don&apos;t have an account?{" "}
                 <Link
                   to="/account/signup"
-                  className="underline underline-offset-4"
+                  className="underline underline-offset-4 text-blue-400"
                 >
                   Sign up
                 </Link>
@@ -209,5 +220,4 @@ export function LoginForm({ className, ...props }) {
   );
 }
 
-// Export the LoginForm component as the default export
 export { LoginForm as default };

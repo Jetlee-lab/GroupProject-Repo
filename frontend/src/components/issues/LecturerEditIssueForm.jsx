@@ -1,189 +1,219 @@
-import React, { useState, useEffect } from "react"; 
-import TextInput from "./TextInput";
-import TextareaInput from "./TextareaInput";
-import SelectInput from "./SelectInput";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useIssuesMeta, useActiveRole } from "@/hooks";
+import { queryClient } from "@/lib/client";
+import { toast } from "sonner";
+import {
+  fetchUsers,
+  fetchIssues,
+  paginate,
+  updateIssue,
+  deleteIssue,
+  fetchIssue,
+} from "@/lib/api";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import UnknownError from "@/pages/unknown-error";
+import { LoaderIcon } from "lucide-react";
+import {
+  TitleInput,
+  DescriptionInput,
+  CreatorInput,
+  AssigneeInput,
+  PriorityInput,
+  StatusInput,
+  NotesInput,
+  CategoriesInput,
+  EscalationInput,
+} from "@/components/issues/issue-fields";
+import { ROLE_STUDENT } from "@/lib/constants";
+import ReplyIssueForm from "@/components/issues/reply-issue"
 
-const LecturerEditIssueForm = ({ initialData, onSubmit }) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    priority: "Medium",
-    category: "",
-    course: "",
-    instructor: "",
-    studentContact: "",
-    resolved: false,
-    resolutionDate: "",
-    issueType: "Administrative",
-    status: "Open", 
-    lecturerComments: "",
-    attachments: null,
-    relatedIssues: "",
+export default function ResolveIssue() {
+  const { issueId } = useParams();
+  const { isPending, error, data, isFetching } = useQuery({
+    queryKey: ["issues", issueId],
+    queryFn: () => fetchIssue(issueId),
   });
 
-  // Use effect to pre-fill data if it's available (for editing)
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        ...initialData,
-        resolved: initialData.resolved || false,
-      });
+  if (isPending || isFetching) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoaderIcon className="animate-spin" />
+      </div>
+    );
+  }
+  if (error) {
+    if (error.response?.status === 404) {
+      return <UnknownError />;
     }
-  }, [initialData]);
+    toast.error("Error fetching issue");
+    console.error("Error fetching issue", error);
+  }
 
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === "file") {
-      setFormData({ ...formData, [name]: files });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
+  return <ReplyIssueForm issue={data.data}/>
+  // return <IssueResolveForm item={data.data} />;
+}
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    if (onSubmit) {
-      onSubmit(formData);
-    }
+function IssueResolveForm({ item }) {
+  const studentsRes = queryClient.getQueryData(["users", "students"]);
+  const lecturersRes = queryClient.getQueryData(["users", "lecturers"]);
+  const issuesMeta = useIssuesMeta();
+  const issueMutation = useMutation({
+    mutationFn: updateIssue,
+    onSuccess: (data) => {
+      // queryClient.invalidateQueries({ queryKey: ['issues'] })
+      toast.success("Issue updated successfully");
+      queryClient.invalidateQueries(["issues"]);
+      // item = data.data
+      console.log({ item, data: data.data });
+    },
+    onError: (error) => {
+      toast.error("Error updating issue");
+      console.error("Error updating issue", error);
+    },
+  });
+
+  const [{ name: activeRole }] = useActiveRole();
+  console.log({ issuesMeta });
+
+  const dataRef = React.useRef({
+    title: item.title,
+    description: item.description,
+    owner: item.owner.id,
+    assignee: item.assignee?.id || null,
+    status: issuesMeta.statuses.find((s) => s.name === item.status).id,
+    priority: issuesMeta.priorities.find((p) => p.name === item.priority).id,
+    escalation_level: issuesMeta.escalation_levels.find(
+      (l) => l.name === item.escalation_level
+    ).id,
+    categories: item.categories.map((c) => String(c.id)),
+    notes: item.notes,
+  });
+  const handleSubmit = (formData) => {
+    // e.preventDefault()
+    // e.stopPropagation()
+    // const formData = new FormData(e.target)
+    const data = dataRef.current;
+
+    console.log({ data });
+    issueMutation.mutate({ ...data, id: item.id });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-screen-xl mx-auto p-8 bg-white shadow-lg rounded-xl space-y-6 sm:space-y-8"
-    >
-      <h2 className="text-4xl font-semibold text-center mb-6">Edit An Issue</h2>
+    <div className="flex flex-col gap-14 space-y-6 px-4 py-4 rounded-lg">
+      <Card className="">
+        <CardHeader>
+          {/* <CardTitle>Create your Issue</CardTitle> */}
+          {/* <CardDescription></CardDescription> */}
+        </CardHeader>
+        <CardContent>
+          <form
+            id="issue-update-form"
+            className="flex flex-col gap-6"
+            action={handleSubmit}
+          >
+            <div className="flex flex-col gap-3">
+              <TitleInput dataRef={dataRef} />
+            </div>
+            <div className="flex flex-col gap-3">
+              <DescriptionInput dataRef={dataRef} />
+            </div>
+            {(activeRole !== ROLE_STUDENT && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3">
+                  <CreatorInput
+                    creators={studentsRes?.data}
+                    dataRef={dataRef}
+                  />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <AssigneeInput
+                    assignees={lecturersRes?.data}
+                    item={item}
+                    dataRef={dataRef}
+                  />
+                </div>
+              </div>
+            )) ||
+              null}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-3">
+                {(activeRole === ROLE_STUDENT && (
+                  <>
+                    <Label htmlFor="status" className="font-semibold">
+                      Status
+                    </Label>
+                    <StatusBadge status={item.status} className="p-2" />
+                  </>
+                )) || (
+                  <StatusInput
+                    statuses={issuesMeta.statuses}
+                    dataRef={dataRef}
+                  />
+                )}
+              </div>
+              <div className="flex flex-col gap-3">
+                {(activeRole === ROLE_STUDENT && (
+                  <>
+                    <Label htmlFor="status" className="font-semibold">
+                      Priority
+                    </Label>
+                    <PriorityBadge priority={item.priority} className="p-2" />
+                  </>
+                )) || (
+                  <PriorityInput
+                    priorities={issuesMeta.priorities}
+                    dataRef={dataRef}
+                  />
+                )}
+              </div>
+            </div>
+            {(activeRole !== ROLE_STUDENT && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3">
+                  <EscalationInput
+                    escalationLevels={issuesMeta.escalation_levels}
+                    dataRef={dataRef}
+                  />
+                </div>
+              </div>
+            )) ||
+              null}
+            {/* <div className="grid grid-cols-2 gap-4"> */}
+            <div className="flex flex-col gap-3">
+              {/* <div className="p-4 max-w-xl"> */}
+              <CategoriesInput
+                categories={issuesMeta.categories}
+                dataRef={dataRef}
+              />
+              {/* </div> */}
+            </div>
+            {/* </div> */}
 
-      {/* Section 1: Issue Information */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <TextInput
-          label="Issue Title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
-        
-        {/* Display Previous Issue Details in an Area next to Student Name */}
-        <div className="flex flex-col bg-gray-50 p-4 rounded-lg">
-          <h3 className="font-semibold text-lg">Previous Issue Details</h3>
-          <div className="text-sm mt-2">
-            <strong>Previous Title:</strong> {initialData?.title || "N/A"}
-          </div>
-          <div className="text-sm">
-            <strong>Previous Status:</strong> {initialData?.status || "N/A"}
-          </div>
-        </div>
-
-        <TextInput
-          label="Student Name / Registration Number"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      {/* Section 2: Category and Course Details */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <TextInput
-          label="Course/Department"
-          name="course"
-          value={formData.course}
-          onChange={handleChange}
-          required
-        />
-        <SelectInput
-          label="Category"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          options={["Assignment", "Exam Results", "Course Materials", "Technical Issue"]}
-        />
-        <TextInput
-          label="Lecturer"
-          name="instructor"
-          value={formData.instructor}
-          onChange={handleChange}
-        />
-      </div>
-
-      {/* Section 3: Issue Resolution and Priority */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <TextInput
-          label="Student Contact Info (Email/Phone)"
-          name="studentContact"
-          value={formData.studentContact}
-          onChange={handleChange}
-        />
-        <SelectInput
-          label="Priority"
-          name="priority"
-          value={formData.priority}
-          onChange={handleChange}
-          options={["Low", "Medium", "High"]}
-        />
-        <TextInput
-          label="Expected Resolution Date"
-          name="resolutionDate"
-          type="date"
-          value={formData.resolutionDate}
-          onChange={handleChange}
-        />
-      </div>
-
-      {/* Section 4: Issue Type and Status */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <SelectInput
-          label="Issue Type"
-          name="issueType"
-          value={formData.issueType}
-          onChange={handleChange}
-          options={["Administrative", "Technical", "Course Content", "Other"]}
-        />
-        <SelectInput
-          label="Status"
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          options={["Open", "In Progress", "Closed"]}
-        />
-        <TextareaInput
-          label="Lecturer's Resolution Comments"
-          name="lecturerComments"
-          value={formData.lecturerComments}
-          onChange={handleChange}
-        />
-      </div>
-
-      {/* Section 6: Resolution Checkbox */}
-      <div className="mt-6 flex items-center space-x-4">
-        <input
-          type="checkbox"
-          id="resolved"
-          name="resolved"
-          checked={formData.resolved}
-          onChange={() =>
-            setFormData({ ...formData, resolved: !formData.resolved })
-          }
-          className="h-5 w-5 text-blue-600 border-gray-300 rounded"
-        />
-        <label htmlFor="resolved" className="text-sm text-gray-700">
-          Mark as Resolved Now
-        </label>
-      </div>
-
-      {/* Submit Button */}
-      <div className="flex justify-center mt-6">
-        <button
-          type="submit"
-          className="w-full sm:w-auto py-3 px-8 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-        >
-          Submit Edited Issue
-        </button>
-      </div>
-    </form>
+            <div className="flex flex-col gap-3">
+              <NotesInput notes={item.notes} dataRef={dataRef} />
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-around">
+          <Button form="issue-create-form" className="md:min-w-[160px]">
+            {(issueMutation.isPending && (
+              <LoaderIcon className="animate-spin" />
+            )) ||
+              "Submit"}
+          </Button>
+          {/* <FileUpload /> */}
+        </CardFooter>
+      </Card>
+    </div>
   );
-};
-
-export default LecturerEditIssueForm;
+}

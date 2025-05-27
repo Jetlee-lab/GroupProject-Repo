@@ -1,24 +1,51 @@
 import React, { useState, lazy } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@/hooks"
-import { fetchIssues, fetchUsers } from '@/lib/api';
-import { STATUS_CLOSED, STATUS_PENDING, STATUS_ESCALATED, STATUS_RESOLVED, STATUS_INREVIEW } from '@/lib/constants';
+import { useQuery } from "@/hooks";
+import { fetchIssues, fetchUsers } from "@/lib/api";
+import {
+  STATUS_CLOSED,
+  STATUS_PENDING,
+  STATUS_ESCALATED,
+  STATUS_RESOLVED,
+  STATUS_INREVIEW,
+} from "@/lib/constants";
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
+import IssueTable from "@/components/issues/issue-table";
 
-const AcademicRegistrarReportsPage = () => {
-const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError, data: issuesData } = useQuery(fetchIssues)
-  const { isLoading: userssLoading, isFetching: usersFetching, error: usersError, data: usersData } = useQuery(fetchUsers)
+export default function AcademicRegistrarReportsPage() {
+  return (
+    <div className="flex flex-col gap-y-8 p-4 rounded-lg">
+      <div>
+        <IssueTable />
+      </div>
+    </div>
+  );
+}
+
+const AcademicRegistrarReportsPage2 = () => {
+  const {
+    isLoading: issuesLoading,
+    isFetching: issuesFetching,
+    error: issuesError,
+    data: issuesData,
+  } = useQuery(fetchIssues);
+  const {
+    isLoading: userssLoading,
+    isFetching: usersFetching,
+    error: usersError,
+    data: usersData,
+  } = useQuery(fetchUsers);
 
   if (issuesFetching || usersFetching) {
-    return <>Fetching issues...</>
+    return <>Fetching issues...</>;
   } else if (issuesLoading || userssLoading) {
-    return <>Loading data...</>
+    return <>Loading data...</>;
   } else if (issuesError || usersError) {
     return <UnknownError error="Failed Loading resource." />;
   }
 
-  const issues = issuesData.data
-  const users = usersData.data
+  const issues = issuesData.data;
+  const users = usersData.data;
 
   const handleSearchInput = (e) => {
     const searchValue = e.target.value;
@@ -72,7 +99,11 @@ const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError
                   {/*Display status with different colors */}
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                      [ STATUS_INREVIEW, STATUS_ESCALATED,  STATUS_PENDING].includes(issue.status)
+                      [
+                        STATUS_INREVIEW,
+                        STATUS_ESCALATED,
+                        STATUS_PENDING,
+                      ].includes(issue.status)
                         ? "bg-green-100 text-green-600"
                         : issue.status === "Pending"
                         ? "bg-yellow-100 text-yellow-600"
@@ -92,9 +123,15 @@ const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError
                 </td>
                 {/*Displaying priority */}
 
-                <td className="px-6 py-4">{users.filter(u => issue.owner == u.id)[0]?.email || "annon." }</td>
+                <td className="px-6 py-4">
+                  {users.filter((u) => issue.owner == u.id)[0]?.email ||
+                    "annon."}
+                </td>
                 <td className="px-6 py-4">{issue.date}</td>
-                <td className="px-6 py-4">{users.filter(u => issue.assignee == u.id)[0]?.email || "N/A" }</td>
+                <td className="px-6 py-4">
+                  {users.filter((u) => issue.assignee == u.id)[0]?.email ||
+                    "N/A"}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -103,5 +140,3 @@ const { isLoading: issuesLoading, isFetching: issuesFetching, error: issuesError
     </div>
   );
 };
-
-export default AcademicRegistrarReportsPage;

@@ -32,9 +32,8 @@ class IssueViewSet(
     # permission_classes = (AllowAny,)
     serializer_class = IssueSerializer
 
-    def create(self, request, *args, **kwargs):
-        print({"data":self.request.data, "files":self.request.FILES})
-        return super().create(request,*args, **kwargs)
+    # def create(self, request, *args, **kwargs):
+    #     return super().create(request,*args, **kwargs)
     #     serializer = self.get_serializer(data=request.data) #, many=True
     #     # print("testinhgf", data)
 
@@ -121,6 +120,13 @@ class IssueViewSet(
     
     def get_queryset(self):
         user = self.request.user
+        roles = user.roles.values_list("name", flat=True)
+        # return Issue.objects.all()
         if user.is_staff:
-            return Issue.objects.all()
+            # print(user.roles.values_list("name", flat=True))
+            if Role.ROLE_REGISTRAR in roles:
+                return Issue.objects.all()
+            return Issue.objects.filter(
+                Q(assignee=user) | Q(owner=user)
+            )
         return Issue.objects.filter(owner=user)

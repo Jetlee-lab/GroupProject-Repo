@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError, NotFound
 from rest_framework import mixins
 from rest_framework.decorators import action, api_view
 from django.db.models import Count
-
+from django.http import QueryDict
 from ..serializers import (
     UserSerializer,
     RoleSerializer,
@@ -14,19 +14,22 @@ from ..serializers import (
     IssueSerializer,
     StaffSerializer,
     StudentSerializer,
+    CourseSerializer,
 )
 from ..models import User, Role, Student, Staff, Faculty, Issue
-from ..utils.io import IOMixin, paginate_response #format_response
+from ..utils.io import IOMixin, paginate_response, send_email #format_response
 
 
 class UsersViewSet(
     IOMixin,
     # viewsets.GenericViewSet,
     # mixins.CreateModelMixin,
-    # mixins.UpdateModelMixin,
+    mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
 ):
+    # def get_serializer():
+    #     self.request.user.roles
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -77,8 +80,7 @@ class UsersViewSet(
     @action(methods=["GET"], detail=False, url_path="roles", url_name="user-roles")
     def roles(self, request, *args, **kwargs):
         roles = Role.objects.all()
-        data = RoleSerializer(roles, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(RoleSerializer(roles, many=True).data, status=status.HTTP_200_OK)
         # roles = User.objects.filter(roles__isnull=False).values_list('roles__name', flat=True).distinct()
         # return paginate_response(self, roles)
 
@@ -89,20 +91,36 @@ class UsersViewSet(
         students = Student.objects.all()
         return paginate_response(self, students, StudentSerializer)
 
-    @action(methods=["GET"], detail=False, url_path="staff", url_name="staff")
+    @action(methods=["GET", "PUT"], detail=False, url_path="staff", url_name="staff")
     def staff(self, request, *args, **kwargs):
-        staff = User.objects.filter(staff__isnull=False)
-        return paginate_response(self, staff, UserSerializer)
+        # staff = User.objects.filter(staff__isnull=False)
+
+        if request.method == "GET":
+            staff = Staff.objects.all()
+            return paginate_response(self, staff, StaffSerializer)
+        else:
+            if not (units := request.data.get('units')):
+                raise ValidationError({'message': 'Courses Units are required'})
+            elif not (lecturerId := request.data.get('lecturerId')):
+                raise ValidationError({'message': 'lecturerId is required'})
+
+            # print("-----pk", self.request.user.pk, Staff.objects.all())
+            # return Response({})
+            instance = Staff.objects.get(pk=lecturerId)
+            serializer = StaffSerializer(instance, data=request.data, context={"units": units}, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(methods=["GET"], detail=False, url_path="registrars", url_name="registrars")
     def registrars(self, request, *args, **kwargs):
-        registrars = User.objects.filter(roles__name=Role.ROLE_REGISTRAR)
-        return paginate_response(self, registrars, UserSerializer)
+        registrars = Staff.objects.filter(roles__name=Role.ROLE_REGISTRAR)
+        return paginate_response(self, registrars, StaffSerializer)
 
     @action(methods=["GET"], detail=False, url_path="lecturers", url_name="lecturers")
     def lecturers(self, request, *args, **kwargs):
-        lecturers = User.objects.filter(roles__name=Role.ROLE_LECTURER)
-        return paginate_response(self, lecturers, UserSerializer)
+        lecturers = Staff.objects.filter(roles__name=Role.ROLE_LECTURER)
+        return paginate_response(self, lecturers, StaffSerializer)
 
     @action(methods=["GET"], detail=False, url_path="administrators", url_name="administrators")
     def admins(self, request, *args, **kwargs):
@@ -111,14 +129,14 @@ class UsersViewSet(
 
     @action(methods=["GET"], detail=True, url_path="issues", url_name="issues")
     def issues(self, request, *args, pk=None, **kwargs):
-        role = self.request.user.roles.first()
+        roles = self.request.user.roles.all()
         # print({"role": role})
         try:
-            if role.name == Role.ROLE_STUDENT:
-                issues = Student.objects.get(pk=pk).issues.all()
-            elif role.name == Role.ROLE_LECTURER:
+            if Role.ROLE_LECTURER in roles:
                 issues = Staff.objects.get(pk=pk).assigned_issues.all()
-            else:
+            elif Role.ROLE_STUDENT in roles:
+                issues = Student.objects.get(pk=pk).issues.all()
+            else:  # Role.ROLE_REGISTRAR in roles:
                 issues = Issue.objects.all()
         except (Student.DoesNotExist, Staff.DoesNotExist):
             raise NotFound({'details': 'Issues not found'})
@@ -147,6 +165,31 @@ class UsersViewSet(
             raise NotFound({'details': 'Staff details not found'})
 
         return paginate_response(self, faculties, FacultySerializer)
+
+    @action(methods=["GET", "PUT", "POST"], detail=True, url_path="courses", url_name="courses")
+    def courses(self, request, *args, pk=None, **kwargs):
+        try:
+            student = Student.objects.get(pk=pk)
+        except Student.DoesNotExist:
+            raise NotFound({'details': 'Not a student. Course details not found'})
+        else:
+            if request.method == "GET":
+                courses = student.courses.all()
+                return paginate_response(self, courses, CourseSerializer)
+
+            course_data = request.data.getlist('courses') if isinstance(request.data, QueryDict) else request.data.get('courses', [])
+            # return Response({'coursesResp': course_data})
+            if not course_data:
+                raise ValidationError({'message': 'Courses list is required'})
+
+            if request.method == "PUT":
+                student.courses.add(*course_data)
+            elif request.method == "POST":
+                student.courses.set(course_data)
+            
+            student.save()
+            courses = student.courses.all()
+        return Response(CourseSerializer(courses, many=True).data, status=status.HTTP_200_OK)
 
     def get_queryset(self):
         return User.objects.all() #prefetch_related('student_details', )
@@ -187,25 +230,23 @@ def send_sms(request):
 
 @api_view(['POST'])
 def send_email(request):
-    from django.core.mail import send_mail
-
     data = request.data
 
     to = data.get('to', None)
     if to is None:
         raise ValidationError({'message': 'Recipient email is required'})
 
-    from_email=data.get('from', 'kato.keithpaul@students.mak.ac.ug')
+    from_email=data.get('from', None)
     subject=data.get('subject', 'Subject here')
     message=data.get('message', 'Here is the message.')
 
     # print(request.data, from_email, subject, message)
 
-    send_mail(
+    send_email(
         subject=subject,
-        message=message, 
+        message=message,
+        to=[to],
         from_email=from_email,
-        recipient_list=[to],
-        fail_silently=False
     )
+
     return Response({'message': 'Email sent'}, status=status.HTTP_200_OK)

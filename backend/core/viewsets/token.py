@@ -8,7 +8,7 @@ from django.db.models import Count
 
 from ..serializers import  ReferenceTokenSerializer
 from ..models import ReferenceToken
-from ..utils.io import IOMixin
+from ..utils.io import IOMixin, send_email
 
 
 class ReferenceTokenViewSet(
@@ -33,6 +33,12 @@ class ReferenceTokenViewSet(
         # print("serializer", serializer.data, "serializer.is_valid", serializer.is_valid(), "serializer.data", serializer.data)
         reference_token = serializer.save()
         # print("reference_token", reference_token)
+
+        send_email(
+            subject="Reference Token",
+            message=f"Your reference token is {reference_token.token}",
+            to=[reference_token.email],
+        )
 
         return Response(serializer.data, status.HTTP_200_OK)
 

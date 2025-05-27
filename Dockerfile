@@ -55,7 +55,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # RUN mv /app/frontend/dist /app/backend/staticfiles/frontend
 
 # Expose the Django port
-EXPOSE 8000
+# No need to expose. Let's use the dynamically assigned port by heroku
+# EXPOSE 8000
 
 RUN chmod +x /app/build.sh
 # Run Django’s development server

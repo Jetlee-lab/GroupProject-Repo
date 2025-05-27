@@ -19,6 +19,7 @@ env = environ.Env(
     
     CORS_ALLOWED_ORIGINS=(tuple),
     CORS_ALLOW_ALL_ORIGINS=(bool, False),
+    CORS_ALLOW_HEADERS=(tuple),
     CORS_ALLOW_CREDENTIALS=(bool, False),
     CSRF_TRUSTED_ORIGINS=(tuple),
 
@@ -224,7 +225,7 @@ REST_FRAMEWORK = {
     
     #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_PAGINATION_CLASS': 'core.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 2,
+    'PAGE_SIZE': 100,
 }
 
 # #####################################################################
@@ -234,6 +235,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS", default=ALLOWED_HOSTS)
 CORS_ALLOW_ALL_ORIGINS =env("CORS_ALLOW_ALL_ORIGINS")
 CORS_ALLOW_CREDENTIALS = env("CORS_ALLOW_CREDENTIALS")
+CORS_ALLOW_HEADERS = env("CORS_ALLOW_HEADERS")
 
 #  CSRF
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", default=ALLOWED_HOSTS)
@@ -271,10 +273,38 @@ ACCOUNT_ADAPTER = "core.adapters.CustomAccountAdapter"
 HEADLESS_ADAPTER = "core.adapters.CustomHeadlessAdapter"
 
 SOCIALACCOUNT_QUERY_EMAIL = True
-# HEADLESS_ONLY = True
+ACCOUNT_EMAIL_REQUIRED = True
+
+# ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
+# ACCOUNT_LOGIN_BY_CODE_ENABLED = True
+# ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
+# ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+
+HEADLESS_ONLY = True
+HEADLESS_FRONTEND_URLS = {
+    "account_confirm_email": "/account/verify-email/{key}",
+    "account_reset_password": "/account/password/reset",
+    "account_reset_password_from_key": "/account/password/reset/key/{key}",
+    "account_signup": "/account/signup",
+    "socialaccount_login_error": "/account/provider/callback",
+}
+# HEADLESS_SERVE_SPECIFICATION = True
+
+# MFA_SUPPORTED_TYPES = ["totp", "recovery_codes", "webauthn"]
+# MFA_PASSKEY_LOGIN_ENABLED = True
+# MFA_PASSKEY_SIGNUP_ENABLED = True
+
+# REST_FRAMEWORK = {
+#     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+# }
+# SPECTACULAR_SETTINGS = {
+#     "EXTERNAL_DOCS": {"description": "allauth", "url": "/_allauth/openapi.html"},
+# }
 
 # ACCOUNT_FORMS = {'signup': 'core.forms.CustomSignupForm'}
 # ACCOUNT_SIGNUP_FORM_CLASS = 'core.forms.CustomSignupForm'
+
 
 # #####################################################################
 # EMAIL
@@ -289,3 +319,12 @@ EMAIL_HOST_USER=env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT=env('EMAIL_PORT')
 EMAIL_USE_TLS=env('EMAIL_USE_TLS')
+
+# #####################################################################
+# SETTINGS OVERRIDES
+# #####################################################################
+
+try:
+    from .local_settings import *  # noqa
+except ImportError:
+    pass

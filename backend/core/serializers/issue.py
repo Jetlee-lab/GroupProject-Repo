@@ -1,11 +1,12 @@
 from django.db import transaction
-from rest_framework.exceptions import ValidationError
-from rest_framework import serializers
-from ..models import Issue, IssueLog, Category, Attachment, Issue, Role
-from .common import DynamicFieldsModelSerializer
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils import timezone
 import json
+from rest_framework.exceptions import ValidationError
+from rest_framework import serializers
+from .common import DynamicFieldsModelSerializer
+from ..models import Issue, IssueLog, Category, Attachment, Issue, Role
+from ..utils.io import send_email
 
 # from django.core.serializers import serialize
 
@@ -18,17 +19,28 @@ import json
 #             "id": instance.id,
 #             "name": instance.name,
 #         }
+class AttachmentSerializer(DynamicFieldsModelSerializer):
+
+    class Meta:
+        model = Attachment
+        fields = '__all__'
+        # exclude = ['id']
+        read_only_fields = ['issue', 'name', 'size', 'type']
+
 
 class IssueSerializer(serializers.ModelSerializer):
     # categories = CategoriesListingField(many=True) #, read_only=True)
+    attachments = AttachmentSerializer(many=True, read_only=True)
+
     class Meta:
         model = Issue
         fields = '__all__'
-        read_only_fields = ["id", 'updated_at', 'created_at']
+        read_only_fields = ["id", 'reference_no', 'updated_at', 'created_at']
         # extra_fields = {'rank':{'write_only':True}}
     
     @transaction.atomic
     def create(self, validated_data):
+        print("---------------------creating issue---------------------", {"vd": validated_data})
         print({"validated_data":validated_data, "context":self.context})
         categories = validated_data.pop('categories', None)
 
@@ -49,12 +61,12 @@ class IssueSerializer(serializers.ModelSerializer):
         return issue
 
     def update(self, instance, validated_data):
-
+        print("---------------------updating issue---------------------\n", {"vd": validated_data},"\n\n", {"instance": instance.__dict__})
         log_kwargs = {
             k: json.loads(DjangoJSONEncoder().encode([*getattr(instance, k).values()]))
             if k == 'attachments' else getattr(instance, k)
             for k in ['assignee', 'status', 'priority', 'attachments', 'categories', 'escalation_level']
-        } 
+        }
 
         if (categories := validated_data.pop('categories', None)) is not None:
             instance.categories.set(categories)
@@ -70,7 +82,25 @@ class IssueSerializer(serializers.ModelSerializer):
         issue_log = IssueLog.objects.create(issue=instance, actor=actor, **log_kwargs)
         issue_log.categories.set(categories)
         issue_log.save()
+        
+        req_status = validated_data.get("status")
+        req_escalation_level = validated_data.get("escalation_level")
+        msg = ""
 
+        if req_status and req_status != log_kwargs.get("status"):
+            msg += f"Status is now {Issue.STATUS_CHOICES[req_status]}"
+
+        if req_escalation_level and req_escalation_level != log_kwargs.get("escalation_level"):
+            msg += f"{" and is e" if msg else "E"}scalated to {Issue.ESCALATION_CHOICES[req_escalation_level]}"
+
+        if msg:
+            send_email(
+                subject="Issue Update Notification",
+                message=f"Hello {instance.owner.username or "there!"}, " \
+                    f"We wanted to inform you that there has been an update to your issue: \"{instance.title}\". " \
+                    f"{msg}.\nIssue reference: {instance.reference_no}.",
+                to=[actor.email],
+            )
         return instance
 
     def validate_owner(self, value):
@@ -131,14 +161,6 @@ class IssueLogSerializer(DynamicFieldsModelSerializer):
             'priority', 'categories', 'attachment', 'created_at'
         ]
 
-
-class AttachmentSerializer(DynamicFieldsModelSerializer):
-
-    class Meta:
-        model = Attachment
-        fields = '__all__'
-        # exclude = ['id']
-        read_only_fields = ['issue', 'name', 'size', 'type']
 
 class CategorySerializer(DynamicFieldsModelSerializer):
     class Meta:

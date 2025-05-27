@@ -15,7 +15,10 @@ let BACKEND_URL;
 if (import.meta.env.DEV) {
   BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8000";
 } else {
-  BACKEND_URL = "https://groupproject-repo.onrender.com";
+  // https://groupproject-repo.onrender.com
+  // https://aits-groups-d962bd2c1d87.herokuapp.com
+
+  BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://aits-groups-d962bd2c1d87.herokuapp.com";
 }
 
 export { BACKEND_URL };

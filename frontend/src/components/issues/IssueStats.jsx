@@ -3,6 +3,15 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@/hooks";
 import { fetchIssues } from "@/lib/api";
 import {
+  CircleCheckBig,
+  ClipboardPenLine,
+  Hourglass,
+  AlertTriangle,
+  Layers,
+  LockKeyhole,
+  Ban,
+} from "lucide-react";
+import {
   STATUS_CLOSED,
   STATUS_PENDING,
   STATUS_ESCALATED,
@@ -11,40 +20,47 @@ import {
   STATUS_REJECTED,
 } from "@/lib/constants";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@radix-ui/react-separator";
 
 const config = {
   [STATUS_RESOLVED]: {
     title: "Resolved",
+    icon: CircleCheckBig,
     // cardClasses: "bg-green-40 border-green-200",
     // titleClasses: "text-green-400",
     countClasses: "text-green-400",
   },
   [STATUS_REJECTED]: {
     title: "Rejected",
+    icon: Ban,
     // cardClasses: "bg-red-40 border-red-200",
     // titleClasses: "text-red-400",
     countClasses: "text-red-400",
   },
   [STATUS_INREVIEW]: {
     title: "In Review",
+    icon: ClipboardPenLine,
     // cardClasses: "bg-blue-40 border-blue-200",
     // titleClasses: "text-blue-400",
     countClasses: "text-blue-400",
   },
   [STATUS_PENDING]: {
-    title: "Open",
+    title: "Pending",
+    icon: Hourglass,
     // cardClasses: "bg-gray-40 border-gray-200",
     // titleClasses: "text-gray-400",
     countClasses: "text-gray-400",
   },
   [STATUS_CLOSED]: {
     title: "Closed",
+    icon: LockKeyhole,
     // cardClasses: "bg-gray-70 border-gray-300",
     // titleClasses: "text-gray-700",
     countClasses: "text-gray-700",
   },
   [STATUS_ESCALATED]: {
     title: "Escalated",
+    icon: AlertTriangle,
     // cardClasses: "bg-orange-40 border-orange-200",
     // titleClasses: "text-orange-400",
     countClasses: "text-orange-400",
@@ -65,7 +81,9 @@ export default function IssueStats({ stats }) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      { (stats.pending || stats.fetching) && <IssueStats.Skeleton /> || <IssueStatusStat statuses={stats.data?.status || {}} /> }
+      {((stats.pending || stats.fetching) && <IssueStats.Skeleton />) || (
+        <IssueStatusStat statuses={stats.data?.status || {}} />
+      )}
     </div>
   );
 }
@@ -92,13 +110,27 @@ function IssueStatusStat({ statuses }) {
               configInfo.cardClasses
             )}
           >
-            <h2
-              className={cn("text-lg font-semibold", configInfo.titleClasses)}
-            >
-              {configInfo.title}
-            </h2>
+            <div className="flex flex-row justify-between">
+              <div className="flex justify-center items-center bg-primary text-primary-foreground rounded-md size-10">
+                {configInfo.icon && (
+                  <configInfo.icon size={28} strokeWidth={3} />
+                )}
+              </div>
+              <h2
+                className={cn(
+                  "text-lg font-semibold text-primary pr-4",
+                  configInfo.titleClasses
+                )}
+              >
+                {configInfo.title}
+              </h2>
+            </div>
+            <Separator
+              orientation="vertical"
+              className="mt-4 mb-1 h-[1px] bg-gray-300"
+            />
             <p
-              className={cn("text-2xl font-extrabold", configInfo.countClasses)}
+              className={cn("text-2xl font-extrabold pl-4", configInfo.countClasses)}
             >
               {status?.issues.length || 0}
             </p>
@@ -106,8 +138,16 @@ function IssueStatusStat({ statuses }) {
         );
       })}
       <div className="bg-black text-white p-4 rounded-lg shadow-md">
-        <h2 className="text-lg font-semibold">Total Issues</h2>
-        <p className="text-xl font-extrabold">{issues.size}</p>
+        {/* <h2 className="text-lg font-semibold">Total Issues</h2>
+        <p className="text-xl font-extrabold">{issues.size}</p> */}
+      <div className="flex flex-row justify-between">
+        <div className="flex justify-center items-center bg-primary text-primary-foreground rounded-md size-10">
+          <Layers size={28} strokeWidth={3} />
+        </div>
+        <h2 className="text-lg font-semibold text-gray-400 pr-4">Total </h2>
+      </div>
+      <Separator orientation="vertical" className="mt-4 mb-1 h-[1px] bg-gray-300" />
+      <p className="text-2xl font-extrabold text-gray-400">{issues.size}</p>
       </div>
     </>
   );
@@ -116,7 +156,7 @@ function IssueStatusStat({ statuses }) {
 IssueStats.Skeleton = function () {
   return (
     <>
-    {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4"> */}
+      {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4"> */}
       {new Array(Object.entries(config).length + 1).fill().map((_, index) => {
         return (
           <div key={index} className="p-4 rounded-lg bg-gray-200">
@@ -127,7 +167,7 @@ IssueStats.Skeleton = function () {
           </div>
         );
       })}
-    {/* </div> */}
+      {/* </div> */}
     </>
   );
 };

@@ -36,6 +36,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useNavigate } from "react-router-dom";
 import {
   CheckCircle2Icon,
   ChevronDownIcon,
@@ -57,6 +58,9 @@ import {
   Lock,
   Trash2,
   Ellipsis,
+  ListCheck,
+  EditIcon,
+  CalendarDaysIcon,
 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { toast } from "sonner";
@@ -108,6 +112,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -144,7 +149,7 @@ import {
   NotesInput,
 } from "./issue-fields";
 import { useActiveRole } from "@/hooks";
-import { statusMap, priorityMap } from "@/lib/constants";
+import { statusMap, priorityMap, ROLE_REGISTRAR } from "@/lib/constants";
 import { ROLE_STUDENT, ROLE_LECTURER } from "@/lib/constants";
 import {
   Tooltip,
@@ -238,17 +243,23 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
       // queryClient.invalidateQueries({ queryKey: ['issues'] })
       toast.success("Issue Deleted successfully");
       // queryClient.invalidateQueries(["issues"])
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['issues'] }),
+        queryClient.invalidateQueries({ queryKey: ['stats'] })
+      ])
     },
     onError: (error) => {
       toast.error("Error deleting issue");
       console.error("Error deleting issue", error);
     },
   });
+  const [edittedRow, setEdittedRow] = React.useState(null)
 
   const dataIds = React.useMemo(() => data?.map(({ id }) => id) || [], [data]);
   // const users = queryClient.getQueryData(["users"])
   // const [isEditorOpen, setIsEditorOpen] = React.useState(undefined);
   const [{ name: activeRole }] = useActiveRole();
+  const navigate = useNavigate();
   let toSplice = [];
 
   switch (activeRole) {
@@ -261,7 +272,6 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
     default:
       break;
   }
-  // console.log({ initialData, data });
 
   const columns = [
     {
@@ -301,13 +311,14 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
       accessorKey: "title",
       header: "Title",
       cell: ({ row }) => {
-        return <TableCellViewer item={row.original} />;
+        // console.log("---->",row.id, edittedRow ? edittedRow.id == row.id : false)
+        return <TableCellViewer item={row.original} isEditMenuOpen={edittedRow ? (edittedRow.id == row.id) || undefined : undefined} onOpenChange={(state) => {setEdittedRow(state)}} />;
       },
       enableHiding: false,
     },
     {
       accessorKey: "creator",
-      header: "Creator",
+      header: "Student",
       cell: ({ row }) => (
         <div className="">
           {"@"}
@@ -389,35 +400,40 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
           return `@${row.original.assignee.username}`;
         }
 
-        return <div className="font-display text-xs">{"<"}Unassigned{">"}</div>;
-
         return (
-          <>
-            <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
-              Reviewer
-            </Label>
-            <Select>
-              <SelectTrigger
-                className="h-8 w-40"
-                id={`${row.original.id}-reviewer`}
-              >
-                <SelectValue placeholder="Assign reviewer" />
-              </SelectTrigger>
-              <SelectContent align="end">
-                <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-                <SelectItem value="Jamik Tashpulatov">
-                  Jamik Tashpulatov
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </>
+          <div className="font-display text-xs">
+            {"<"}Unassigned{">"}
+          </div>
         );
+
+        // return (
+        //   <>
+        //     <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
+        //       Reviewer
+        //     </Label>
+        //     <Select>
+        //       <SelectTrigger
+        //         className="h-8 w-40"
+        //         id={`${row.original.id}-reviewer`}
+        //       >
+        //         <SelectValue placeholder="Assign reviewer" />
+        //       </SelectTrigger>
+        //       <SelectContent align="end">
+        //         <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
+        //         <SelectItem value="Jamik Tashpulatov">
+        //           Jamik Tashpulatov
+        //         </SelectItem>
+        //       </SelectContent>
+        //     </Select>
+        //   </>
+        // );
       },
     },
     {
       id: "actions",
       cell: ({ row, ...others }) => (
-        <DropdownMenu>
+        <Dialog>
+          <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
@@ -428,19 +444,65 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-32">
-            {/* <DropdownMenuItem onClick={() => setIsEditorOpen(!isEditorOpen)}>Edit</DropdownMenuItem>
+          <DropdownMenuContent
+              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              // side={isMobile ? "bottom" : "right"}
+              align="end"
+              sideOffset={4}
+            >
+              {/* <DropdownMenuItem >
+                <DialogTrigger asChild>
+                  <Button>xskjcd</Button>
+                </DialogTrigger>
+              </DropdownMenuItem> */}
+                          {/* <DropdownMenuItem onClick={() => setIsEditorOpen(!isEditorOpen)}>Edit</DropdownMenuItem>
             <DropdownMenuItem>Make a copy</DropdownMenuItem>
             <DropdownMenuItem>Favorite</DropdownMenuItem>
             <DropdownMenuSeparator /> */}
             <DropdownMenuItem
-              className="text-red-500"
-              onClick={() => handleDelete(row.original)}
+              className="text-blue-500"
+              onClick={() => setEdittedRow(row.original)}
             >
-              <Trash2 className="text-red-500" /> Delete
+              <EditIcon className="text-blue-500" />Quick Edit
             </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            <DropdownMenuItem
+              className="text-red-500"
+              // onClick={() => handleDelete(row.original)}
+            >
+              <DialogTrigger asChild>
+                <span className="flex gap-2 items-center"><Trash2 className="text-red-500" />Delete</span>
+              </DialogTrigger>
+            </DropdownMenuItem>
+            {[ROLE_LECTURER, ROLE_REGISTRAR].includes(activeRole) && (
+              <DropdownMenuItem
+                className="text-blue-500"
+                onClick={() => navigate(`/dashboard/issue/${row.original.id}`)}
+              >
+                <ListCheck className="text-blue-500" /> Review
+              </DropdownMenuItem>
+            )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DialogContent className="flex flex-col gap-4 items-center sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete Issue</DialogTitle>
+              <DialogDescription>
+                Are you sure?
+              </DialogDescription>
+            </DialogHeader>
+            {/* <LogoutPage /> */}
+            <DialogFooter className="">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="button" variant="default" onClick={() => handleDelete(row.original)}>
+                Yes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       ),
     },
   ];
@@ -478,6 +540,8 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
     autoResetPageIndex: false,
   });
 
+  const [isNewIssueOpen, setIsNewIssueOpen] = React.useState(false);
+
   // console.log({ data, initialData, ...pagination });
   React.useEffect(() => {
     if (data === initialData) return;
@@ -496,7 +560,6 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
   }
 
   const handleDelete = (issue) => {
-    console.log({ issue });
     issueDeleteMutation.mutate(issue.id);
   };
 
@@ -576,26 +639,29 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
-                <PlusIcon />
-                <span className="hidden lg:inline">New Issue</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="md:min-w-[756px] md:max-h-[552px] m-4 overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="font-bold">Create Issue</DialogTitle>
-                <DialogDescription />
-              </DialogHeader>
-              <div className="grid gap-4">
-                <CreateIssueForm />
-              </div>
-              <DialogFooter>
-                {/* <Button type="submit">Save changes</Button> */}
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          {(activeRole === ROLE_STUDENT && (
+            <Dialog open={undefined}>
+              <DialogTrigger asChild>
+                <Button variant={"default"} size="sm">
+                  <PlusIcon />
+                  <span className="hidden lg:inline">Create New Issue</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="md:min-w-[756px] md:max-h-[552px] m-4 overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="font-bold">Create Issue</DialogTitle>
+                  <DialogDescription />
+                </DialogHeader>
+                <div className="grid gap-4">
+                  <CreateIssueForm onSuccess={() => void(0)}/>
+                </div>
+                <DialogFooter>
+                  {/* <Button type="submit">Save changes</Button> */}
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )) ||
+            null}
         </div>
       </div>
       <TabsContent
@@ -645,7 +711,7 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
                       colSpan={columns.length}
                       className="h-24 text-center text-semibold"
                     >
-                      No results.
+                      No Issues Found.
                     </TableCell>
                   </TableRow>
                 )}
@@ -685,10 +751,12 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
             </div>
             {/* <div className="flex w-fit items-center justify-center text-sm font-medium"> */}
             {/* </div> */}
-            <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </div>
+            {data.length > 0 && (
+              <div className="flex w-fit items-center justify-center text-sm font-medium">
+                Page {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getPageCount()}
+              </div>
+            )}
             <div className="ml-auto flex items-center gap-2 lg:ml-0">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -696,13 +764,15 @@ export function DataTable({ data: initialData, onLoadMore, count }) {
                     variant="outline"
                     className="size-8"
                     onClick={() => {
-                      const hasMore = onLoadMore()
-                      if (!hasMore){
-                        toast.info("No more data to load!")
+                      const hasMore = onLoadMore();
+                      if (!hasMore) {
+                        toast.info("No more data to load!");
                       }
                     }}
                   >
-                    <span className="sr-only">Load more {`${data.length} of ${count}`} results</span>
+                    <span className="sr-only">
+                      Load more {`${data.length} of ${count}`} results
+                    </span>
                     <Ellipsis />
                   </Button>
                 </TooltipTrigger>
@@ -793,7 +863,7 @@ const chartConfig = {
   },
 };
 
-function TableCellViewer({ item }) {
+function TableCellViewer({ item, isEditMenuOpen, onOpenChange }) {
   const isMobile = useIsMobile();
   // const [open, setOpen] = React.useState(undefined);
   const studentsRes = queryClient.getQueryData(["users", "students"]);
@@ -802,22 +872,22 @@ function TableCellViewer({ item }) {
   const issueMutation = useMutation({
     mutationFn: updateIssue,
     onSuccess: (data) => {
-      // queryClient.invalidateQueries({ queryKey: ['issues'] })
       toast.success("Issue updated successfully");
-      queryClient.invalidateQueries(["issues"])
-      // item = data.data
-      console.log({item,data: data.data})
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      // console.log({item,data: data.data})
     },
     onError: (error) => {
       toast.error("Error updating issue");
       console.error("Error updating issue", error);
     },
   });
-  // console.log({
-  //   item,
-  //   issuesMeta,
-  //   get: issuesMeta.statuses.find((s) => s.name === item.status),
-  // });
+  const [isOpen, setIsOpen] = React.useState(isEditMenuOpen)
+
+  React.useEffect(() => {
+    // console.log({isEditMenuOpen})
+    setIsOpen(isEditMenuOpen)
+  }, [isEditMenuOpen])
+
   const [{ name: activeRole }] = useActiveRole();
 
   const dataRef = React.useRef({
@@ -830,6 +900,7 @@ function TableCellViewer({ item }) {
     escalation_level: issuesMeta.escalation_levels.find(
       (l) => l.name === item.escalation_level
     ).id,
+    course_unit: item.course_unit,
     categories: item.categories.map((c) => String(c.id)),
     notes: item.notes,
   });
@@ -839,22 +910,26 @@ function TableCellViewer({ item }) {
     // e.stopPropagation()
     // const formData = new FormData(e.target)
     const data = dataRef.current;
-
-    console.log({ data });
-    issueMutation.mutate({ ...data, id: item.id });
+    issueMutation.mutate({ issue: data, id: item.id });
   };
 
   return (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={(state) => {
+      // console.log({state})
+      isOpen ? onOpenChange(state) : void(0)
+      }}>
       <SheetTrigger asChild>
         <Button
           variant="link"
-          className="w-fit px-0 text-left text-foreground whitespace-break-spaces line-clamp-1 h-8"
+          className="px-0 text-left text-foreground whitespace-break-spaces line-clamp-1 h-8 w-full"
         >
           {item.title}
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="flex flex-col">
+      <SheetContent
+        side="right"
+        className="flex flex-col md:min-w-[512px] md:px-4"
+      >
         <SheetHeader className="gap-1">
           <SheetTitle>Issue Details</SheetTitle>
           <SheetDescription>You can edit this issue here.</SheetDescription>
@@ -902,8 +977,8 @@ function TableCellViewer({ item }) {
               <Separator /> */}
               <div className="grid gap-2">
                 <div className="flex flex-col gap-2 font-medium leading-none justify-center">
-                  <div className="flex gap-4">
-                    <span>Created on:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <div className="flex gap-4 items-center">
+                    <span className="flex justify-center items-center gap-2"><CalendarDaysIcon />Created on:&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <span className="font-normal text-xs">
                       {format(
                         new Date(item.created_at),
@@ -911,8 +986,8 @@ function TableCellViewer({ item }) {
                       )}
                     </span>
                   </div>
-                  <div className="flex gap-4">
-                    <span>Last Updated:</span>
+                  <div className="flex gap-4 items-center">
+                    <span className="flex justify-center items-center gap-2"><CalendarDaysIcon />Last Updated:</span>
                     <span className="font-normal text-xs">
                       {item.updated_at
                         ? format(
@@ -1015,12 +1090,16 @@ function TableCellViewer({ item }) {
             </div>
           </form>
         </div>
-        <SheetFooter className="mt-auto flex gap-2 sm:flex-col sm:space-x-0">
-          <Button className="w-full" type="submit" form="issue-update-form">
-            Submit
+        <SheetFooter className="mt-auto flex gap-4 md:flex-row sm:space-x-0">
+          <Button
+            className="w-full md:w-1/2"
+            type="submit"
+            form="issue-update-form"
+          >
+            {activeRole === ROLE_STUDENT ? "Submit" : "Reply"}
           </Button>
-          <SheetClose asChild>
-            <Button variant="outline" className="w-full">
+          <SheetClose asChild className="">
+            <Button variant="outline" className="w-full md:w-1/2">
               Done
             </Button>
           </SheetClose>
@@ -1094,13 +1173,13 @@ export function PriorityBadge({
 
 export default function IssuesTable() {
   const [page, setPage] = React.useState(0);
-  const [size,] =React.useState(100)
+  const [size] = React.useState(100);
   const { status, data, error, isFetching, isPlaceholderData, isSuccess } =
     useQuery({
       queryKey: ["issues", page],
       queryFn: () => fetchIssues({ params: paginate(page, size) }),
       placeholderData: keepPreviousData,
-      keepPreviousData:true,
+      keepPreviousData: true,
       // staleTime: 5000,
     });
   queryClient.prefetchQuery({
@@ -1109,11 +1188,11 @@ export default function IssuesTable() {
       fetchUsers({ endpoint: "students", params: paginate(0, 100) }),
   });
   queryClient.prefetchQuery({
-    queryKey: ["users", "lectures"],
+    queryKey: ["users", "lecturers"],
     queryFn: () =>
       fetchUsers({ endpoint: "lecturers", params: paginate(0, 100) }),
   });
-  const deferredData = React.useDeferredValue(data, data)
+  const deferredData = React.useDeferredValue(data, data);
 
   // console.log({ status, data, error });
   const hasMore = !!deferredData?.meta.pagination.next;
@@ -1136,9 +1215,8 @@ export default function IssuesTable() {
     return hasMore;
   };
 
-  if (!deferredData)
-    return null
-  console.log({data, deferredData})
+  if (!deferredData) return null;
+
   return (
     <>
       {/* <div>Current Page: {page + 1}</div>
@@ -1156,7 +1234,13 @@ export default function IssuesTable() {
       >
         Next Page
       </Button> */}
-      {isSuccess && <DataTable data={deferredData.data} onLoadMore={handleLoadMore} count={deferredData.meta.pagination.count} />}
+      {isSuccess && (
+        <DataTable
+          data={deferredData.data}
+          onLoadMore={handleLoadMore}
+          count={deferredData.meta.pagination.count}
+        />
+      )}
     </>
   );
 }

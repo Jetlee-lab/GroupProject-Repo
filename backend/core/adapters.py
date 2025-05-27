@@ -6,8 +6,9 @@ from django.http import JsonResponse
 from django.core.exceptions import BadRequest
 import json
 import http
+from uuid import uuid4
 from .serializers import UserSerializer
-from .models import ReferenceToken
+from .models import ReferenceToken, Role, Student, Staff
 
 
 class CustomHeadlessAdapter(DefaultHeadlessAdapter):
@@ -20,6 +21,7 @@ class CustomHeadlessAdapter(DefaultHeadlessAdapter):
         
 class CustomAccountAdapter(DefaultAccountAdapter):
     def new_user(self, request, *args, **kwargs):
+        # print([super().new_user(request), Student, Staff])
         fields = request.POST.dict()
         if not fields:
             try:
@@ -33,6 +35,7 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         try:
             self.aits_token = ReferenceToken.objects.get(token=token, email=fields.get('email'))
         except:  # ReferenceToken.DoesNotExist:
+            print({"token":token,"fields": fields})
             raise interupt('Reference token invalid', param='token', code='invalid_token')
         else:
             if self.aits_token.is_used:
@@ -40,10 +43,17 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             elif not self.aits_token.active:
                 raise interupt('Reference token is inactive', param='token', code='token_inactive')
 
-        user = super().new_user(request)
+        user_id = uuid4()
+        
+        if self.aits_token.role.name == Role.ROLE_STUDENT:
+            user = Student(student_no=user_id)
+        else:
+            user = Staff(staff_id=user_id, is_staff=True)
+        # user = super().new_user(request)
         return user
     
     def save_user(self, request, user, form, commit=True):
+        print({"user":user})
         super().save_user(request, user, form, commit)
         
         # token = ReferenceToken.objects.get(token=token, email=user.email)       
@@ -52,8 +62,8 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         self.aits_token.save()
 
         user.roles.add(self.aits_token.role)
+        user_id = uuid4()
         user.save()
-
 
 def interupt(message, *, code, param, status=http.HTTPStatus.BAD_REQUEST):
     return ImmediateHttpResponse(JsonResponse({

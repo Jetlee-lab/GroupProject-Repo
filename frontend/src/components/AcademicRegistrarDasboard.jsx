@@ -2,7 +2,6 @@ import React, { useState, useEffect, lazy } from "react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import IssueStats from "./issues/IssueStats";
-import IssuesTable from "./issues/IssueTable";
 import ActivityFeed from "./issues/ActivityFeed";
 import { Button } from "@/components/ui/button";
 import { Terminal } from "lucide-react";
@@ -30,6 +29,8 @@ import { fetchRoles, fetchTokens, createToken } from "@/lib/api";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { use } from "react";
+import { useCopyToClipboard } from "usehooks-ts";
+import IssueTable from "./issues/issue-table";
 // import { useQuery } from "@/hooks"
 // import { useQuery } from "@tanstack/react-query";
 // import { fetchIssues, fetchUsers, fetchStats } from "@/lib/api";
@@ -57,7 +58,7 @@ export default function RegistrarDashboard({ stats, issues, users }) {
   // const users = usersRes.data;
 
   return (
-    <div className="flex flex-col gap-y-8 p-4  bg-blue-200  rounded-lg">
+    <div className="flex flex-col gap-y-8 p-4 rounded-lg">
       {/* Overview section */}
       <div className="">
         <IssueStats stats={stats} />
@@ -82,12 +83,21 @@ export default function RegistrarDashboard({ stats, issues, users }) {
               View & Assign Issues
             </Button>
           </Link>
+          <Link to="generated-tokens">
+            <Button
+              variant="outline"
+              className="bg-blue-500 text-white px-2 py-4 rounded hover:bg-blue-600"
+            >
+              View Generated Tokens
+            </Button>
+          </Link>
         </div>
       </div>
 
-      {/* Activity Feed */}
-      <div>
-        <h3 className="text-xl text-center font-bold mb-4">RECENT ACTIVITY</h3>
+      <div className="flex flex-col gap-y-8 p-4 rounded-lg">
+        <div>
+          <IssueTable />
+        </div>
         <ActivityFeed />
       </div>
     </div>
@@ -126,7 +136,7 @@ export function GenerateToken() {
     }));
   }
 
-  // console.log({ tokenMutation });
+  const [copiedText, copy] = useCopyToClipboard();
   useEffect(() => {
     if (tokenMutation.isError) {
       const {
@@ -160,6 +170,16 @@ export function GenerateToken() {
 
     tokenMutation.mutate(formData);
   }
+
+  const handleCopy = (text) => () => {
+    copy(text)
+      .then(() => {
+        toast.info("Copied!");
+      })
+      .catch((error) => {
+        toast.error("Failed to copy!");
+      });
+  };
 
   return (
     <Dialog>
@@ -222,15 +242,20 @@ export function GenerateToken() {
           </div>
           {/* </form> */}
           {tokenMutation.isSuccess && (
-            <Alert>
-              {/* <Terminal className="h-4 w-4" /> */}
-              <AlertTitle>Reference Token!</AlertTitle>
-              <AlertDescription>
-                <span className="font-bold text-md items-center">
-                  {tokenMutation.data.data?.token}
-                </span>
-              </AlertDescription>
-            </Alert>
+            <>
+              <Alert>
+                {/* <Terminal className="h-4 w-4" /> */}
+                <AlertTitle>Reference Token!</AlertTitle>
+                <AlertDescription>
+                  <span className="font-bold text-md items-center">
+                    {tokenMutation.data.data?.token}
+                  </span>
+                </AlertDescription>
+              </Alert>
+              <Button onClick={handleCopy(tokenMutation.data.data?.token)}>
+                Copy
+              </Button>
+            </>
           )}
         </div>
         <DialogFooter>

@@ -12,8 +12,8 @@ from django.utils.translation import gettext_lazy as _  # Updated import
 from django.db import models
 from django.core.exceptions import ValidationError
 
-from .department import Department  # Ensure this import is correct
-
+from .department import Department
+from .course import Course, CourseUnit
 
 class UserManager(UserManager):
     def create_user(self, username, email, password=None, **kwargs):
@@ -120,6 +120,7 @@ class User(AbstractUser):
         related_name="users",
         # verbose_name=_("roles"),
     )
+    notifications_enabled = models.BooleanField(default=True)
     updated_at = models.DateTimeField(null=True)
     
     objects = UserManager()
@@ -141,12 +142,10 @@ class Student(User):
     #     related_name="%(class)s_details",
     #     on_delete=models.CASCADE,
     # )
-    student_no = models.CharField(max_length=32, blank=False)
-
+    student_no = models.UUIDField(unique=True, editable=False)
+    courses = models.ManyToManyField(Course, related_name='students')
     # def __str__(self):
     #     return "Student Table"
-
-
 
 class Staff(User):
     """
@@ -158,10 +157,9 @@ class Staff(User):
     #     related_name="%(class)s_details",
     #     on_delete=models.CASCADE,
     # )
-    departments = models.ManyToManyField(Department,
-        related_name='staff'
-    )
-
+    staff_id = models.UUIDField(unique=True, editable=False)
+    departments = models.ManyToManyField(Department, related_name='staff')
+    course_units = models.ManyToManyField(CourseUnit, related_name='staff')
 
     # def __str__(self):
     #     return "Staff Table"

@@ -74,3 +74,14 @@ def paginate_response(viewset, queryset, serializer, many=True):
         return Response(serializer(queryset, many=many).data)
 
     return viewset.get_paginated_response(serializer(page, many=many).data)
+
+def send_email(*, subject, message, to, from_email=None, fail_silently=False):
+    from django.core.mail import send_mail
+    
+    send_mail(
+        subject=subject,
+        message=message, 
+        from_email=from_email,
+        recipient_list=to,
+        fail_silently=fail_silently,
+    )

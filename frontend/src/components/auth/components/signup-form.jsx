@@ -9,6 +9,10 @@ import { useConfig } from "@/features/auth";
 import AitsLogo from "@/components/images/logo2.jpg";
 import { cn } from "@/lib/utils";
 import { LoaderIcon, Eye, EyeOff } from "lucide-react";
+import FormErrors from '@/components/form-errors'
+
+// import ProviderList from '../socialaccount/ProviderList'
+// import Button from '../components/Button'
 
 export function SignupForm({ className, ...props }) {
   const [email, setEmail] = useState("");
@@ -118,26 +122,49 @@ export function SignupForm({ className, ...props }) {
                   type="text"
                   required
                   onChange={(e) => setUsername(e.target.value)}
-                  aria-label="Username"
                 />
-                <FormErrors param="username" errors={response.content?.errors || []} />
+                {response.fetching || (
+                  <FormErrors
+                    param="username"
+                    errors={response.content?.errors}
+                  />
+                )}
               </div>
-              <div className="relative">
-                <Label htmlFor="password2">Repeat Password</Label>
-                <Input
-                  id="password2"
-                  type={passwordVisible ? "text" : "password"}
-                  required
-                  onChange={(e) => setPassword1(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-1 top-4 right-3 flex items-center text-muted-foreground"
-                  onClick={() => setPasswordVisible(!passwordVisible)}
-                >
-                  {passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-                <FormErrors param="password2" errors={password2Errors} />
+              <div className="flex flex-col md:flex-row gap-6 md:items-center">
+                <div className="flex flex-col gap-2 relative">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type={passwordVisible ? "text" : "password"}
+                    required
+                    onChange={(e) => setPassword2(e.target.value)}
+                  />
+                  {response.fetching || (
+                    <FormErrors
+                      param="password"
+                      errors={response.content?.errors}
+                    />
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 relative">
+                  <Label htmlFor="password">Repeat Password</Label>
+                  <Input
+                    id="password2"
+                    type={passwordVisible ? "text" : "password"}
+                    required
+                    onChange={(e) => setPassword1(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-1 top-4 right-3 flex items-center text-muted-foreground"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                  >
+                    {passwordVisible ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                  {response.fetching || (
+                    <FormErrors param="password2" errors={password2Errors} />
+                  )}
+                </div>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="token">Reference Token</Label>
@@ -165,24 +192,6 @@ export function SignupForm({ className, ...props }) {
         and <a href="#">Privacy Policy</a>.
       </div>
     </div>
-  );
-}
-
-export function FormErrors({ param, errors }) {
-  if (!errors || !errors.length) return null;
-
-  const filteredErrors = errors.filter((error) =>
-    param ? error.param === param : error.param == null
-  );
-
-  if (!filteredErrors.length) return null;
-
-  return (
-    <ul className="text-red-600 text-sm">
-      {filteredErrors.map((e, i) => (
-        <li key={i}>{e.message}</li>
-      ))}
-    </ul>
   );
 }
 

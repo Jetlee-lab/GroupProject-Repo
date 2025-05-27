@@ -1,11 +1,13 @@
-// Importing necessary libraries and components
-import React, { Children, useState, lazy } from "react";
-import { Link, useLocation, Outlet, useRoutes } from "react-router-dom";
-import { useActiveRole, useRoles } from "@/hooks/use-auth";
-import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
-import { Button } from "@/components/ui/button";
-import React, { useState, lazy } from "react";
-import { Link, useRoutes } from "react-router-dom";
+import React, { Children, useState, lazy } from "react"; // Importing React and the useState hook for state management
+import {
+  Link,
+  useLocation,
+  Outlet,
+  useRoutes,
+  Navigate,
+  useNavigate,
+  useLoaderData,
+} from "react-router-dom"; // Importing Link component from react-router-dom for navigation
 import { useActiveRole, useRoles } from "@/hooks/use-auth";
 import { AppSidebar } from "@/components/dashboard/components/app-sidebar";
 import { Button } from "@/components/ui/button";
@@ -50,6 +52,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { LoaderIcon } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -57,7 +60,7 @@ import {
 } from "@/components/ui/popover";
 import { Component, Outdent, CircleUserRound } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { ROLE_STUDENT, ROLE_LECTURER, ROLE_REGISTRAR } from "@/lib/constants"
+import { ROLE_STUDENT, ROLE_LECTURER, ROLE_REGISTRAR } from "@/lib/constants";
 
 // Lazy-loaded components for better performance
 const LecturerDashboard = lazy(() => import("@/components/LecturerDashboard"));
@@ -82,6 +85,8 @@ const SettingsPage = lazy(() => import("@/pages/SettingsPage"));
 // const LogoutPage = lazy(() => import("@/pages/LogoutPage"));
 const NotFound = lazy(() => import("@/pages/404"));
 const UnknownError = lazy(() => import("@/pages/unknown-error"));
+const GeneratedTokensPage = lazy(() => import("@/pages/generated-tokens"));
+const CoursesManagementPage = lazy(() => import("@/pages/manage-courses"));
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchIssues,
@@ -93,7 +98,7 @@ import { Search } from "@/components/search";
 import { useDispatch } from "react-redux";
 import { setMeta as setIssuesMeta } from "@/redux/features/issuesSilce";
 import { DashboardFooter } from "@/components/footer";
-import Timeline from "@/components/timeline"
+import Timeline from "@/components/timeline";
 
 const dashboardRoutes = [
   {
@@ -126,7 +131,7 @@ const dashboardRoutes = [
         Component: AcademicRegistrarReportsPage,
       },
       {
-        path: "/edit-issue-lecturer",
+        path: "/issue/:issueId",
         Component: LecturerEditIssueForm,
       },
 
@@ -137,6 +142,14 @@ const dashboardRoutes = [
       {
         path: "/assign-issue",
         Component: AssignIssue,
+      },
+      {
+        path: "/generated-tokens",
+        Component: GeneratedTokensPage,
+      },
+      {
+        path: "/management/courses",
+        Component: CoursesManagementPage,
       },
       // {
       //   path: "/account/logout",
@@ -156,20 +169,44 @@ export default function DashboardRoutes() {
 }
 
 export function DashboardLayout() {
-  // TODO: Show progress when switching roles
-
+  const {
+    error: issuesMetaError,
+    data: issuesMetaRes,
+    isFetching: issuesMetaFetching,
+  } = useQuery({
+    queryKey: ["issues", "meta"],
+    queryFn: () => fetchIssuesMeta(),
+  });
+  const dispatch = useDispatch();
   const roles = useRoles();
   const [{ name: role }, setActiveRole] = useActiveRole();
   // const { pathname } = useLocation();
   const switchRole = (role) => setActiveRole(role);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const handleRoleChange = (role) => {
+    // alert()
+    // location.reloa
+    setActiveRole(role);
+    // navigate(`/dashboard`);
+  };
+
+  if (issuesMetaFetching) {
+    return null;
+  }
+  if (issuesMetaError) {
+    return <UnknownError error="Failed Loading resource." />;
+  } else if (issuesMetaRes) {
+    dispatch(setIssuesMeta(issuesMetaRes.data));
+  }
 
   return (
     <SidebarProvider defaultOpen={false}>
-      <AppSidebar userRoles={roles} onRoleChange={() => void 0} />
+      <AppSidebar userRoles={roles} onRoleChange={handleRoleChange} />
       <SidebarInset>
         {/* <div className="sticky top-0 bg-gradient-to-r from-blue-100 to-green-200"> */}
-        <header className="flex sticky top-0 z-11 min-h-14 p-4  backdrop-blur-3xl  bg-blue-600">
-          <div className="flex items-center gap-2 px-4">
+        <header className="flex sticky top-0 z-11 min-h-14 p-4 backdrop-blur-3xl bg-gradient-to-r from-blue-400 to-blue-600">
+          <div className="flex w-full items-center gap-2 sm:px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
@@ -185,9 +222,11 @@ export function DashboardLayout() {
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+            {/* <div className=""> */}
             <Search />
+            {/* </div> */}
           </div>
-          <div className="flex flex-row gap-x-4 ml-auto">
+          <div className="hidden flex flex-row gap-x-4 ml-auto">
             <RoleSwitcher role={role} onChange={switchRole} />
           </div>
         </header>
@@ -195,7 +234,7 @@ export function DashboardLayout() {
         <div>
           <div className="flex flex-col lg:fixed lg:flex-row h-full pb-16">
             <div className="flex flex-3 flex-col gap-5 p-2 pt-0 lg:overflow-auto h-full">
-              <div className="min-h-[100%] flex-1 rounded-xl bg-muted/50 bg-gradient-to-r from-blue-100 to-blue-300  md:min-h-min">
+              <div className="sm:min-h-[100%] flex-1 rounded-xl bg-muted/50 bg-gradient-to-r from-blue-100 to-blue-300 md:min-h-min">
                 <Outlet />
               </div>
               <footer>
@@ -230,7 +269,6 @@ export function CalendarDemo() {
 export function Dashboard() {
   const [{ name: role }, setRole] = useActiveRole();
   const [statsParams, setStatParams] = useState({}); // ({ priority: '' });
-  const dispatch = useDispatch();
   const {
     isPending: statsPending,
     error: statsError,
@@ -258,17 +296,9 @@ export function Dashboard() {
     queryKey: ["users"],
     queryFn: () => fetchUsers(),
   });
-  const {
-    error: issuesMetaError,
-    data: issuesMetaRes,
-    isFetching: issuesMetaFetching,
-  } = useQuery({
-    queryKey: ["issues", "meta"],
-    queryFn: () => fetchIssuesMeta(),
-  });
 
-  if (statsError || issuesMetaError || usersError || issuesMetaError) {
-    console.log({ statsError, issuesError, usersError, issuesMetaError });
+  if (statsError || usersError) {
+    console.log({ statsError, issuesError, usersError });
     return <UnknownError error="Failed Loading resource." />;
   } else if (statsFetching) {
     // return <>Fetching issues...</>;
@@ -277,9 +307,11 @@ export function Dashboard() {
   }
 
   if (issuesFetching) {
-    return null;
-  } else if (issuesMetaRes) {
-    dispatch(setIssuesMeta(issuesMetaRes.data));
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoaderIcon size={48} className="animate-spin" />
+      </div>
+    );
   }
 
   const stats = {
