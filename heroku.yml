@@ -7,4 +7,5 @@ run:
   worker:
     command:
       - /bin/bash
-    image: heroku/heroku:24
+    image: django
+    # image: heroku/heroku:24
