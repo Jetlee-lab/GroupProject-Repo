@@ -55,18 +55,18 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN chmod +x /app/build.sh
 # Run Django’s development server
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-# ENTRYPOINT ["bash", "/app/build.sh"]
+ENTRYPOINT ["bash", "/app/build.sh"]
 
 # ------------------------------------------------------
 
-RUN echo COLLECTING STATIC FILES... && python manage.py collectstatic --noinput
+# RUN echo COLLECTING STATIC FILES... && python manage.py collectstatic --noinput
 
-# # Move the built frontend
-RUN echo MOVING BUILT FRONTEND... && \
-    mkdir -p /app/backend/staticfiles && \
-    mv /app/frontend/dist /app/backend/staticfiles/frontend
-    
-ENTRYPOINT ["bash", "/app/build.sh"]
+# # # Move the built frontend
+# RUN echo MOVING BUILT FRONTEND... && \
+#     mkdir -p /app/backend/staticfiles && \
+#     mv /app/frontend/dist /app/backend/staticfiles/frontend
+
+# ENTRYPOINT ["bash", "/app/build.sh"]
 
 
 
