@@ -40,8 +40,8 @@ class IssueSerializer(serializers.ModelSerializer):
     
     @transaction.atomic
     def create(self, validated_data):
-        print("---------------------creating issue---------------------", {"vd": validated_data})
-        print({"validated_data":validated_data, "context":self.context})
+        # print("---------------------creating issue---------------------", {"vd": validated_data})
+        # print({"validated_data":validated_data, "context":self.context})
         categories = validated_data.pop('categories', None)
 
         issue = Issue.objects.create(**validated_data)
@@ -61,7 +61,7 @@ class IssueSerializer(serializers.ModelSerializer):
         return issue
 
     def update(self, instance, validated_data):
-        print("---------------------updating issue---------------------\n", {"vd": validated_data},"\n\n", {"instance": instance.__dict__})
+        # print("---------------------updating issue---------------------\n", {"vd": validated_data},"\n\n", {"instance": instance.__dict__})
         log_kwargs = {
             k: json.loads(DjangoJSONEncoder().encode([*getattr(instance, k).values()]))
             if k == 'attachments' else getattr(instance, k)
