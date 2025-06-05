@@ -3,9 +3,9 @@ build:
     web: Dockerfile
 # run:
 #   web: python /app/backend/manage.py runserver 0.0.0.0:${PORT}
-run:
-  worker:
-    image: nikolaik/python-nodejs:python3.13-nodejs23
-    command:
-      - /bin/bash
-    # image: heroku/heroku:24
+# run:
+#   worker:
+#     command:
+#       - /bin/bash
+#     image: ubuntu:22.04
+#     # image: heroku/heroku:24
