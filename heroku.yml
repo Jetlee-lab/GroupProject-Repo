@@ -3,3 +3,10 @@ build:
     web: Dockerfile
 # run:
 #   web: python /app/backend/manage.py runserver 0.0.0.0:${PORT}
+
+# run:
+#   worker:
+#     command:
+#       - /bin/bash
+#     image: ubuntu:22.04
+#     # image: heroku/heroku:24

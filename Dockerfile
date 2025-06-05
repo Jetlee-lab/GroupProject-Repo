@@ -33,13 +33,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # WORKDIR /app/backend
 
-# RUN echo RUNNING MIGRATIONS...; \
-#     python manage.py makemigrations && \
-#     python manage.py migrate
-
-# RUN echo POPULATING DATABASE...; \
-#     python manage.py loaddata data
-
 # Collect static files
 # RUN echo COLLECTING STATIC FILES...; \
 #     python manage.py collectstatic --noinput; \
@@ -58,10 +51,22 @@ RUN pip install --no-cache-dir -r requirements.txt
 # No need to expose. Let's use the dynamically assigned port by heroku
 # EXPOSE 8000
 
+
 RUN chmod +x /app/build.sh
 # Run Django’s development server
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ENTRYPOINT ["bash", "/app/build.sh"]
+
+# ------------------------------------------------------
+
+# RUN echo COLLECTING STATIC FILES... && python manage.py collectstatic --noinput
+
+# # # Move the built frontend
+# RUN echo MOVING BUILT FRONTEND... && \
+#     mkdir -p /app/backend/staticfiles && \
+#     mv /app/frontend/dist /app/backend/staticfiles/frontend
+
+# ENTRYPOINT ["bash", "/app/build.sh"]
 
 
 
